@@ -36,7 +36,8 @@ func fire() -> void:
 		_rounds-=1
 		if _rounds != 0:
 			_cooldown = 60.0/rpm
-		bullet_fired.emit(b,_endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(_endOfGun.global_rotation), linear_velocity)
+		var vel = linear_velocity if agent == null else agent.linear_velocity
+		bullet_fired.emit(b,_endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(_endOfGun.global_rotation), vel)
 		if agent == null:
 			apply_impulse(Vector2.RIGHT.rotated(global_rotation + PI) * recoil, _endOfGun.global_position)
 	else:
