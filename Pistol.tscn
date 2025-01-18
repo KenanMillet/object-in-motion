@@ -20,8 +20,9 @@ animations = [{
 [node name="Pistol" type="RigidBody2D"]
 gravity_scale = 0.0
 script = ExtResource("1_trfsu")
+rpm = 180
 bullet = ExtResource("2_i0v3o")
-magSize = 0
+bulletSpeed = 200
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
