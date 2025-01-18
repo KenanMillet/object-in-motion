@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://rl71eoe3h2qx"]
+
+[ext_resource type="Script" path="res://agent.gd" id="1_0ibwk"]
+[ext_resource type="Texture2D" uid="uid://dgbydmxxj7dum" path="res://art/playerbase.png" id="1_qf3vp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5wyik"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_qf3vp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ytdjo"]
+height = 52.0
+
+[node name="AgentHuman" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder")]
+mass = 10.0
+gravity_scale = 0.0
+script = ExtResource("1_0ibwk")
+hand = NodePath("Shoulder/Hand")
+shoulder = NodePath("Shoulder")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(7, 0)
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_5wyik")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_ytdjo")
+
+[node name="Shoulder" type="Marker2D" parent="."]
+position = Vector2(4, -11)
+
+[node name="Hand" type="Marker2D" parent="Shoulder"]
+position = Vector2(13, 0)

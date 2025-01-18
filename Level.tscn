@@ -11,6 +11,8 @@
 [node name="InstanceManager" type="Node" parent="."]
 script = ExtResource("1_fo1qu")
 
-[node name="Player" parent="." instance=ExtResource("2_48rs6")]
+[node name="Marker2D" type="Marker2D" parent="InstanceManager"]
+position = Vector2(-100, -100)
 
-[connection signal="swapGuns" from="Player" to="InstanceManager" method="_on_player_swap_guns"]
+[node name="Player" parent="." node_paths=PackedStringArray("instanceManager") instance=ExtResource("2_48rs6")]
+instanceManager = NodePath("../InstanceManager")

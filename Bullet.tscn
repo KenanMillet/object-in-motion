@@ -18,6 +18,7 @@ animations = [{
 radius = 1.0
 
 [node name="Bullet" type="RigidBody2D"]
+mass = 0.01
 gravity_scale = 0.0
 linear_damp_mode = 1
 script = ExtResource("1_at65e")
