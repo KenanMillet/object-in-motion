@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cbn4yp7nnbr40"]
+
+[ext_resource type="Script" path="res://InstanceManager.gd" id="1_fo1qu"]
+[ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://Player.tscn" id="2_48rs6"]
+
+[node name="Level" type="Node2D"]
+
+[node name="InstanceManager" type="Node" parent="."]
+script = ExtResource("1_fo1qu")
+
+[node name="Player" parent="." instance=ExtResource("2_48rs6")]
+
+[connection signal="swapGuns" from="Player" to="InstanceManager" method="_on_player_swap_guns"]

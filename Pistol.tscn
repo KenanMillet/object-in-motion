@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://dxlvnghp7s5iy"]
+
+[ext_resource type="Script" path="res://Gun.gd" id="1_trfsu"]
+[ext_resource type="PackedScene" uid="uid://cn80bj33reegx" path="res://Bullet.tscn" id="2_i0v3o"]
+[ext_resource type="Texture2D" uid="uid://yv7ug73r8hgk" path="res://art/pistol.png" id="2_i8k75"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_82vox"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_i8k75")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gqaik"]
+
+[node name="Pistol" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_trfsu")
+bullet = ExtResource("2_i0v3o")
+magSize = 0
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_82vox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gqaik")
+
+[node name="EndOfGun" type="Marker2D" parent="."]
+position = Vector2(8, -2)

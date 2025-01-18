@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://eli52larnpyd"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_8uice"]
+[ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://Pistol.tscn" id="2_pwykp"]
+
+[node name="Player" type="Node"]
+script = ExtResource("1_8uice")
+startingGun = ExtResource("2_pwykp")
