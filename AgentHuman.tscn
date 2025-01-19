@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://rl71eoe3h2qx"]
+[gd_scene load_steps=6 format=3 uid="uid://rl71eoe3h2qx"]
 
 [ext_resource type="Script" path="res://agent.gd" id="1_0ibwk"]
 [ext_resource type="Texture2D" uid="uid://dgbydmxxj7dum" path="res://art/playerbase.png" id="1_qf3vp"]
@@ -17,20 +17,30 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ytdjo"]
 height = 52.0
 
-[node name="AgentHuman" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder")]
-mass = 10.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c00xd"]
+
+[node name="AgentHuman" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+mass = 70.0
 gravity_scale = 0.0
 script = ExtResource("1_0ibwk")
 hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
+enemyHitbox = NodePath("Enemy Hitbox")
+playerHitbox = NodePath("Player Hitbox")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(7, 0)
 scale = Vector2(0.05, 0.05)
 sprite_frames = SubResource("SpriteFrames_5wyik")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_ytdjo")
+
+[node name="Player Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -4)
+scale = Vector2(-0.609939, 0.769017)
+shape = SubResource("CapsuleShape2D_c00xd")
+debug_color = Color(0.690645, 0.287299, 1, 0.42)
 
 [node name="Shoulder" type="Marker2D" parent="."]
 position = Vector2(4, -11)

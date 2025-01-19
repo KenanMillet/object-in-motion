@@ -7,6 +7,7 @@ signal needs_reload
 @export var bullet: PackedScene
 @export var bulletSpeed = 500
 @export var recoil = 10
+@export var agentRecoil = 1000
 @export var rpm = 60
 @export var magSize = 10
 @export var reloadTime = 1.5
@@ -17,9 +18,17 @@ signal needs_reload
 
 var agent: Agent = null
 
+var thrownBy: Agent = null
+
 var _cooldown = 0
 
 var _impulses = []
+
+func is_empty():
+	return _rounds == 0 && magSize != 0
+
+func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
+	_impulses.append([impulse, from, torque])
 
 func attach(newAgent: Agent) -> void:
 	agent = newAgent
@@ -31,16 +40,16 @@ func detach() -> void:
 func fire() -> void:
 	if _cooldown != 0:
 		return
-	if _rounds > 0 || magSize == 0:
+	if !is_empty():
 		var b: Bullet = bullet.instantiate()
 		_rounds-=1
-		if _rounds != 0:
+		if !is_empty():
 			_cooldown = 60.0/rpm
 		var vel = linear_velocity if agent == null else agent.linear_velocity
 		bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation), vel)
 		add_collision_exception_with(b)
 		if agent == null:
-			_impulses.append([Vector2.RIGHT.rotated(global_rotation + PI) * recoil, endOfGun.global_position])
+			propel(Vector2(recoil, 0).rotated(global_rotation + PI), endOfGun.global_position - global_position)
 	else:
 		needs_reload.emit()
 		
@@ -67,4 +76,5 @@ func _process(delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	for impulse in _impulses:
 		apply_impulse(impulse[0], impulse[1])
+		apply_torque_impulse(impulse[2])
 	_impulses.clear()
