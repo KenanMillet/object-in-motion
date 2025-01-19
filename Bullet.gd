@@ -13,7 +13,7 @@ func _ready() -> void:
 	collision_mask = 0b1110 # guns, bullets, agents, walls
 	body_entered.connect(_on_body_entered)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if global_position.distance_to(Vector2.ZERO) > 10000:
 		queue_free()
 

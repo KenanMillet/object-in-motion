@@ -80,7 +80,7 @@ func _process(delta: float) -> void:
 		targetPos.global_position = gun.global_position
 		cameraMount.global_position = gun.global_position
 		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
-			gun.fire(agent)
+			gun.fire()
 
 	if agent != null:
 		targetPos.global_position = agent.global_position

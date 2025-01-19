@@ -39,7 +39,7 @@ func detach() -> void:
 	linear_velocity = agent.linear_velocity
 	agent = null
 
-func fire(agent: Agent) -> void:
+func fire() -> void:
 	if _cooldown != 0:
 		return
 	if !is_empty():

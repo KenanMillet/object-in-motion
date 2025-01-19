@@ -57,7 +57,7 @@ func releaseGun() -> void:
 	controllingPlayer = null
 	remove_collision_exception_with(gun)
 	gun.detach()
-	gun.reparent(prevGunParent)
+	gun.reparent.call_deferred(prevGunParent)
 	gun.needs_reload.disconnect(_reload_gun)
 	gun.bullet_fired.disconnect(_on_bullet_fired)
 	gun = null
@@ -93,7 +93,7 @@ func die() -> void:
 func _reload_gun() -> void:
 	gun.reload()
 	
-func _on_bullet_fired(_bullet: Bullet, pos: Vector2, muzzle_velocity: Vector2, _gun_velocity: Vector2) -> void:
+func _on_bullet_fired(_bullet: Bullet, _pos: Vector2, muzzle_velocity: Vector2, _gun_velocity: Vector2) -> void:
 	lock_rotation = true
 	propel(Vector2.RIGHT.rotated(muzzle_velocity.angle() + PI) * gun.agentRecoil, shoulder.global_position - global_position)
 	lock_rotation = false
@@ -109,7 +109,7 @@ func _process(_delta: float) -> void:
 	if throwMode:
 		queue_redraw()
 	if gun != null && controllingPlayer == null:
-		gun.fire(self)
+		gun.fire()
 
 func _physics_process(_delta: float) -> void:
 	if gun != null:
@@ -127,4 +127,4 @@ func _draw() -> void:
 	var throwIndicatorLength = lerpf(minThrowImpulse, maxThrowImpulse, tp)
 	if tp > 0 && gun != null:
 		var endOfGun = gun.endOfGun.get_relative_transform_to_parent(self)
-		draw_dashed_line(endOfGun.origin, endOfGun.origin + endOfGun.x * throwIndicatorLength, Color.ALICE_BLUE,  throwIndicatorLength / 100, maxThrowImpulse / 10)
+		draw_dashed_line(endOfGun.origin, endOfGun.origin + endOfGun.x * throwIndicatorLength, Color.ALICE_BLUE,  throwIndicatorLength / 100.0, maxThrowImpulse / 10.0)
