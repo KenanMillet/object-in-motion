@@ -8,7 +8,7 @@ extends RigidBody2D
 
 var gun: Gun = null
 var prevGunParent: Node = null
-var target: Vector2 = Vector2.ZERO
+var target: Node2D = null
 
 func holdGun(newgun: Gun, parent: Node) -> void:
 	gun = newgun
@@ -46,5 +46,6 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if gun != null:
-		shoulder.look_at(target)
+		if target != null:
+			shoulder.look_at(target.global_position)
 		gun.global_position = hand.global_position

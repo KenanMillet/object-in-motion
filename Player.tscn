@@ -4,12 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://Pistol.tscn" id="2_pwykp"]
 [ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentHuman.tscn" id="3_e1h85"]
 
-[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount")]
+[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos")]
 script = ExtResource("1_8uice")
 startingGun = ExtResource("2_pwykp")
 startingAgent = ExtResource("3_e1h85")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
+cursorPos = NodePath("CursorPos")
 
 [node name="CameraMount" type="Node2D" parent="."]
 
@@ -17,3 +18,5 @@ cameraMount = NodePath("CameraMount")
 zoom = Vector2(1.5, 1.5)
 process_callback = 0
 position_smoothing_enabled = true
+
+[node name="CursorPos" type="Node2D" parent="."]
