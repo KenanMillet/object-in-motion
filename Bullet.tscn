@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cn80bj33reegx"]
+[gd_scene load_steps=6 format=3 uid="uid://cn80bj33reegx"]
 
 [ext_resource type="Script" path="res://Bullet.gd" id="1_at65e"]
 [ext_resource type="Texture2D" uid="uid://47qu3ig6srh1" path="res://art/bullet.png" id="2_l5e7i"]
@@ -15,19 +15,28 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tt0nf"]
-radius = 1.0
+radius = 0.1
 
-[node name="Bullet" type="RigidBody2D"]
-mass = 0.01
+[sub_resource type="CircleShape2D" id="CircleShape2D_hocvn"]
+radius = 2.0
+
+[node name="PistolBullet" type="RigidBody2D" node_paths=PackedStringArray("playerHurtBox", "enemyHurtBox")]
+mass = 0.2
 gravity_scale = 0.0
 linear_damp_mode = 1
 script = ExtResource("1_at65e")
+playerHurtBox = NodePath("Player Hurt Box")
+enemyHurtBox = NodePath("Enemy Hurt Box")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 3)
 scale = Vector2(0.05, 0.05)
 sprite_frames = SubResource("SpriteFrames_u2jya")
+offset = Vector2(-1.895, 32.16)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Player Hurt Box" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_tt0nf")
+
+[node name="Enemy Hurt Box" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hocvn")
+disabled = true

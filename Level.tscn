@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=7 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://InstanceManager.gd" id="1_fo1qu"]
 [ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://Player.tscn" id="2_48rs6"]
 [ext_resource type="PackedScene" uid="uid://b07rv0ofpm43a" path="res://Background_1.tscn" id="3_2nl6q"]
-[ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentHuman.tscn" id="3_yqvf8"]
+[ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentMedium.tscn" id="3_yqvf8"]
 [ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://Pistol.tscn" id="4_o8hum"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 
 [node name="Level" type="Node2D"]
 
@@ -30,3 +32,24 @@ position = Vector2(1795, 970)
 
 [node name="Player" parent="." node_paths=PackedStringArray("instanceManager") instance=ExtResource("2_48rs6")]
 instanceManager = NodePath("../Instance Manager")
+
+[node name="Bounds" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, 1080)
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, 1080)
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(1920, 0)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(1920, 0)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_u2hhs")

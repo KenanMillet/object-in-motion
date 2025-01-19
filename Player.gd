@@ -52,8 +52,13 @@ func controlGun(newGun: Gun) -> void:
 		gun.body_entered.disconnect(_on_gun_contact)
 		gun.body_exited.disconnect(_on_gun_contact)
 		gun.thrownBy = null
+		if agent != null && agent.gun == gun:
+			agent.releaseGun()
 	newGun.body_entered.connect(_on_gun_contact)
 	newGun.body_exited.connect(_on_gun_contact)
+	if agent != null && agent.gun != newGun:
+		gun.global_position = newGun.global_position
+		agent.holdGun(newGun, newGun.get_parent())
 	gun = newGun
 	controlDowntime = controlCooldown
 
@@ -75,7 +80,7 @@ func _process(delta: float) -> void:
 		targetPos.global_position = gun.global_position
 		cameraMount.global_position = gun.global_position
 		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
-			gun.fire()
+			gun.fire(agent)
 
 	if agent != null:
 		targetPos.global_position = agent.global_position

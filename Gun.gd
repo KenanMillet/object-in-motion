@@ -7,10 +7,12 @@ signal needs_reload
 @export var bullet: PackedScene
 @export var bulletSpeed = 500
 @export var recoil = 10
-@export var agentRecoil = 1000
-@export var rpm = 60
-@export var magSize = 10
+@export var agentRecoil = 5000
+@export var rpm = 120
+@export var enemyRpm = 90
 @export var reloadTime = 1.5
+@export var enemyReloadTime = 3.0
+@export var magSize = 10
 @export var endOfGun: Marker2D = null
 @export var customCenterOfMass: Marker2D = null
 
@@ -37,17 +39,21 @@ func detach() -> void:
 	linear_velocity = agent.linear_velocity
 	agent = null
 
-func fire() -> void:
+func fire(agent: Agent) -> void:
 	if _cooldown != 0:
 		return
 	if !is_empty():
 		var b: Bullet = bullet.instantiate()
+		var is_player = (agent == null || agent.controllingPlayer != null)
+		b.enemyHurtBox.set_deferred("disabled", !is_player)
+		b.playerHurtBox.set_deferred("disabled", is_player)
 		_rounds-=1
 		if !is_empty():
 			_cooldown = 60.0/rpm
 		var vel = linear_velocity if agent == null else agent.linear_velocity
 		bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation), vel)
 		add_collision_exception_with(b)
+		add_collision_exception_with(agent)
 		if agent == null:
 			propel(Vector2(recoil, 0).rotated(global_rotation + PI), endOfGun.global_position - global_position)
 	else:

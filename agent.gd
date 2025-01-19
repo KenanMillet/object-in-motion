@@ -9,13 +9,15 @@ signal died
 @export var minThrowImpulse = 50
 @export var maxThrowImpulse = 250
 @export var minThrowTorque = 10
-@export var maxThrowTorque = 100
+@export var maxThrowTorque = 75
 @export var enemyHitbox: CollisionShape2D = null
 @export var playerHitbox: CollisionShape2D = null
+@export var health: int = 12
 
 var gun: Gun = null
 var prevGunParent: Node = null
 var target: Node2D = null
+var movementTarget: Node2D = null
 var controllingPlayer: Player = null
 
 var throwMode: bool = false:
@@ -29,6 +31,13 @@ var throwMode: bool = false:
 var _throwChargingStart = null
 
 var _impulses = []
+
+func damage(value: int) -> void:
+	health = max(health - value, 0)
+	if (controllingPlayer != null):
+		print("Health Remaining: ", health)
+	if health == 0:
+		die()
 
 func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 	_impulses.append([impulse, from, torque])
@@ -45,6 +54,7 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 	gun.bullet_fired.connect(_on_bullet_fired)
 
 func releaseGun() -> void:
+	controllingPlayer = null
 	remove_collision_exception_with(gun)
 	gun.detach()
 	gun.reparent(prevGunParent)
@@ -74,7 +84,8 @@ func throwGun() -> void:
 	throwMode = false
 
 func die() -> void:
-	releaseGun()
+	if gun != null:
+		releaseGun()
 	died.emit()
 	enemyHitbox.set_deferred("disabled", true)
 	playerHitbox.set_deferred("disabled", true)
@@ -90,13 +101,15 @@ func _on_bullet_fired(_bullet: Bullet, pos: Vector2, muzzle_velocity: Vector2, _
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	collision_layer = 0b0010 # agents
-	collision_mask |= 0b1111 # walls, agents, bullets, guns
+	collision_mask |= 0b1101 # walls, agents, bullets, guns
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
 
 func _process(_delta: float) -> void:
 	if throwMode:
 		queue_redraw()
+	if gun != null && controllingPlayer == null:
+		gun.fire(self)
 
 func _physics_process(_delta: float) -> void:
 	if gun != null:
