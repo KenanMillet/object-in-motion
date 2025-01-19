@@ -10,23 +10,23 @@ signal needs_reload
 @export var rpm = 60
 @export var magSize = 10
 @export var reloadTime = 1.5
+@export var endOfGun: Marker2D = null
+@export var customCenterOfMass: Marker2D = null
 
 @onready var _rounds = magSize
-@onready var _endOfGun: Marker2D = $EndOfGun
-@onready var _collider: = $CollisionPolygon2D
 
 var agent: Agent = null
 
 var _cooldown = 0
 
+var _impulses = []
+
 func attach(newAgent: Agent) -> void:
 	agent = newAgent
-	_collider.disabled = true
 
 func detach() -> void:
 	linear_velocity = agent.linear_velocity
 	agent = null
-	_collider.disabled = false
 
 func fire() -> void:
 	if _cooldown != 0:
@@ -37,9 +37,10 @@ func fire() -> void:
 		if _rounds != 0:
 			_cooldown = 60.0/rpm
 		var vel = linear_velocity if agent == null else agent.linear_velocity
-		bullet_fired.emit(b,_endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(_endOfGun.global_rotation), vel)
+		bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation), vel)
+		add_collision_exception_with(b)
 		if agent == null:
-			apply_impulse(Vector2.RIGHT.rotated(global_rotation + PI) * recoil, _endOfGun.global_position)
+			_impulses.append([Vector2.RIGHT.rotated(global_rotation + PI) * recoil, endOfGun.global_position])
 	else:
 		needs_reload.emit()
 		
@@ -49,9 +50,21 @@ func reload() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	center_of_mass_mode = CENTER_OF_MASS_MODE_CUSTOM
-	center_of_mass = $CenterOfMass.position
+	contact_monitor = true
+	max_contacts_reported = 10
+	collision_layer = 0b1000 # guns
+	collision_mask |= 0b1111 # walls, agents, bullets, guns
+	if customCenterOfMass != null:
+		center_of_mass_mode = CENTER_OF_MASS_MODE_CUSTOM
+		center_of_mass = customCenterOfMass.position
+	else:
+		center_of_mass_mode = CENTER_OF_MASS_MODE_AUTO
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_cooldown = max(0.0, _cooldown - delta)
+
+func _physics_process(_delta: float) -> void:
+	for impulse in _impulses:
+		apply_impulse(impulse[0], impulse[1])
+	_impulses.clear()
