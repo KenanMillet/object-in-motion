@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddjmlwnyldf4a"]
+[gd_scene load_steps=5 format=3 uid="uid://ddjmlwnyldf4a"]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_lj0gx"]
+[ext_resource type="Texture2D" uid="uid://c0670tcnuyqkl" path="res://art/combat ui/focus bars/gun_only_focus.png" id="2_b8fy4"]
 [ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="2_fpunk"]
 [ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="3_wcqru"]
 
 [node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("focus", "health", "plan")]
 script = ExtResource("1_lj0gx")
 focus = NodePath("Focus")
+gunFocusBar = ExtResource("2_b8fy4")
 health = NodePath("VBoxContainer/Health")
 plan = NodePath("VBoxContainer/Plan")
 
