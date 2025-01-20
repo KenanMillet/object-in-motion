@@ -102,7 +102,10 @@ func _process(delta: float) -> void:
 
 	controlDowntime = max(controlDowntime - delta, 0)
 	if Input.is_action_pressed("Focus") || focusIsForced:
-		Engine.time_scale = focusTimeScale if focusTime > 0 else 1.0
+		if Input.is_action_pressed("Focus") && focusIsForced:
+			Engine.time_scale = 0.4
+		else:
+			Engine.time_scale = focusTimeScale if focusTime > 0 else 1.0
 		if !Input.is_action_just_pressed("Focus"):
 			focusTime = max(focusTime - delta, 0)
 	else:

@@ -95,6 +95,7 @@ func fire() -> void:
 			var b: Bullet = bullets[i]
 			b.enemyHurtBox.set_deferred("disabled", controllingPlayer == null)
 			b.playerHurtBox.set_deferred("disabled", controllingPlayer != null)
+			b.firedFromPlayer = controllingPlayer
 			var deviation: float = bulletDeviation()
 			bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation + deviation), vel)
 			add_collision_exception_with(b)

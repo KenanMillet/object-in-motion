@@ -5,6 +5,9 @@ extends RigidBody2D
 @export var enemyDamage: int = 4
 @export var playerHurtBox: CollisionShape2D = null
 @export var enemyHurtBox: CollisionShape2D = null
+@export var ignoreEnemyBullets: bool = false
+
+var firedFromPlayer: Player = null
 
 func _ready() -> void:
 	contact_monitor = true
@@ -24,5 +27,7 @@ func _on_body_entered(body:Node) -> void:
 		agent.damage(playerDamage if agent.controllingPlayer != null else enemyDamage)
 	if body is Gun && (body as Gun).agent == null:
 		hide()
-		await get_tree().create_timer(0.1).timeout 
+		await get_tree().create_timer(0.1).timeout
+	if body is Bullet && firedFromPlayer != null && ignoreEnemyBullets:
+		return
 	queue_free()
