@@ -9,7 +9,8 @@ extends RigidBody2D
 func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
-	collision_layer = 0b0100 # bullets
+	#collision_layer = 0b0100 # bullets
+	collision_layer = 0b0000 # bullets
 	collision_mask = 0b1110 # guns, bullets, agents, walls
 	body_entered.connect(_on_body_entered)
 

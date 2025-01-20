@@ -6,7 +6,7 @@ signal needs_reload
 
 @export var bullet: PackedScene
 @export var bulletSpeed = 500
-@export var recoil = 10
+@export var recoil = 100
 @export var agentRecoil = 5000
 @export var rpm = 120
 @export var enemyRpm = 90

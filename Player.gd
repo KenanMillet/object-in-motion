@@ -31,17 +31,19 @@ func _ready() -> void:
 	instanceManager.spawnGun(secondGun, get_viewport().size/2 + Vector2i(100, 0))
 
 func controlAgent(newAgent: Agent, newGun: Gun) -> void:
-	newAgent.target = cursorPos
 	if agent != null:
 		agent.enemyHitbox.set_deferred("disabled", false)
 		agent.playerHitbox.set_deferred("disabled", true)
 		agent.target = targetPos
 		agent.controllingPlayer = null
 		agent.died.disconnect(_on_agent_death)
+		agent.queue_redraw()
+	newAgent.target = cursorPos
 	newAgent.enemyHitbox.set_deferred("disabled", true)
 	newAgent.playerHitbox.set_deferred("disabled", false)
 	newAgent.died.connect(_on_agent_death)
 	newAgent.controllingPlayer = self
+	newAgent.queue_redraw()
 	agent = newAgent
 	if newGun != null:
 		controlGun(newGun)

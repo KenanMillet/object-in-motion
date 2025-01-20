@@ -12,12 +12,20 @@ signal died
 @export var maxThrowTorque = 75
 @export var enemyHitbox: CollisionShape2D = null
 @export var playerHitbox: CollisionShape2D = null
+@export var healthBar: Marker2D
 @export var health: int = 12
+@export var preferredDistance = 100
+@export var heartDisplay: Array[CompressedTexture2D]
 
 var gun: Gun = null
 var prevGunParent: Node = null
-var target: Node2D = null
-var movementTarget: Node2D = null
+var target: Node2D = null:
+	get:
+		return target
+	set(value):
+		target = value
+		targetMovementOffset = Vector2(preferredDistance, 0) * randf_range(0, 2*PI)
+var targetMovementOffset: Vector2 = Vector2.INF
 var controllingPlayer: Player = null
 
 var throwMode: bool = false:
@@ -31,13 +39,6 @@ var throwMode: bool = false:
 var _throwChargingStart = null
 
 var _impulses = []
-
-func damage(value: int) -> void:
-	health = max(health - value, 0)
-	if (controllingPlayer != null):
-		print("Health Remaining: ", health)
-	if health == 0:
-		die()
 
 func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 	_impulses.append([impulse, from, torque])
@@ -83,12 +84,21 @@ func throwGun() -> void:
 	releaseGun()
 	throwMode = false
 
+func damage(value: int) -> void:
+	health = max(health - value, 0)
+	queue_redraw()
+	if (controllingPlayer != null):
+		print("Health Remaining: ", health)
+	if health == 0:
+		die()
+
 func die() -> void:
 	if gun != null:
 		releaseGun()
 	died.emit()
 	enemyHitbox.set_deferred("disabled", true)
 	playerHitbox.set_deferred("disabled", true)
+	target = null
 
 func _reload_gun() -> void:
 	gun.reload()
@@ -105,13 +115,24 @@ func _ready() -> void:
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
 
+func pid(targetPosition: Vector2, lastPosition: Vector2, position: Vector2, deltaTime: float, integral: Vector2, p_weight: Vector2, i_weight: Vector2, d_weight: Vector2) -> Array[Vector2]:
+	var proportional = targetPosition - global_position
+	var derivative = (position - lastPosition)/deltaTime
+	integral += proportional*deltaTime
+	var output = (p_weight * proportional) + (i_weight * integral) + (d_weight * derivative)
+	return [output, integral]
+
+var lastPosition = null
+var integral = Vector2.ZERO
+
 func _process(_delta: float) -> void:
 	if throwMode:
 		queue_redraw()
-	if gun != null && controllingPlayer == null:
+
+	if controllingPlayer == null && gun != null:
 		gun.fire()
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if gun != null:
 		if target != null:
 			shoulder.look_at(target.global_position)
@@ -121,8 +142,31 @@ func _physics_process(_delta: float) -> void:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])
 	_impulses.clear()
+	
+	if controllingPlayer == null && target != null && targetMovementOffset != Vector2.INF:
+		if lastPosition == null:
+			lastPosition = global_position
+		var p_weight = 1.1 * Vector2.ONE
+		var i_weight = 0.15 * Vector2.ONE
+		var d_weight = -2 * Vector2.ONE
+		var pid_result = pid(target.global_position + targetMovementOffset, lastPosition, global_position, delta, integral, p_weight, i_weight, d_weight)
+		lastPosition = global_position
+		integral = pid_result[1]
+		apply_force(1000*pid_result[0])
+	else:
+		lastPosition = null
 
 func _draw() -> void:
+	if controllingPlayer != null && health > 0:
+		var h = health
+		var scale = 0.1
+		var currentHeartPos = healthBar.position/scale + ((ceilf(h/4.0) - 1) * 0.5 * Vector2.LEFT * heartDisplay[0].get_width())
+		draw_set_transform(Vector2.ZERO, 0, scale * Vector2.ONE)
+		while h > 0:
+			draw_texture(heartDisplay[4-min(4, h)], currentHeartPos - heartDisplay[0].get_size()/2)
+			currentHeartPos += Vector2.RIGHT * heartDisplay[0].get_width()
+			h -= 4
+
 	var tp = throwPower()
 	var throwIndicatorLength = lerpf(minThrowImpulse, maxThrowImpulse, tp)
 	if tp > 0 && gun != null:
