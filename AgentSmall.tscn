@@ -193,7 +193,7 @@ healthChunk = ExtResource("2_p8hpt")
 maxFocusTime = 4.0
 focusTimeScale = 0.4
 focusBar = ExtResource("3_lgble")
-enemyThrustModifier = 1.0
+enemyThrustModifier = 200.0
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -9)

@@ -23,7 +23,7 @@ spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
 enemiesToSpawn = 4
 agentTable = Array[PackedScene]([ExtResource("3_yqvf8"), ExtResource("4_3dgf3"), ExtResource("5_j57wm")])
-agentWeights = Array[int]([1, 2, 1])
+agentWeights = Array[int]([0, 0, 1])
 gunTable = Array[PackedScene]([ExtResource("4_o8hum"), ExtResource("7_55d5r"), ExtResource("8_fxed1")])
 players = [NodePath("../Player")]
 

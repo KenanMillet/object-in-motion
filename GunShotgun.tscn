@@ -19,6 +19,7 @@ bullet = ExtResource("2_no545")
 playerBulletSpeed = 400
 enemyBulletSpeed = 300
 gunRecoil = 1200.0
+enemyAgentRecoil = 5000.0
 playerRpm = 60
 enemyRpm = 30
 bulletsPerShot = 4
