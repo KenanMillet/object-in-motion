@@ -13,6 +13,7 @@ camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")
 targetPos = NodePath("TargetPos")
+godMode = true
 
 [node name="CameraMount" type="Node2D" parent="."]
 

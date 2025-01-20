@@ -65,7 +65,8 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		if agent.target != null:
 			agent.target = targetPos
 		agent.controllingPlayer = null
-		agent.died.disconnect(_on_agent_death)
+		if agent.died.is_connected(_on_agent_death):
+			agent.died.disconnect(_on_agent_death)
 	if newAgent != null:
 		newAgent.target = cursorPos
 		newAgent.enemyHitbox.set_deferred("disabled", true)

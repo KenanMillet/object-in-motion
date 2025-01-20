@@ -15,6 +15,7 @@ linear_damp_mode = 1
 angular_damp_mode = 1
 script = ExtResource("1_fvhs3")
 bullet = ExtResource("2_nynuw")
+enemyAgentRecoil = 500.0
 ammoChunk = ExtResource("3_jctrb")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
