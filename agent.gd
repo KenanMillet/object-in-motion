@@ -26,6 +26,8 @@ signal health_changed(new_health: int)
 
 @export var preferredDistance: Vector2 = Vector2(250, 400)
 
+var reloading: bool = false
+
 var gun: Gun = null
 var prevGunParent: Node = null
 var target: Node2D = null:
@@ -68,6 +70,7 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 	gun.reparent(hand)
 	gun.needs_reload.connect(_reload_gun)
 	gun.bullet_fired.connect(_on_bullet_fired)
+	reloading = false
 
 func releaseGun() -> void:
 	controllingPlayer = null
@@ -78,6 +81,7 @@ func releaseGun() -> void:
 	gun.bullet_fired.disconnect(_on_bullet_fired)
 	gun = null
 	prevGunParent = null
+	reloading = false
 
 func startChargingThrow() -> void:
 	_throwChargingStart = Time.get_ticks_msec()
@@ -115,8 +119,13 @@ func die() -> void:
 	playerHitbox.set_deferred("disabled", true)
 	target = null
 
-func _reload_gun() -> void:
-	gun.reload()
+func _reload_gun(reload_time: float) -> void:
+	if !reloading:
+		reloading = true
+		await get_tree().create_timer(reload_time).timeout
+		reloading = false
+		if gun != null:
+			gun.reload()
 	
 func _on_bullet_fired(_bullet: Bullet, _pos: Vector2, muzzle_velocity: Vector2, _gun_velocity: Vector2) -> void:
 	lock_rotation = true

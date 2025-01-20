@@ -5,6 +5,7 @@ extends CanvasLayer
 @export var gunFocusBar: Texture = null
 @export var health: HBoxContainer
 @export var plan: HBoxContainer
+@export var ammunition: GridContainer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,6 +24,15 @@ func set_new_health_chunks(new_agent: Agent) -> void:
 		return
 	for _h in ceili(new_agent.health/4.0):
 		health.add_child(new_agent.healthChunk.instantiate())
+
+func set_new_ammo_chunks(new_gun: Gun) -> void:
+	for child in ammunition.get_children():
+		ammunition.remove_child(child)
+		child.queue_free()
+	if new_gun == null || new_gun.ammoChunk == null:
+		return
+	for _i in new_gun.ammo:
+		ammunition.add_child(new_gun.ammoChunk.instantiate())
 
 func _on_player_agent_changed(new_agent: Agent, old_agent: Agent) -> void:
 	set_new_health_chunks(new_agent)
@@ -45,7 +55,11 @@ func _on_player_agent_changed(new_agent: Agent, old_agent: Agent) -> void:
 		handle_signals.call(new_agent, "connect")
 
 func _on_player_gun_changed(new_gun: Gun, old_gun: Gun) -> void:
-	pass # Replace with function body.
+	set_new_ammo_chunks(new_gun)
+	if old_gun != null:
+		old_gun.ammo_changed.disconnect(_on_gun_ammo_changed)
+	if new_gun != null:
+		new_gun.ammo_changed.connect(_on_gun_ammo_changed)
 
 
 func _on_agent_health_changed(new_health: int) -> void:
@@ -62,6 +76,15 @@ func _on_agent_health_changed(new_health: int) -> void:
 		var piece: CanvasItem = chunk.get_child(4 - min(new_health - h, 4))
 		chunk.visible = true
 		piece.visible = true
+
+
+func _on_gun_ammo_changed(new_ammo: int, ammo_chunk: PackedScene) -> void:
+	while new_ammo < ammunition.get_child_count():
+		var child = ammunition.get_child(-1)
+		ammunition.remove_child(child)
+		child.queue_free()
+	while new_ammo > ammunition.get_child_count():
+		ammunition.add_child(ammo_chunk.instantiate())
 
 
 func _on_player_focus_changed(percent_remaining: float) -> void:

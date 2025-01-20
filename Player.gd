@@ -86,10 +86,12 @@ func controlGun(newGun: Gun) -> void:
 		gun.body_entered.disconnect(_on_gun_contact)
 		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
+		gun.controllingPlayer = self
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()
 	newGun.body_entered.connect(_on_gun_contact)
 	newGun.body_exited.connect(_on_gun_break_contact)
+	newGun.controllingPlayer = self
 	if agent != null && agent.gun != newGun:
 		gun.global_position = newGun.global_position
 		agent.holdGun(newGun, newGun.get_parent())
@@ -126,8 +128,8 @@ func _process(delta: float) -> void:
 
 func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)
-	agent.target = null
-	controlAgent(null, gun)
+	var old_agent = controlAgent(null, gun)
+	old_agent.target = null
 
 func _on_gun_contact(body: Node) -> void:
 	if controlDowntime == 0:
