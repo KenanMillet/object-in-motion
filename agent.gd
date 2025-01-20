@@ -24,7 +24,12 @@ signal health_changed(new_health: int)
 @export var focusTimeScale: float = 0.2
 @export var focusBar: Texture = null
 
+@export_group("Enemy Movement")
 @export var preferredDistance: Vector2 = Vector2(250, 400)
+@export var enemyThrustModifier: float = 1000
+@export var enemyPropWeight: Vector2 = 1.1 * Vector2.ONE
+@export var enemyIntegWeight: Vector2 = 0.15 * Vector2.ONE
+@export var enemyDerivWeight: Vector2 = -2 * Vector2.ONE
 
 var reloading: bool = false
 
@@ -73,8 +78,8 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 	reloading = false
 
 func releaseGun() -> void:
+	var old_gun = gun
 	controllingPlayer = null
-	remove_collision_exception_with(gun)
 	gun.detach()
 	gun.reparent.call_deferred(prevGunParent)
 	gun.needs_reload.disconnect(_reload_gun)
@@ -82,6 +87,8 @@ func releaseGun() -> void:
 	gun = null
 	prevGunParent = null
 	reloading = false
+	await get_tree().create_timer(1).timeout 
+	remove_collision_exception_with(old_gun)
 
 func startChargingThrow() -> void:
 	_throwChargingStart = Time.get_ticks_msec()
@@ -104,10 +111,10 @@ func throwGun() -> void:
 	throwMode = false
 
 func damage(value: int) -> void:
+	if controllingPlayer != null && controllingPlayer.godMode:
+		return
 	health = max(health - value, 0)
 	queue_redraw()
-	if (controllingPlayer != null):
-		print("Health Remaining: ", health)
 	if health == 0:
 		die()
 
@@ -168,18 +175,15 @@ func _physics_process(delta: float) -> void:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])
 	_impulses.clear()
-	
+
 	if controllingPlayer == null && target != null && targetMovementAngle != NAN:
 		var movementTarget = target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
 		if last_position == null:
 			last_position = global_position
-		var p_weight = 1.1 * Vector2.ONE
-		var i_weight = 0.15 * Vector2.ONE
-		var d_weight = -2 * Vector2.ONE
-		var pid_result = pid(movementTarget, last_position, global_position, delta, integral, p_weight, i_weight, d_weight)
+		var pid_result = pid(movementTarget, last_position, global_position, delta, integral, enemyPropWeight, enemyIntegWeight, enemyDerivWeight)
 		last_position = global_position
 		integral = pid_result[1]
-		apply_force(1000*pid_result[0])
+		apply_force(enemyThrustModifier*pid_result[0])
 	else:
 		last_position = null
 

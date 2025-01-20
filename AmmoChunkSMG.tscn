@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4mwjccqi0ff4"]
+
+[ext_resource type="Texture2D" uid="uid://c7wtukcr217t1" path="res://art/combat ui/ammo tracker/medium_bullet.png" id="1_33vgr"]
+
+[node name="Ammo Chunk" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_33vgr")

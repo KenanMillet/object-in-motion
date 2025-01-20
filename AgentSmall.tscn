@@ -1,8 +1,8 @@
-[gd_scene load_steps=39 format=3 uid="uid://cdouvi3xunu"]
+[gd_scene load_steps=39 format=3 uid="uid://dps1u886grvy8"]
 
 [ext_resource type="Script" path="res://agent.gd" id="1_0c5u4"]
-[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="2_caswk"]
-[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="3_o6bj2"]
+[ext_resource type="PackedScene" uid="uid://naslptaukkc8" path="res://HealthChunkSmall.tscn" id="2_p8hpt"]
+[ext_resource type="Texture2D" uid="uid://pq3w5xq7s4ec" path="res://art/combat ui/focus bars/small_agent_focus.png" id="3_lgble"]
 [ext_resource type="Texture2D" uid="uid://x6ivq3gfce3s" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0000.png" id="4_c0nsg"]
 [ext_resource type="Texture2D" uid="uid://62qdde7ya6nv" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0001.png" id="5_46wmi"]
 [ext_resource type="Texture2D" uid="uid://w1hgo7vbfpxm" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0002.png" id="6_eaygd"]
@@ -178,8 +178,8 @@ height = 12.0
 radius = 3.27902
 height = 7.80217
 
-[node name="AgentMedium" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
-mass = 70.0
+[node name="Small Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+mass = 15.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1
@@ -188,26 +188,30 @@ hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
-healthChunk = ExtResource("2_caswk")
-focusBar = ExtResource("3_o6bj2")
+health = 8
+healthChunk = ExtResource("2_p8hpt")
+maxFocusTime = 4.0
+focusTimeScale = 0.4
+focusBar = ExtResource("3_lgble")
+enemyThrustModifier = 1.0
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
-position = Vector2(8, 4)
-scale = Vector2(0.05, 0.05)
+position = Vector2(0, -9)
+scale = Vector2(-0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(8, 6)
+position = Vector2(-2, -3)
+scale = Vector2(5, 4.2)
 shape = SubResource("CapsuleShape2D_ytdjo")
 
 [node name="Player Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(8, 7)
-scale = Vector2(-0.609939, 0.769017)
+scale = Vector2(2, 2)
 shape = SubResource("CapsuleShape2D_c00xd")
 debug_color = Color(0.690645, 0.287299, 1, 0.42)
 
 [node name="Shoulder" type="Marker2D" parent="."]
-position = Vector2(12, 6)
+position = Vector2(-4, -1)
 
 [node name="Hand" type="Marker2D" parent="Shoulder"]
-position = Vector2(-5, 0)
+position = Vector2(12, 0)

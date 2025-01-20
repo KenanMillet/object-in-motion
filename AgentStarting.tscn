@@ -189,30 +189,25 @@ height = 20.0
 radius = 3.27902
 height = 10.4029
 
-[node name="AgentStarting" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+[node name="Starting Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
 mass = 70.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1
 script = ExtResource("1_x38s1")
-hand = NodePath("Body/Shoulder/Hand")
-shoulder = NodePath("Body/Shoulder")
+hand = NodePath("Shoulder/Hand")
+shoulder = NodePath("Shoulder")
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
 healthChunk = ExtResource("2_b2ane")
+maxFocusTime = 3.0
 focusBar = ExtResource("3_qv8pj")
+enemyThrustModifier = 0.0
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
-
-[node name="Shoulder" type="Marker2D" parent="Body"]
-position = Vector2(-25, -20)
-scale = Vector2(5, 5)
-
-[node name="Hand" type="Marker2D" parent="Body/Shoulder"]
-position = Vector2(12, 3.55271e-15)
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
@@ -225,3 +220,9 @@ rotation = 3.14159
 scale = Vector2(1.64154, -2.26252)
 shape = SubResource("CapsuleShape2D_c00xd")
 debug_color = Color(0.690645, 0.287299, 1, 0.42)
+
+[node name="Shoulder" type="Marker2D" parent="."]
+position = Vector2(-5, -1)
+
+[node name="Hand" type="Marker2D" parent="Shoulder"]
+position = Vector2(13, 2.38419e-07)

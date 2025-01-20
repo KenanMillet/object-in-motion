@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://dxlvnghp7s5iy"]
 
-[ext_resource type="Script" path="res://Gun.gd" id="1_trfsu"]
-[ext_resource type="PackedScene" uid="uid://cn80bj33reegx" path="res://Bullet.tscn" id="2_i0v3o"]
-[ext_resource type="PackedScene" uid="uid://dmfu2rufhkr7u" path="res://AmmoChunkStarting.tscn" id="4_5nyii"]
-[ext_resource type="Texture2D" uid="uid://borse5qlmj1k4" path="res://art/enemies and agents/agents/starting_agent/starting_agent_gun_static.png" id="4_e8g42"]
+[ext_resource type="Script" path="res://Gun.gd" id="1_fvhs3"]
+[ext_resource type="PackedScene" uid="uid://cn80bj33reegx" path="res://BulletPistol.tscn" id="2_nynuw"]
+[ext_resource type="PackedScene" uid="uid://dmfu2rufhkr7u" path="res://AmmoChunkPistol.tscn" id="3_jctrb"]
+[ext_resource type="Texture2D" uid="uid://borse5qlmj1k4" path="res://art/enemies and agents/agents/starting_agent/starting_agent_gun_static.png" id="4_276v0"]
 
 [node name="Pistol" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]
 collision_layer = 8
@@ -13,16 +13,15 @@ inertia = 50.0
 contact_monitor = true
 linear_damp_mode = 1
 angular_damp_mode = 1
-script = ExtResource("1_trfsu")
-bullet = ExtResource("2_i0v3o")
-recoil = 200
-ammoChunk = ExtResource("4_5nyii")
+script = ExtResource("1_fvhs3")
+bullet = ExtResource("2_nynuw")
+ammoChunk = ExtResource("3_jctrb")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.2, 0.2)
-texture = ExtResource("4_e8g42")
+texture = ExtResource("4_276v0")
 offset = Vector2(-43.22, 25.545)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]

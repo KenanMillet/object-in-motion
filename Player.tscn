@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://eli52larnpyd"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_8uice"]
-[ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://Pistol.tscn" id="2_pwykp"]
-[ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentStarting.tscn" id="3_e1h85"]
+[ext_resource type="PackedScene" uid="uid://dps1u886grvy8" path="res://AgentSmall.tscn" id="2_tb4dn"]
+[ext_resource type="PackedScene" uid="uid://dhdueamxhb7yf" path="res://GunShotgun.tscn" id="3_k0cbv"]
 [ext_resource type="PackedScene" uid="uid://ddjmlwnyldf4a" path="res://hud.tscn" id="4_ns5kd"]
 
 [node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "targetPos")]
 script = ExtResource("1_8uice")
-startingGun = ExtResource("2_pwykp")
-startingAgent = ExtResource("3_e1h85")
+startingAgent = ExtResource("2_tb4dn")
+startingGun = ExtResource("3_k0cbv")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")

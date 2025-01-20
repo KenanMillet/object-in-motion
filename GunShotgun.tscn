@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhdueamxhb7yf"]
+
+[ext_resource type="Script" path="res://Gun.gd" id="1_b440x"]
+[ext_resource type="PackedScene" uid="uid://646ue1vs5pi7" path="res://BulletShotgun.tscn" id="2_no545"]
+[ext_resource type="PackedScene" uid="uid://b7ue54lqsq2r4" path="res://AmmoChunkShotgun.tscn" id="3_31bbs"]
+[ext_resource type="Texture2D" uid="uid://boat3eh5rbbbk" path="res://art/enemies and agents/agents/small_agent/small_gun_static.png" id="4_vq4aa"]
+
+[node name="Shotgun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]
+collision_layer = 8
+collision_mask = 15
+mass = 2.0
+gravity_scale = 0.0
+inertia = 100.0
+contact_monitor = true
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_b440x")
+bullet = ExtResource("2_no545")
+playerBulletSpeed = 400
+enemyBulletSpeed = 300
+gunRecoil = 1200.0
+playerRpm = 60
+enemyRpm = 30
+bulletsPerShot = 4
+precision = 0.75
+playerReloadTime = 2.25
+enemyReloadTime = 3.5
+magSize = 4
+ammoChunk = ExtResource("3_31bbs")
+endOfGun = NodePath("EndOfGun")
+customCenterOfMass = NodePath("CenterOfMass")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-21, 4.5)
+scale = Vector2(-0.2, 0.2)
+texture = ExtResource("4_vq4aa")
+offset = Vector2(-65.445, -63.81)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-18, 12, -14, 11, -13, 4, -2, 1, 14, 1, 14, -4, -14, -3, -18, 3)
+
+[node name="EndOfGun" type="Marker2D" parent="."]
+position = Vector2(15, -2)
+
+[node name="CenterOfMass" type="Marker2D" parent="."]
+position = Vector2(-6, -1)

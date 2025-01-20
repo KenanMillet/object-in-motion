@@ -23,5 +23,6 @@ func _on_body_entered(body:Node) -> void:
 		var agent: Agent = body as Agent
 		agent.damage(playerDamage if agent.controllingPlayer != null else enemyDamage)
 	if body is Gun && (body as Gun).agent == null:
-		return
+		hide()
+		await get_tree().create_timer(0.1).timeout 
 	queue_free()

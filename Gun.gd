@@ -6,11 +6,15 @@ signal needs_reload(reload_time: float)
 signal ammo_changed(new_ammo: int, ammo_chunk: PackedScene)
 
 @export var bullet: PackedScene
-@export var bulletSpeed = 500
-@export var recoil = 100
-@export var agentRecoil = 5000
+@export var playerBulletSpeed = 650
+@export var enemyBulletSpeed = 500
+@export var gunRecoil: float = 200
+@export var playerAgentRecoil: float = 5000
+@export var enemyAgentRecoil: float = 2000
 @export var playerRpm: int = 120
 @export var enemyRpm: int = 90
+@export var bulletsPerShot: int = 1
+@export var precision: float = 1
 @export var playerReloadTime: float = 1.5
 @export var enemyReloadTime: float = 3.0
 @export var magSize = 10
@@ -26,6 +30,18 @@ signal ammo_changed(new_ammo: int, ammo_chunk: PackedScene)
 		ammo_changed.emit(value, ammoChunk)
 
 var controllingPlayer: Player = null
+
+var bulletSpeed: float:
+	get:
+		return playerBulletSpeed if controllingPlayer != null else enemyBulletSpeed
+
+var recoil: float:
+	get:
+		return gunRecoil/float(bulletsPerShot)
+
+var agentRecoil: float:
+	get:
+		return (playerAgentRecoil if controllingPlayer != null else enemyAgentRecoil)/float(bulletsPerShot)
 
 var rpm: int:
 	get:
@@ -55,28 +71,40 @@ func attach(newAgent: Agent) -> void:
 func detach() -> void:
 	linear_velocity = agent.linear_velocity
 	agent = null
+	
+func bulletDeviation() -> float:
+	var spread_outlier_deg: float = 15.0
+	return deg_to_rad((randfn(0, 1.0/precision)/PI) * spread_outlier_deg)
 
 func fire() -> void:
 	if _cooldown != 0:
 		return
 	if !is_empty():
-		var b: Bullet = bullet.instantiate()
-		var is_player = (agent == null || agent.controllingPlayer != null)
-		b.enemyHurtBox.set_deferred("disabled", !is_player)
-		b.playerHurtBox.set_deferred("disabled", is_player)
 		ammo-=1
 		if !is_empty():
 			_cooldown = 60.0/rpm
+
 		var vel = linear_velocity if agent == null else agent.linear_velocity
-		bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation), vel)
-		add_collision_exception_with(b)
-		if agent == null:
-			propel(Vector2(recoil, 0).rotated(global_rotation + PI), endOfGun.global_position - global_position)
-		else:
-			b.add_collision_exception_with(agent)
+		var bullets: Array[Bullet] = []
+		for _b in bulletsPerShot:
+			bullets.append(bullet.instantiate())
+		for i in bullets.size():
+			for j in bullets.size():
+				if i != j:
+					bullets[i].add_collision_exception_with(bullets[j])
+			var b: Bullet = bullets[i]
+			b.enemyHurtBox.set_deferred("disabled", controllingPlayer == null)
+			b.playerHurtBox.set_deferred("disabled", controllingPlayer != null)
+			var deviation: float = bulletDeviation()
+			bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation + deviation), vel)
+			add_collision_exception_with(b)
+			if agent == null:
+				propel(Vector2(recoil, 0).rotated(global_rotation + PI + deviation), endOfGun.global_position - global_position)
+			else:
+				b.add_collision_exception_with(agent)
 	else:
 		needs_reload.emit(reloadTime)
-		
+
 func reload() -> void:
 	ammo = magSize
 

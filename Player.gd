@@ -5,8 +5,8 @@ signal agent_changed(new_agent: Agent, old_agent: Agent)
 signal gun_changed(new_gun: Gun, old_gun: Gun)
 signal focus_changed(percent_remaining: float)
 
-@export var startingGun: PackedScene
 @export var startingAgent: PackedScene
+@export var startingGun: PackedScene
 @export var instanceManager: InstanceManager
 @export var camera: Camera2D
 @export var cameraMount: Node2D
@@ -15,14 +15,8 @@ signal focus_changed(percent_remaining: float)
 @export var controlCooldown: float = 0.5
 @export var gunMaxFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
+@export var godMode: bool = false
 
-var gun: Gun = null:
-	get:
-		return gun
-	set(value):
-		var old_gun = gun
-		gun = value
-		gun_changed.emit(value, old_gun)
 var agent: Agent = null:
 	get:
 		return agent
@@ -30,6 +24,13 @@ var agent: Agent = null:
 		var old_agent = agent
 		agent = value
 		agent_changed.emit(value, old_agent)
+var gun: Gun = null:
+	get:
+		return gun
+	set(value):
+		var old_gun = gun
+		gun = value
+		gun_changed.emit(value, old_gun)
 
 var focusIsForced: bool:
 	get:
@@ -55,9 +56,6 @@ func _ready() -> void:
 	instanceManager.spawnAgent(newAgent, get_viewport().size/2, newGun, cursorPos)
 	controlAgent(newAgent, newGun)
 	camera.reparent(cameraMount)
-	
-	var secondGun = startingGun.instantiate()
-	instanceManager.spawnGun(secondGun, get_viewport().size/2 + Vector2i(100, 0))
 
 func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 	var old_agent = agent
