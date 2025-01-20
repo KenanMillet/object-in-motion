@@ -53,9 +53,10 @@ func fire() -> void:
 		var vel = linear_velocity if agent == null else agent.linear_velocity
 		bullet_fired.emit(b,endOfGun.global_position, Vector2(bulletSpeed, 0).rotated(endOfGun.global_rotation), vel)
 		add_collision_exception_with(b)
-		add_collision_exception_with(agent)
 		if agent == null:
 			propel(Vector2(recoil, 0).rotated(global_rotation + PI), endOfGun.global_position - global_position)
+		else:
+			b.add_collision_exception_with(agent)
 	else:
 		needs_reload.emit()
 		
