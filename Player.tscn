@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://eli52larnpyd"]
+[gd_scene load_steps=5 format=3 uid="uid://eli52larnpyd"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_8uice"]
 [ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://Pistol.tscn" id="2_pwykp"]
 [ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentMedium.tscn" id="3_e1h85"]
+[ext_resource type="PackedScene" uid="uid://ddjmlwnyldf4a" path="res://hud.tscn" id="4_ns5kd"]
 
 [node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "targetPos")]
 script = ExtResource("1_8uice")
@@ -23,3 +24,5 @@ position_smoothing_enabled = true
 [node name="CursorPos" type="Node2D" parent="."]
 
 [node name="TargetPos" type="Node2D" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("4_ns5kd")]
