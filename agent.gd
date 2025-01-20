@@ -2,6 +2,7 @@ class_name Agent
 extends RigidBody2D
 
 signal died
+signal health_changed(new_health: int)
 
 @export var hand: Marker2D
 @export var shoulder: Marker2D
@@ -12,10 +13,18 @@ signal died
 @export var maxThrowTorque = 75
 @export var enemyHitbox: CollisionShape2D = null
 @export var playerHitbox: CollisionShape2D = null
-@export var healthBar: Marker2D
-@export var health: int = 12
+@export var health: int = 12:
+	get:
+		return health
+	set(value):
+		health = value
+		health_changed.emit(value)
+@export var healthChunk: PackedScene
+@export var maxFocusTime: float = 2.0
+@export var focusTimeScale: float = 0.2
+@export var focusBar: Texture = null
+
 @export var preferredDistance: Vector2 = Vector2(250, 400)
-@export var heartDisplay: Array[CompressedTexture2D]
 
 var gun: Gun = null
 var prevGunParent: Node = null
@@ -166,16 +175,6 @@ func _physics_process(delta: float) -> void:
 		lastPosition = null
 
 func _draw() -> void:
-	if controllingPlayer != null && health > 0:
-		var h = health
-		var scale = 0.1
-		var currentHeartPos = healthBar.position/scale + ((ceilf(h/4.0) - 1) * 0.5 * Vector2.LEFT * heartDisplay[0].get_width())
-		draw_set_transform(Vector2.ZERO, 0, scale * Vector2.ONE)
-		while h > 0:
-			draw_texture(heartDisplay[4-min(4, h)], currentHeartPos - heartDisplay[0].get_size()/2)
-			currentHeartPos += Vector2.RIGHT * heartDisplay[0].get_width()
-			h -= 4
-
 	var tp = throwPower()
 	var throwIndicatorLength = lerpf(minThrowImpulse, maxThrowImpulse, tp)
 	if tp > 0 && gun != null:

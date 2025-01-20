@@ -1,6 +1,42 @@
-[gd_scene load_steps=2 format=3 uid="uid://ddjmlwnyldf4a"]
+[gd_scene load_steps=5 format=3 uid="uid://ddjmlwnyldf4a"]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_lj0gx"]
+[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="2_fpunk"]
+[ext_resource type="Texture2D" uid="uid://pq3w5xq7s4ec" path="res://art/combat ui/focus bars/small_agent_focus.png" id="2_t32y3"]
+[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="3_wcqru"]
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("focus", "health", "plan")]
 script = ExtResource("1_lj0gx")
+focus = NodePath("Focus")
+spaceFocusBar = ExtResource("2_t32y3")
+health = NodePath("VBoxContainer/Health")
+plan = NodePath("VBoxContainer/Plan")
+
+[node name="Focus" type="TextureProgressBar" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+max_value = 1.0
+step = 0.001
+value = 1.0
+fill_mode = 6
+texture_progress = ExtResource("2_fpunk")
+tint_under = Color(0, 0, 0, 0.862745)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_right = 1920.0
+offset_bottom = 360.0
+
+[node name="Health" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Health Chunk" parent="VBoxContainer/Health" instance=ExtResource("3_wcqru")]
+layout_mode = 2
+
+[node name="Health Chunk2" parent="VBoxContainer/Health" instance=ExtResource("3_wcqru")]
+layout_mode = 2
+
+[node name="Health Chunk3" parent="VBoxContainer/Health" instance=ExtResource("3_wcqru")]
+layout_mode = 2
+
+[node name="Plan" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2

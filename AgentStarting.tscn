@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://rl71eoe3h2qx"]
+
+[ext_resource type="Script" path="res://agent.gd" id="1_x38s1"]
+[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="2_b2ane"]
+[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="3_qv8pj"]
+[ext_resource type="Texture2D" uid="uid://dgbydmxxj7dum" path="res://art/playerbase.png" id="3_ujaxi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5wyik"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ujaxi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ytdjo"]
+height = 52.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c00xd"]
+
+[node name="AgentStarting" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+mass = 70.0
+gravity_scale = 0.0
+linear_damp_mode = 1
+linear_damp = 0.1
+script = ExtResource("1_x38s1")
+hand = NodePath("Shoulder/Hand")
+shoulder = NodePath("Shoulder")
+enemyHitbox = NodePath("Enemy Hitbox")
+playerHitbox = NodePath("Player Hitbox")
+healthChunk = ExtResource("2_b2ane")
+focusBar = ExtResource("3_qv8pj")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, 4)
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_5wyik")
+
+[node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(1, 4)
+shape = SubResource("CapsuleShape2D_ytdjo")
+
+[node name="Player Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4.76837e-07)
+scale = Vector2(-0.609939, 0.769017)
+shape = SubResource("CapsuleShape2D_c00xd")
+debug_color = Color(0.690645, 0.287299, 1, 0.42)
+
+[node name="Shoulder" type="Marker2D" parent="."]
+position = Vector2(5, -7)
+
+[node name="Hand" type="Marker2D" parent="Shoulder"]
+position = Vector2(13, 0)
+
+[node name="Health Bar" type="Marker2D" parent="."]
+position = Vector2(0, -42)

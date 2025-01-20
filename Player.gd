@@ -1,8 +1,10 @@
 class_name Player
 extends Node
 
-@export var focusTimeScale = 0.2
-@export var maxFocusTime = 2.0
+signal agent_changed(new_agent: Agent, old_agent: Agent)
+signal gun_changed(new_gun: Gun, old_gun: Gun)
+signal focus_changed(percent_remaining: float)
+
 @export var startingGun: PackedScene
 @export var startingAgent: PackedScene
 @export var instanceManager: InstanceManager
@@ -10,14 +12,39 @@ extends Node
 @export var cameraMount: Node2D
 @export var cursorPos: Node2D
 @export var targetPos: Node2D
-@export var controlCooldown = 0.5
+@export var controlCooldown: float = 0.5
+@export var spaceMaxFocusTime: float = INF
+@export var spaceFocusTimeScale: float = 0.1
 
-var gun: Gun = null
-var agent: Agent = null
+var gun: Gun = null:
+	get:
+		return gun
+	set(value):
+		var old_gun = gun
+		gun = value
+		gun_changed.emit(value, old_gun)
+var agent: Agent = null:
+	get:
+		return agent
+	set(value):
+		var old_agent = agent
+		agent = value
+		agent_changed.emit(value, old_agent)
 
 var forceFocus = false
 var controlDowntime = 0
-@onready var focusTime = maxFocusTime
+var maxFocusTime: float:
+	get:
+		return agent.maxFocusTime if agent != null else spaceMaxFocusTime
+var focusTimeScale: float:
+	get:
+		return agent.focusTimeScale if agent != null else spaceFocusTimeScale
+var focusTime: float = 0:
+	get:
+		return focusTime
+	set(value):
+		focusTime = value
+		focus_changed.emit(focusTime/maxFocusTime if !is_inf(maxFocusTime) else 1.0)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -34,20 +61,21 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> void:
 	if agent != null:
 		agent.enemyHitbox.set_deferred("disabled", false)
 		agent.playerHitbox.set_deferred("disabled", true)
-		agent.target = targetPos
+		if agent.target != null:
+			agent.target = targetPos
 		agent.controllingPlayer = null
 		agent.died.disconnect(_on_agent_death)
-		agent.queue_redraw()
-	newAgent.target = cursorPos
-	newAgent.enemyHitbox.set_deferred("disabled", true)
-	newAgent.playerHitbox.set_deferred("disabled", false)
-	newAgent.died.connect(_on_agent_death)
-	newAgent.controllingPlayer = self
-	newAgent.queue_redraw()
+	if newAgent != null:
+		newAgent.target = cursorPos
+		newAgent.enemyHitbox.set_deferred("disabled", true)
+		newAgent.playerHitbox.set_deferred("disabled", false)
+		newAgent.died.connect(_on_agent_death)
+		newAgent.controllingPlayer = self
 	agent = newAgent
+	focusTime = maxFocusTime
+	controlDowntime = controlCooldown
 	if newGun != null:
 		controlGun(newGun)
-	controlDowntime = controlCooldown
 
 func controlGun(newGun: Gun) -> void:
 	if gun != null:
@@ -72,7 +100,7 @@ func _process(delta: float) -> void:
 
 	controlDowntime = max(controlDowntime - delta, 0)
 	if Input.is_action_pressed("Focus") || forceFocus:
-		Engine.time_scale = focusTimeScale
+		Engine.time_scale = focusTimeScale if focusTime > 0 else 1.0
 		if !Input.is_action_just_pressed("Focus"):
 			focusTime = max(focusTime - delta, 0)
 	else:
@@ -92,15 +120,12 @@ func _process(delta: float) -> void:
 			agent.startChargingThrow()
 		if Input.is_action_just_released("Fire") && agent.throwMode:
 			agent.throwGun()
-			agent.died.disconnect(_on_agent_death)
-			agent.target = targetPos
-			agent = null
-
+			controlAgent(null, gun)
 
 func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)
 	agent.target = null
-	agent = null
+	controlAgent(null, gun)
 	forceFocus = true
 
 func _on_gun_contact(body: Node) -> void:
