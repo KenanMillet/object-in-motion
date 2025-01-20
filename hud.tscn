@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ddjmlwnyldf4a"]
+[gd_scene load_steps=8 format=3 uid="uid://ddjmlwnyldf4a"]
 
 [ext_resource type="Script" path="res://hud.gd" id="1_lj0gx"]
 [ext_resource type="Texture2D" uid="uid://c0670tcnuyqkl" path="res://art/combat ui/focus bars/gun_only_focus.png" id="2_b8fy4"]
@@ -6,13 +6,23 @@
 [ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="3_wcqru"]
 [ext_resource type="Texture2D" uid="uid://bws45omyav748" path="res://art/combat ui/ammo tracker/starter_bullet.png" id="5_r1om8"]
 
+[sub_resource type="Curve" id="Curve_8gbr8"]
+_data = [Vector2(0, 0), 0.0, 0.6, 0, 0, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_hynd8"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.63861, 0.0, 0, 0]
+point_count = 2
+
 [node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("focus", "health", "plan", "ammunition")]
 script = ExtResource("1_lj0gx")
 focus = NodePath("Focus")
-gunFocusBar = ExtResource("2_b8fy4")
 health = NodePath("Health And Plan/Health")
 plan = NodePath("Health And Plan/Plan")
 ammunition = NodePath("Ammunition")
+gunFocusBar = ExtResource("2_b8fy4")
+agentFocusCurve = SubResource("Curve_8gbr8")
+gunFocusCurve = SubResource("Curve_hynd8")
 
 [node name="Focus" type="TextureProgressBar" parent="."]
 offset_right = 1920.0

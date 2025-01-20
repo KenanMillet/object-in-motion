@@ -195,30 +195,33 @@ gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1
 script = ExtResource("1_x38s1")
-hand = NodePath("Shoulder/Hand")
-shoulder = NodePath("Shoulder")
+hand = NodePath("Body/Shoulder/Hand")
+shoulder = NodePath("Body/Shoulder")
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
 healthChunk = ExtResource("2_b2ane")
 focusBar = ExtResource("3_qv8pj")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
-position = Vector2(8, 4)
-scale = Vector2(0.05, 0.05)
+position = Vector2(0, 3)
+scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
 
+[node name="Shoulder" type="Marker2D" parent="Body"]
+position = Vector2(-25, -20)
+scale = Vector2(5, 5)
+
+[node name="Hand" type="Marker2D" parent="Body/Shoulder"]
+position = Vector2(12, 3.55271e-15)
+
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(7, 4)
+position = Vector2(0, 2)
+scale = Vector2(6.0926, 3.72174)
 shape = SubResource("CapsuleShape2D_ytdjo")
 
 [node name="Player Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(7, 4)
-scale = Vector2(-0.609939, 0.769017)
+position = Vector2(0, 1)
+rotation = 3.14159
+scale = Vector2(1.64154, -2.26252)
 shape = SubResource("CapsuleShape2D_c00xd")
 debug_color = Color(0.690645, 0.287299, 1, 0.42)
-
-[node name="Shoulder" type="Marker2D" parent="."]
-position = Vector2(6, 2)
-
-[node name="Hand" type="Marker2D" parent="Shoulder"]
-position = Vector2(4, 0)

@@ -111,8 +111,7 @@ func _process(delta: float) -> void:
 		Engine.time_scale = 1.0
 
 	if gun != null:
-		targetPos.global_position = gun.global_position
-		cameraMount.global_position = gun.global_position
+		targetPos.global_position = gun.customCenterOfMass.global_position if gun.customCenterOfMass != null else gun.global_position
 		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
 			gun.fire()
 
@@ -125,6 +124,8 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_released("Fire") && agent.throwMode:
 			agent.throwGun()
 			controlAgent(null, gun)
+	
+	cameraMount.global_position = targetPos.global_position
 
 func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)

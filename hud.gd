@@ -1,19 +1,30 @@
 class_name HUD
 extends CanvasLayer
 
+@export_group("HUD Elements")
 @export var focus: TextureProgressBar
-@export var gunFocusBar: Texture = null
 @export var health: HBoxContainer
 @export var plan: HBoxContainer
 @export var ammunition: GridContainer
 
+@export_group("Element Modifiers")
+@export var gunFocusBar: Texture = null
+@export var agentFocusCurve: Curve
+@export var gunFocusCurve: Curve
+
+var focusCurve: Curve
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	var focus_resolution: int = int(absf(focus.max_value-focus.min_value)/focus.step)
+	agentFocusCurve.bake_resolution = focus_resolution
+	gunFocusCurve.bake_resolution = focus_resolution
+	agentFocusCurve.bake()
+	gunFocusCurve.bake()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func set_new_health_chunks(new_agent: Agent) -> void:
@@ -37,6 +48,7 @@ func set_new_ammo_chunks(new_gun: Gun) -> void:
 func _on_player_agent_changed(new_agent: Agent, old_agent: Agent) -> void:
 	set_new_health_chunks(new_agent)
 	focus.texture_progress = new_agent.focusBar if new_agent != null else gunFocusBar
+	focusCurve = agentFocusCurve if new_agent != null else gunFocusCurve
 
 	var handle_signals = func(agent: Agent, signal_fn: StringName):
 		var handle: Callable
@@ -72,6 +84,7 @@ func _on_agent_health_changed(new_health: int) -> void:
 		print("new_health: ", new_health, " is above max_health: ", max_health, " so excess health will not be displayed")
 	new_health = min(new_health, max_health)
 	for h in range(0,new_health,4):
+		@warning_ignore("integer_division")
 		var chunk: CanvasItem = health.get_child(h/4)
 		var piece: CanvasItem = chunk.get_child(4 - min(new_health - h, 4))
 		chunk.visible = true
@@ -88,5 +101,4 @@ func _on_gun_ammo_changed(new_ammo: int, ammo_chunk: PackedScene) -> void:
 
 
 func _on_player_focus_changed(percent_remaining: float) -> void:
-	print("Focus Remaining: ", percent_remaining * 100, "%")
-	focus.value = percent_remaining
+	focus.value = focusCurve.sample_baked(percent_remaining) if focusCurve != null else percent_remaining

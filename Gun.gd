@@ -31,7 +31,7 @@ var rpm: int:
 	get:
 		return playerRpm if controllingPlayer != null else enemyRpm
 
-var reloadTime: int:
+var reloadTime: float:
 	get:
 		return playerReloadTime if controllingPlayer != null else enemyReloadTime
 

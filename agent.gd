@@ -139,14 +139,14 @@ func _ready() -> void:
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
 
-func pid(targetPosition: Vector2, lastPosition: Vector2, position: Vector2, deltaTime: float, integral: Vector2, p_weight: Vector2, i_weight: Vector2, d_weight: Vector2) -> Array[Vector2]:
-	var proportional = targetPosition - global_position
-	var derivative = (position - lastPosition)/deltaTime
-	integral += proportional*deltaTime
-	var output = (p_weight * proportional) + (i_weight * integral) + (d_weight * derivative)
-	return [output, integral]
+func pid(target_pos: Vector2, last_pos: Vector2, pos: Vector2, deltaTime: float, cumulative_integral: Vector2, p_weight: Vector2, i_weight: Vector2, d_weight: Vector2) -> Array[Vector2]:
+	var proportional = target_pos - global_position
+	var derivative = (pos - last_pos)/deltaTime
+	cumulative_integral += proportional*deltaTime
+	var output = (p_weight * proportional) + (i_weight * cumulative_integral) + (d_weight * derivative)
+	return [output, cumulative_integral]
 
-var lastPosition = null
+var last_position = null
 var integral = Vector2.ZERO
 
 func _process(_delta: float) -> void:
@@ -171,17 +171,17 @@ func _physics_process(delta: float) -> void:
 	
 	if controllingPlayer == null && target != null && targetMovementAngle != NAN:
 		var movementTarget = target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
-		if lastPosition == null:
-			lastPosition = global_position
+		if last_position == null:
+			last_position = global_position
 		var p_weight = 1.1 * Vector2.ONE
 		var i_weight = 0.15 * Vector2.ONE
 		var d_weight = -2 * Vector2.ONE
-		var pid_result = pid(movementTarget, lastPosition, global_position, delta, integral, p_weight, i_weight, d_weight)
-		lastPosition = global_position
+		var pid_result = pid(movementTarget, last_position, global_position, delta, integral, p_weight, i_weight, d_weight)
+		last_position = global_position
 		integral = pid_result[1]
 		apply_force(1000*pid_result[0])
 	else:
-		lastPosition = null
+		last_position = null
 
 func _draw() -> void:
 	var tp = throwPower()
