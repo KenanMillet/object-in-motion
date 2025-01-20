@@ -64,5 +64,6 @@ func _fire_bullet(bullet: Bullet, pos: Vector2, muzzle_velocity: Vector2, gun_ve
 	add_child(bullet)
 
 func _ready() -> void:
-	var agent_and_gun = _randomAgentAndGun()
-	spawnAgent(agent_and_gun[0], _randomSpawnLocation(), agent_and_gun[1])
+	for i in 5:
+		var agent_and_gun = _randomAgentAndGun()
+		spawnAgent(agent_and_gun[0], _randomSpawnLocation(), agent_and_gun[1])

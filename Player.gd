@@ -52,12 +52,12 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> void:
 func controlGun(newGun: Gun) -> void:
 	if gun != null:
 		gun.body_entered.disconnect(_on_gun_contact)
-		gun.body_exited.disconnect(_on_gun_contact)
+		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()
 	newGun.body_entered.connect(_on_gun_contact)
-	newGun.body_exited.connect(_on_gun_contact)
+	newGun.body_exited.connect(_on_gun_break_contact)
 	if agent != null && agent.gun != newGun:
 		gun.global_position = newGun.global_position
 		agent.holdGun(newGun, newGun.get_parent())

@@ -14,7 +14,7 @@ signal died
 @export var playerHitbox: CollisionShape2D = null
 @export var healthBar: Marker2D
 @export var health: int = 12
-@export var preferredDistance = 100
+@export var preferredDistance: Vector2 = Vector2(250, 400)
 @export var heartDisplay: Array[CompressedTexture2D]
 
 var gun: Gun = null
@@ -24,8 +24,14 @@ var target: Node2D = null:
 		return target
 	set(value):
 		target = value
-		targetMovementOffset = Vector2(preferredDistance, 0) * randf_range(0, 2*PI)
-var targetMovementOffset: Vector2 = Vector2.INF
+		if value != null:
+			targetMovementAngle = value.global_position.angle_to_point(global_position)
+			targetAcquireTime = 0
+		else:
+			targetMovementAngle = NAN
+			targetAcquireTime = NAN
+var targetMovementAngle: float = NAN
+var targetAcquireTime: float = NAN
 var controllingPlayer: Player = null
 
 var throwMode: bool = false:
@@ -133,6 +139,8 @@ func _process(_delta: float) -> void:
 		gun.fire()
 
 func _physics_process(delta: float) -> void:
+	targetMovementAngle += delta
+	targetAcquireTime += delta
 	if gun != null:
 		if target != null:
 			shoulder.look_at(target.global_position)
@@ -143,13 +151,14 @@ func _physics_process(delta: float) -> void:
 		apply_torque_impulse(impulse[2])
 	_impulses.clear()
 	
-	if controllingPlayer == null && target != null && targetMovementOffset != Vector2.INF:
+	if controllingPlayer == null && target != null && targetMovementAngle != NAN:
+		var movementTarget = target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
 		if lastPosition == null:
 			lastPosition = global_position
 		var p_weight = 1.1 * Vector2.ONE
 		var i_weight = 0.15 * Vector2.ONE
 		var d_weight = -2 * Vector2.ONE
-		var pid_result = pid(target.global_position + targetMovementOffset, lastPosition, global_position, delta, integral, p_weight, i_weight, d_weight)
+		var pid_result = pid(movementTarget, lastPosition, global_position, delta, integral, p_weight, i_weight, d_weight)
 		lastPosition = global_position
 		integral = pid_result[1]
 		apply_force(1000*pid_result[0])
