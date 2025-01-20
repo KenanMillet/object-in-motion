@@ -2,7 +2,7 @@ class_name HUD
 extends CanvasLayer
 
 @export var focus: TextureProgressBar
-@export var spaceFocusBar: Texture = null
+@export var gunFocusBar: Texture = null
 @export var health: HBoxContainer
 @export var plan: HBoxContainer
 
@@ -26,7 +26,7 @@ func set_new_health_chunks(new_agent: Agent) -> void:
 
 func _on_player_agent_changed(new_agent: Agent, old_agent: Agent) -> void:
 	set_new_health_chunks(new_agent)
-	focus.texture_progress = new_agent.focusBar if new_agent != null else spaceFocusBar
+	focus.texture_progress = new_agent.focusBar if new_agent != null else gunFocusBar
 
 	var handle_signals = func(agent: Agent, signal_fn: StringName):
 		var handle: Callable

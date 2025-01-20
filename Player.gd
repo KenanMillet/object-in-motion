@@ -13,8 +13,8 @@ signal focus_changed(percent_remaining: float)
 @export var cursorPos: Node2D
 @export var targetPos: Node2D
 @export var controlCooldown: float = 0.5
-@export var spaceMaxFocusTime: float = INF
-@export var spaceFocusTimeScale: float = 0.1
+@export var gunMaxFocusTime: float = 6
+@export var gunFocusTimeScale: float = 0.1
 
 var gun: Gun = null:
 	get:
@@ -31,14 +31,16 @@ var agent: Agent = null:
 		agent = value
 		agent_changed.emit(value, old_agent)
 
-var forceFocus = false
+var focusIsForced: bool:
+	get:
+		return agent == null
 var controlDowntime = 0
 var maxFocusTime: float:
 	get:
-		return agent.maxFocusTime if agent != null else spaceMaxFocusTime
+		return agent.maxFocusTime if agent != null else gunMaxFocusTime
 var focusTimeScale: float:
 	get:
-		return agent.focusTimeScale if agent != null else spaceFocusTimeScale
+		return agent.focusTimeScale if agent != null else gunFocusTimeScale
 var focusTime: float = 0:
 	get:
 		return focusTime
@@ -57,7 +59,8 @@ func _ready() -> void:
 	var secondGun = startingGun.instantiate()
 	instanceManager.spawnGun(secondGun, get_viewport().size/2 + Vector2i(100, 0))
 
-func controlAgent(newAgent: Agent, newGun: Gun) -> void:
+func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
+	var old_agent = agent
 	if agent != null:
 		agent.enemyHitbox.set_deferred("disabled", false)
 		agent.playerHitbox.set_deferred("disabled", true)
@@ -76,6 +79,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> void:
 	controlDowntime = controlCooldown
 	if newGun != null:
 		controlGun(newGun)
+	return old_agent
 
 func controlGun(newGun: Gun) -> void:
 	if gun != null:
@@ -95,11 +99,9 @@ func controlGun(newGun: Gun) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	cursorPos.global_position = camera.get_global_mouse_position()
-	if Input.is_action_just_released("Focus"):
-		forceFocus = false
 
 	controlDowntime = max(controlDowntime - delta, 0)
-	if Input.is_action_pressed("Focus") || forceFocus:
+	if Input.is_action_pressed("Focus") || focusIsForced:
 		Engine.time_scale = focusTimeScale if focusTime > 0 else 1.0
 		if !Input.is_action_just_pressed("Focus"):
 			focusTime = max(focusTime - delta, 0)
@@ -126,7 +128,6 @@ func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)
 	agent.target = null
 	controlAgent(null, gun)
-	forceFocus = true
 
 func _on_gun_contact(body: Node) -> void:
 	if controlDowntime == 0:
