@@ -1,0 +1,213 @@
+[gd_scene load_steps=39 format=3 uid="uid://cdouvi3xunu"]
+
+[ext_resource type="Script" path="res://agent.gd" id="1_0c5u4"]
+[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="2_caswk"]
+[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="3_o6bj2"]
+[ext_resource type="Texture2D" uid="uid://x6ivq3gfce3s" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0000.png" id="4_c0nsg"]
+[ext_resource type="Texture2D" uid="uid://62qdde7ya6nv" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0001.png" id="5_46wmi"]
+[ext_resource type="Texture2D" uid="uid://w1hgo7vbfpxm" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0002.png" id="6_eaygd"]
+[ext_resource type="Texture2D" uid="uid://q18afsoxidbk" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0003.png" id="7_7ugac"]
+[ext_resource type="Texture2D" uid="uid://dv2r878m3kx43" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0004.png" id="8_p2rq7"]
+[ext_resource type="Texture2D" uid="uid://doruh7do8sg0h" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0005.png" id="9_22pee"]
+[ext_resource type="Texture2D" uid="uid://d2q7qya5u2vo1" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0006.png" id="10_x3f6l"]
+[ext_resource type="Texture2D" uid="uid://5bocqj12o3io" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0007.png" id="11_guty3"]
+[ext_resource type="Texture2D" uid="uid://ckgybtubhdoif" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0008.png" id="12_jpj5d"]
+[ext_resource type="Texture2D" uid="uid://ccb0nudxgn3ip" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0009.png" id="13_jkbgs"]
+[ext_resource type="Texture2D" uid="uid://deesiql1tjop0" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0010.png" id="14_lf01c"]
+[ext_resource type="Texture2D" uid="uid://rpffepytfsr7" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0011.png" id="15_4sv58"]
+[ext_resource type="Texture2D" uid="uid://1wgpdt47m6ox" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0012.png" id="16_pjqmu"]
+[ext_resource type="Texture2D" uid="uid://de7lxpcjeepdo" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0013.png" id="17_a2se6"]
+[ext_resource type="Texture2D" uid="uid://1url3t3kpyxu" path="res://art/enemies and agents/agents/small_agent/small_death_static.png" id="18_wl4gf"]
+[ext_resource type="Texture2D" uid="uid://o2mkyml4h3c8" path="res://art/enemies and agents/agents/small_agent/neutral/small_agent_neutral_0000.png" id="19_52aff"]
+[ext_resource type="Texture2D" uid="uid://dj6tf3p57txk0" path="res://art/enemies and agents/agents/small_agent/neutral/small_agent_neutral_0001.png" id="20_6ftg5"]
+[ext_resource type="Texture2D" uid="uid://crxwsds1ko5n7" path="res://art/enemies and agents/agents/small_agent/down/small_agent_down_0000.png" id="21_v7qda"]
+[ext_resource type="Texture2D" uid="uid://dmg160qa17wvw" path="res://art/enemies and agents/agents/small_agent/down/small_agent_down_0001.png" id="22_xqnhi"]
+[ext_resource type="Texture2D" uid="uid://c2xvp4kkm1pjv" path="res://art/enemies and agents/agents/small_agent/up/small_agent_up_0000.png" id="34_m1u6a"]
+[ext_resource type="Texture2D" uid="uid://iyq8ybm5nd7k" path="res://art/enemies and agents/agents/small_agent/up/small_agent_up_0001.png" id="35_2u6eb"]
+[ext_resource type="Texture2D" uid="uid://3e18pee0ebl1" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_neutral_0000.png" id="35_oxjdg"]
+[ext_resource type="Texture2D" uid="uid://d0b0q6xqhhi7f" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_neutral_0001.png" id="36_ugh1p"]
+[ext_resource type="Texture2D" uid="uid://cp7wqdhpgvx0v" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_shot_0000.png" id="37_awucy"]
+[ext_resource type="Texture2D" uid="uid://bav0hmkrfjron" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_shot_0001.png" id="38_bp5i5"]
+[ext_resource type="Texture2D" uid="uid://c8qi24p2yxbhc" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_shot_0002.png" id="39_xayow"]
+[ext_resource type="Texture2D" uid="uid://cp7oe2lrces3n" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_shot_0003.png" id="40_6dvuo"]
+[ext_resource type="Texture2D" uid="uid://brpyqqpllim75" path="res://art/enemies and agents/agents/small_agent/shot/small_agent_shot_0004.png" id="41_4rx6f"]
+[ext_resource type="Texture2D" uid="uid://df0vau8j241k" path="res://art/enemies and agents/agents/small_agent/halt_turnaround/small_agent_halt_turnaround_0000.png" id="41_8a34p"]
+[ext_resource type="Texture2D" uid="uid://iy56o2r3ait2" path="res://art/enemies and agents/agents/small_agent/halt_turnaround/small_agent_halt_turnaround_0001.png" id="42_iqcn8"]
+[ext_resource type="Texture2D" uid="uid://bqatjlq20boj3" path="res://art/enemies and agents/agents/small_agent/halt_turnaround/small_agent_halt_turnaround_0002.png" id="43_8xgtc"]
+[ext_resource type="Texture2D" uid="uid://cmleyo1orm6vt" path="res://art/enemies and agents/agents/small_agent/halt_turnaround/small_agent_halt_turnaround_0003.png" id="44_5p8b0"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5wyik"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_c0nsg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_46wmi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_eaygd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_7ugac")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_p2rq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_22pee")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_x3f6l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_guty3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_jpj5d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_jkbgs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_lf01c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_4sv58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_pjqmu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_a2se6")
+}],
+"loop": true,
+"name": &"death_animation",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_wl4gf")
+}],
+"loop": true,
+"name": &"death_static",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_52aff")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_6ftg5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_v7qda")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_xqnhi")
+}],
+"loop": true,
+"name": &"down",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("35_oxjdg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_ugh1p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_awucy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_bp5i5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_xayow")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_6dvuo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_4rx6f")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("41_8a34p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_iqcn8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_8xgtc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_5p8b0")
+}],
+"loop": true,
+"name": &"turnaround_halt",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("34_m1u6a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_2u6eb")
+}],
+"loop": true,
+"name": &"up",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ytdjo"]
+radius = 3.0
+height = 12.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c00xd"]
+radius = 3.27902
+height = 7.80217
+
+[node name="AgentMedium" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+mass = 70.0
+gravity_scale = 0.0
+linear_damp_mode = 1
+linear_damp = 0.1
+script = ExtResource("1_0c5u4")
+hand = NodePath("Shoulder/Hand")
+shoulder = NodePath("Shoulder")
+enemyHitbox = NodePath("Enemy Hitbox")
+playerHitbox = NodePath("Player Hitbox")
+healthChunk = ExtResource("2_caswk")
+focusBar = ExtResource("3_o6bj2")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, 4)
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_5wyik")
+
+[node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(8, 6)
+shape = SubResource("CapsuleShape2D_ytdjo")
+
+[node name="Player Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(8, 7)
+scale = Vector2(-0.609939, 0.769017)
+shape = SubResource("CapsuleShape2D_c00xd")
+debug_color = Color(0.690645, 0.287299, 1, 0.42)
+
+[node name="Shoulder" type="Marker2D" parent="."]
+position = Vector2(12, 6)
+
+[node name="Hand" type="Marker2D" parent="Shoulder"]
+position = Vector2(-5, 0)
