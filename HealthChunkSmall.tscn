@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://ccogxy5ialkvv"]
+
+[ext_resource type="Texture2D" uid="uid://bcj3bbca8c1x4" path="res://art/combat ui/hearts/small_agent/small_agent_0000.png" id="1_f505v"]
+[ext_resource type="Texture2D" uid="uid://d6ywwasxtlpb" path="res://art/combat ui/hearts/small_agent/small_agent_0001.png" id="2_1mjvk"]
+[ext_resource type="Texture2D" uid="uid://b5n6h1gfcffx7" path="res://art/combat ui/hearts/small_agent/small_agent_0002.png" id="3_6gtt1"]
+[ext_resource type="Texture2D" uid="uid://456a4bs8m67d" path="res://art/combat ui/hearts/small_agent/small_agent_0003.png" id="4_cda0y"]
+
+[node name="Health Chunk" type="AspectRatioContainer"]
+offset_right = 1.0
+offset_bottom = 1.0
+
+[node name="Full" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("1_f505v")
+
+[node name="Missing 1" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_1mjvk")
+
+[node name="Missing 2" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_6gtt1")
+
+[node name="Missing 3" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("4_cda0y")
