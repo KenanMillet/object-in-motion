@@ -1,10 +1,12 @@
-[gd_scene load_steps=39 format=3 uid="uid://dps1u886grvy8"]
+[gd_scene load_steps=41 format=3 uid="uid://dps1u886grvy8"]
 
 [ext_resource type="Script" path="res://agent.gd" id="1_0c5u4"]
 [ext_resource type="PackedScene" uid="uid://naslptaukkc8" path="res://HealthChunkSmall.tscn" id="2_p8hpt"]
 [ext_resource type="Texture2D" uid="uid://pq3w5xq7s4ec" path="res://art/combat ui/focus bars/small_agent_focus.png" id="3_lgble"]
 [ext_resource type="Texture2D" uid="uid://x6ivq3gfce3s" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0000.png" id="4_c0nsg"]
+[ext_resource type="Script" path="res://AI_SmallAgent.gd" id="4_pyyxp"]
 [ext_resource type="Texture2D" uid="uid://62qdde7ya6nv" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0001.png" id="5_46wmi"]
+[ext_resource type="Script" path="res://PID.gd" id="5_tm31u"]
 [ext_resource type="Texture2D" uid="uid://w1hgo7vbfpxm" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0002.png" id="6_eaygd"]
 [ext_resource type="Texture2D" uid="uid://q18afsoxidbk" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0003.png" id="7_7ugac"]
 [ext_resource type="Texture2D" uid="uid://dv2r878m3kx43" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0004.png" id="8_p2rq7"]
@@ -179,7 +181,7 @@ radius = 3.27902
 height = 7.80217
 
 [node name="Small Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
-mass = 15.0
+mass = 5.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1
@@ -193,6 +195,22 @@ healthChunk = ExtResource("2_p8hpt")
 maxFocusTime = 4.0
 focusTimeScale = 0.4
 focusBar = ExtResource("3_lgble")
+
+[node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent", "pidController")]
+script = ExtResource("4_pyyxp")
+idleTime = Vector2(2, 4)
+idleDistance = Vector2(450, 550)
+attackDistance = 200.0
+agent = NodePath("..")
+pidController = NodePath("../PID")
+thrustModifier = 2.0
+
+[node name="PID" type="Node" parent="." node_paths=PackedStringArray("refNode")]
+script = ExtResource("5_tm31u")
+proportionalWeight = Vector2(1, 1)
+integralWeight = Vector2(0, 0)
+derivativeWeight = Vector2(-1, -1)
+refNode = NodePath("..")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -9)

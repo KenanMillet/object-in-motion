@@ -76,9 +76,9 @@ func bulletDeviation() -> float:
 	var spread_outlier_deg: float = 15.0
 	return deg_to_rad((randfn(0, 1.0/precision)/PI) * spread_outlier_deg)
 
-func fire() -> void:
+func fire() -> bool:
 	if _cooldown != 0:
-		return
+		return false
 	if !is_empty():
 		ammo-=1
 		if !is_empty():
@@ -105,6 +105,7 @@ func fire() -> void:
 				b.add_collision_exception_with(agent)
 	else:
 		needs_reload.emit(reloadTime)
+	return true
 
 func reload() -> void:
 	ammo = magSize
