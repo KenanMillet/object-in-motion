@@ -41,6 +41,8 @@ position = Vector2(6000, 3500)
 [node name="Player Spawn 1" type="Marker2D" parent="Instance Manager"]
 
 [node name="Player" parent="." instance=ExtResource("2_48rs6")]
+startingGun = ExtResource("4_o8hum")
+godMode = true
 
 [node name="Bounds" type="StaticBody2D" parent="."]
 

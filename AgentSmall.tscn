@@ -181,13 +181,14 @@ radius = 3.27902
 height = 7.80217
 
 [node name="Small Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
-mass = 5.0
+mass = 10.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1
 script = ExtResource("1_0c5u4")
 hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
+throwChargeTime = 2.0
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
 health = 8
