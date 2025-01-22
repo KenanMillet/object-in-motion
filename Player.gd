@@ -7,15 +7,16 @@ signal focus_changed(percent_remaining: float)
 
 @export var startingAgent: PackedScene
 @export var startingGun: PackedScene
-@export var instanceManager: InstanceManager
 @export var camera: Camera2D
 @export var cameraMount: Node2D
 @export var cursorPos: Node2D
 @export var targetPos: Node2D
-@export var controlCooldown: float = 0.5
+@export var controlCooldown: float = 3
 @export var gunMaxFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
 @export var godMode: bool = false
+
+var levelBounds: CollisionObject2D
 
 var agent: Agent = null:
 	get:
@@ -51,13 +52,13 @@ var focusTime: float = 0:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var newAgent = startingAgent.instantiate()
-	var newGun = startingGun.instantiate()
-	instanceManager.spawnAgent(newAgent, get_viewport().size/2, newGun, cursorPos)
-	controlAgent(newAgent, newGun)
-	camera.reparent(cameraMount)
+	camera.reparent.call_deferred(cameraMount)
 
 func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
+	if agent == newAgent:
+		if newGun != null:
+			controlGun(newGun)
+		return agent
 	var old_agent = agent
 	if agent != null:
 		agent.enemyHitbox.set_deferred("disabled", false)
@@ -65,6 +66,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		if agent.target != null:
 			agent.target = targetPos
 		agent.controllingPlayer = null
+		agent.add_collision_exception_with(levelBounds)
 		if agent.died.is_connected(_on_agent_death):
 			agent.died.disconnect(_on_agent_death)
 	if newAgent != null:
@@ -73,6 +75,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		newAgent.playerHitbox.set_deferred("disabled", false)
 		newAgent.died.connect(_on_agent_death)
 		newAgent.controllingPlayer = self
+		newAgent.remove_collision_exception_with(levelBounds)
 	agent = newAgent
 	focusTime = maxFocusTime
 	controlDowntime = controlCooldown
@@ -81,16 +84,20 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 	return old_agent
 
 func controlGun(newGun: Gun) -> void:
+	if newGun == gun:
+		return
 	if gun != null:
 		gun.body_entered.disconnect(_on_gun_contact)
 		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
 		gun.controllingPlayer = self
+		gun.add_collision_exception_with(levelBounds)
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()
 	newGun.body_entered.connect(_on_gun_contact)
 	newGun.body_exited.connect(_on_gun_break_contact)
 	newGun.controllingPlayer = self
+	newGun.remove_collision_exception_with(levelBounds)
 	if agent != null && agent.gun != newGun:
 		gun.global_position = newGun.global_position
 		agent.holdGun(newGun, newGun.get_parent())
@@ -141,11 +148,10 @@ func _on_gun_contact(body: Node) -> void:
 			controlAgent(a, a.gun)
 		elif body is Gun:
 			var g: Gun = body as Gun
-			if !g.is_empty():
-				if g.agent != null:
-					controlAgent(g.agent, g)
-				else:
-					controlGun(g)
+			if g.agent != null:
+				controlAgent(g.agent, g)
+			elif !g.is_empty():
+				controlGun(g)
 
 func _on_gun_break_contact(body: Node) -> void:
 	if body is Agent && body == gun.thrownBy:

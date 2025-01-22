@@ -14,7 +14,7 @@ func _ready() -> void:
 	max_contacts_reported = 10
 	#collision_layer = 0b0100 # bullets
 	collision_layer = 0b0000 # bullets
-	collision_mask = 0b1110 # guns, bullets, agents, walls
+	collision_mask = 0b1111 # guns, bullets, agents, walls
 	body_entered.connect(_on_body_entered)
 
 func _process(_delta: float) -> void:

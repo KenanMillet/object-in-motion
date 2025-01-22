@@ -24,11 +24,10 @@ func _go_idle() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if agent.target != null:
+	if agent.controllingPlayer == null && agent.target != null:
 		if agent.global_position.distance_to(agent.target.global_position) < attackDistance && agent.gun != null:
 			if agent.gun.fire():
 				_go_idle()
 		if !idling && !agent.reloading:
 			pidController.target_position = agent.target.global_position
-
-	agent.apply_force(thrustModifier * pidController.value)
+		agent.apply_force(thrustModifier * pidController.value)

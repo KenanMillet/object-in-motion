@@ -16,46 +16,49 @@
 
 [node name="Background_1" parent="." instance=ExtResource("3_2nl6q")]
 
-[node name="Instance Manager" type="Node" parent="." node_paths=PackedStringArray("defaultSpawnLoc", "spawnZoneCornerA", "spawnZoneCornerB", "players")]
+[node name="Instance Manager" type="Node" parent="." node_paths=PackedStringArray("defaultSpawnLoc", "spawnZoneCornerA", "spawnZoneCornerB", "players", "playerSpawns", "levelBounds")]
 script = ExtResource("1_fo1qu")
 defaultSpawnLoc = NodePath("Default Spawn Location")
 spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
-enemiesToSpawn = 4
+enemiesToSpawn = 10
 agentTable = Array[PackedScene]([ExtResource("3_yqvf8"), ExtResource("4_3dgf3"), ExtResource("5_j57wm")])
 agentWeights = Array[int]([2, 1, 1])
 gunTable = Array[PackedScene]([ExtResource("4_o8hum"), ExtResource("7_55d5r"), ExtResource("8_fxed1")])
 players = [NodePath("../Player")]
+playerSpawns = [NodePath("Player Spawn 1")]
+levelBounds = NodePath("../Bounds")
 
 [node name="Default Spawn Location" type="Marker2D" parent="Instance Manager"]
-position = Vector2(-100, -100)
+position = Vector2(-8000, -8000)
 
 [node name="Spawn Bounds A" type="Marker2D" parent="Instance Manager"]
-position = Vector2(113, 104)
+position = Vector2(-6000, -3500)
 
 [node name="Spawn Bounds B" type="Marker2D" parent="Instance Manager"]
-position = Vector2(1795, 970)
+position = Vector2(6000, 3500)
 
-[node name="Player" parent="." node_paths=PackedStringArray("instanceManager") instance=ExtResource("2_48rs6")]
-instanceManager = NodePath("../Instance Manager")
+[node name="Player Spawn 1" type="Marker2D" parent="Instance Manager"]
+
+[node name="Player" parent="." instance=ExtResource("2_48rs6")]
 
 [node name="Bounds" type="StaticBody2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds"]
-position = Vector2(0, 1080)
+[node name="Bottom Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, 4320)
 shape = SubResource("WorldBoundaryShape2D_u2hhs")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Bounds"]
-position = Vector2(0, 1080)
+[node name="Left Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(-7680, 0)
 rotation = 1.5708
 shape = SubResource("WorldBoundaryShape2D_u2hhs")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Bounds"]
-position = Vector2(1920, 0)
+[node name="Right Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(7680, 0)
 rotation = -1.5708
 shape = SubResource("WorldBoundaryShape2D_u2hhs")
 
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="Bounds"]
-position = Vector2(1920, 0)
+[node name="Top Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, -4320)
 rotation = 3.14159
 shape = SubResource("WorldBoundaryShape2D_u2hhs")

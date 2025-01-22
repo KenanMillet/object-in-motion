@@ -4,8 +4,9 @@
 
 [node name="Background_1" type="Node2D"]
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+[node name="BG" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.02, 0.02)
 
-[node name="Background_1" type="Sprite2D" parent="."]
-position = Vector2(962, 541)
+[node name="SPAAAAACE!" type="Sprite2D" parent="BG"]
 texture = ExtResource("1_vv57e")
+centered = false

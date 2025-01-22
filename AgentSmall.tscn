@@ -232,3 +232,5 @@ position = Vector2(-4, -1)
 
 [node name="Hand" type="Marker2D" parent="Shoulder"]
 position = Vector2(12, 0)
+
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
