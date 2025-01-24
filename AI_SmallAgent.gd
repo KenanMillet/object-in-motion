@@ -33,7 +33,7 @@ func _go_idle() -> void:
 	idling = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if agent.controllingPlayer == null && agent.target != null:
 		agent.aimPosition = agent.target.global_position
 		if agent.gun != null:

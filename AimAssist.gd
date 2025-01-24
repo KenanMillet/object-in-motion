@@ -33,9 +33,9 @@ static func DebugPrint(tag: String, dataPrecision: int = 0, tagPadding: int = 14
 			}))
 
 static func DebugDraw(debugCanvas: Node2D, radius: float, color: Color, filled: bool = false, width: float = -1.0, antialiased: bool = false) -> Callable:
-	return func(agentPos: Vector2, targetPos: Vector2, agentVel: Vector2, targetVel: Vector2, bulletSpeed: float, aimPos: Vector2):
+	return func(agentPos: Vector2, _targetPos: Vector2, _agentVel: Vector2, _targetVel: Vector2, _bulletSpeed: float, aimPos: Vector2):
 		var drawFunc = func():
-			debugCanvas.draw_circle(aimPos, radius, color, filled, width, antialiased)
+			debugCanvas.draw_circle(aimPos, radius, color, filled, -1.0 if filled else width, antialiased)
 			debugCanvas.draw_line(agentPos, aimPos, color, width, antialiased)
 		debugCanvas.draw.connect(drawFunc, ConnectFlags.CONNECT_ONE_SHOT)
 		debugCanvas.queue_redraw()
