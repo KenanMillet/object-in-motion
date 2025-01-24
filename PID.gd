@@ -4,6 +4,8 @@ extends Node
 @export var proportionalWeight: Vector2 = 1.1 * Vector2.ONE
 @export var integralWeight: Vector2 = 0.15 * Vector2.ONE
 @export var derivativeWeight: Vector2 = -2 * Vector2.ONE
+@export var integralMinValue: Vector2 = -1000000000 * Vector2.ONE
+@export var integralMaxValue: Vector2 = 1000000000 * Vector2.ONE
 @export var refNode: Node2D
 
 var target_position: Vector2 = Vector2.INF:
@@ -32,5 +34,5 @@ var value: Vector2:
 func _process(delta: float) -> void:
 	var proportional = target_position - refNode.global_position
 	_derivative = (refNode.global_position - _last_position)/delta
-	_cumulative_integral += proportional*delta
+	_cumulative_integral = (_cumulative_integral + proportional*delta).clamp(integralMinValue/integralWeight, integralMaxValue/integralWeight)
 	_last_position = refNode.global_position

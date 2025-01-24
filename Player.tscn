@@ -5,14 +5,13 @@
 [ext_resource type="PackedScene" uid="uid://dhdueamxhb7yf" path="res://GunShotgun.tscn" id="3_8ac62"]
 [ext_resource type="PackedScene" uid="uid://ddjmlwnyldf4a" path="res://hud.tscn" id="4_ns5kd"]
 
-[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "targetPos")]
+[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos")]
 script = ExtResource("1_8uice")
 startingAgent = ExtResource("2_3vwij")
 startingGun = ExtResource("3_8ac62")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")
-targetPos = NodePath("TargetPos")
 
 [node name="CameraMount" type="Node2D" parent="."]
 

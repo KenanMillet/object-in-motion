@@ -4,13 +4,13 @@ extends Node
 signal agent_changed(new_agent: Agent, old_agent: Agent)
 signal gun_changed(new_gun: Gun, old_gun: Gun)
 signal focus_changed(percent_remaining: float)
+signal control_target_changed(target: RigidBody2D, player: Player)
 
 @export var startingAgent: PackedScene
 @export var startingGun: PackedScene
 @export var camera: Camera2D
 @export var cameraMount: Node2D
 @export var cursorPos: Node2D
-@export var targetPos: Node2D
 @export var controlCooldown: float = 3
 @export var gunMaxFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
@@ -25,6 +25,8 @@ var agent: Agent = null:
 		var old_agent = agent
 		agent = value
 		agent_changed.emit(value, old_agent)
+		if old_agent != value:
+			control_target_changed.emit(value if value != null else gun, self)
 var gun: Gun = null:
 	get:
 		return gun
@@ -32,6 +34,8 @@ var gun: Gun = null:
 		var old_gun = gun
 		gun = value
 		gun_changed.emit(value, old_gun)
+		if old_gun != value && agent == null:
+			control_target_changed.emit(value, self)
 
 var focusIsForced: bool:
 	get:
@@ -63,14 +67,11 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 	if agent != null:
 		agent.enemyHitbox.set_deferred("disabled", false)
 		agent.playerHitbox.set_deferred("disabled", true)
-		if agent.target != null:
-			agent.target = targetPos
 		agent.controllingPlayer = null
 		agent.add_collision_exception_with(levelBounds)
 		if agent.died.is_connected(_on_agent_death):
 			agent.died.disconnect(_on_agent_death)
 	if newAgent != null:
-		newAgent.target = cursorPos
 		newAgent.enemyHitbox.set_deferred("disabled", true)
 		newAgent.playerHitbox.set_deferred("disabled", false)
 		newAgent.died.connect(_on_agent_death)
@@ -120,12 +121,12 @@ func _process(delta: float) -> void:
 		Engine.time_scale = 1.0
 
 	if gun != null:
-		targetPos.global_position = gun.customCenterOfMass.global_position if gun.customCenterOfMass != null else gun.global_position
+		cameraMount.global_position = gun.customCenterOfMass.global_position if gun.customCenterOfMass != null else gun.global_position
 		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
 			gun.fire()
 
 	if agent != null:
-		targetPos.global_position = agent.global_position
+		cameraMount.global_position = agent.global_position
 		if Input.is_action_just_pressed("ToggleThrow"):
 			agent.throwMode = !agent.throwMode
 		if Input.is_action_just_pressed("Fire") && agent.throwMode:
@@ -133,8 +134,6 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_released("Fire") && agent.throwMode:
 			agent.throwGun()
 			controlAgent(null, gun)
-	
-	cameraMount.global_position = targetPos.global_position
 
 func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)

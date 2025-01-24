@@ -29,12 +29,13 @@ var reloading: bool = false
 
 var gun: Gun = null
 var prevGunParent: Node = null
-var target: Node2D = null:
+var target: RigidBody2D = null:
 	get:
 		return target
 	set(value):
 		target = value
 		target_changed.emit(value)
+var aimPosition: Vector2 = Vector2.INF
 var controllingPlayer: Player = null
 
 var throwMode: bool = false:
@@ -133,16 +134,21 @@ func _ready() -> void:
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
 
+func _on_player_control_target_changed(control_target: RigidBody2D, _player: Player) -> void:
+	target = control_target if health > 0 else null
+
 func _process(_delta: float) -> void:
 	if throwMode:
 		queue_redraw()
 
 func _physics_process(_delta: float) -> void:
 	if gun != null:
-		if target != null:
-			shoulder.look_at(target.global_position)
-			gun.look_at(target.global_position)
-		gun.global_position = hand.global_position
+		if controllingPlayer != null:
+			aimPosition = controllingPlayer.cursorPos.global_position
+		if aimPosition != Vector2.INF:
+			shoulder.look_at(aimPosition)
+			gun.global_position = hand.global_position
+			gun.look_at(aimPosition)
 	for impulse in _impulses:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])

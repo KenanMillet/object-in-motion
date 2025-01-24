@@ -53,9 +53,9 @@ func _randomAgentAndGun():
 		gunTable[gun_idx].instantiate()
 	]
 
-func spawnAgent(agent: Agent, pos: Vector2 = _default_spawn_pos(), gun: Gun = null, target: Node2D = players.pick_random().targetPos) -> void:
+func spawnAgent(agent: Agent, pos: Vector2 = _default_spawn_pos(), gun: Gun = null, targetPlayer: Player = players.pick_random()) -> void:
 	agent.global_position = pos
-	agent.target = target
+	targetPlayer.control_target_changed.connect(agent._on_player_control_target_changed)
 	agent.add_collision_exception_with(levelBounds)
 	add_child(agent)
 	if gun != null:
@@ -80,17 +80,10 @@ func _fire_bullet(bullet: Bullet, pos: Vector2, muzzle_velocity: Vector2, gun_ve
 func _spawn_player(player: Player, position: Vector2) -> void:
 	var newAgent = player.startingAgent.instantiate()
 	var newGun = player.startingGun.instantiate()
-	spawnAgent(newAgent, position, newGun, player.cursorPos)
+	spawnAgent(newAgent, position, newGun, player)
 	player.controlAgent(newAgent, newGun)
 
 func _ready() -> void:
-	assert(playerSpawns.size() >= players.size(), "There must be at least as many possible player spawns as there are players!")
-	for player in players:
-		player.levelBounds = levelBounds
-	playerSpawns.shuffle()
-	for i in players.size():
-		var player: Player = players[i]
-		_spawn_player(player, playerSpawns[i].global_position)
 	var tbls = [[agentTable, agentWeights, _agentWeightedTable]]
 	if !forceGunMatchesAgent:
 		tbls.append([gunTable, gunWeights, _gunWeightedTable])
@@ -109,3 +102,11 @@ func _ready() -> void:
 	for i in enemiesToSpawn:
 		var agent_and_gun = _randomAgentAndGun()
 		spawnAgent(agent_and_gun[0], _randomSpawnLocation(), agent_and_gun[1])
+
+	assert(playerSpawns.size() >= players.size(), "There must be at least as many possible player spawns as there are players!")
+	for player in players:
+		player.levelBounds = levelBounds
+	playerSpawns.shuffle()
+	for i in players.size():
+		var player: Player = players[i]
+		_spawn_player(player, playerSpawns[i].global_position)
