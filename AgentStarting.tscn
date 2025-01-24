@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://rl71eoe3h2qx"]
+[gd_scene load_steps=44 format=3 uid="uid://rl71eoe3h2qx"]
 
 [ext_resource type="Script" path="res://agent.gd" id="1_x38s1"]
 [ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="2_b2ane"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://AI_StartingAgent.gd" id="4_c5ys4"]
 [ext_resource type="Texture2D" uid="uid://bhvkaqu17otr3" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0000.png" id="4_n3qm8"]
 [ext_resource type="Texture2D" uid="uid://dhrifgxuxkfd2" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0001.png" id="5_4qjxb"]
-[ext_resource type="Script" path="res://aim_assist.gd" id="5_71jyb"]
 [ext_resource type="Texture2D" uid="uid://c1lc2oks50m6l" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0002.png" id="6_rdvwe"]
 [ext_resource type="Texture2D" uid="uid://cw7sft11issgs" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0003.png" id="7_ad371"]
 [ext_resource type="Texture2D" uid="uid://cdutecu4vj875" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0004.png" id="8_5tu4e"]
@@ -205,15 +204,11 @@ healthChunk = ExtResource("2_b2ane")
 maxFocusTime = 3.0
 focusBar = ExtResource("3_qv8pj")
 
-[node name="AI" type="Node" parent="." node_paths=PackedStringArray("aimAssist", "agent")]
+[node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent") groups=["agents", "starting_agents"]]
 script = ExtResource("4_c5ys4")
 teleportRecoveryTime = Vector2(2, 3)
 preferredDistance = Vector2(500, 600)
-aimAssist = NodePath("../Aim Assist")
 agent = NodePath("..")
-
-[node name="Aim Assist" type="Node" parent="."]
-script = ExtResource("5_71jyb")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)

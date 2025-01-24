@@ -26,7 +26,7 @@ var agent: Agent = null:
 		agent = value
 		agent_changed.emit(value, old_agent)
 		if old_agent != value:
-			control_target_changed.emit(value if value != null else gun, self)
+			control_target_changed.emit((value as RigidBody2D) if value != null else (gun as RigidBody2D), self)
 var gun: Gun = null:
 	get:
 		return gun

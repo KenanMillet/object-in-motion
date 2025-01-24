@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://dps1u886grvy8"]
+[gd_scene load_steps=41 format=3 uid="uid://dps1u886grvy8"]
 
 [ext_resource type="Script" path="res://agent.gd" id="1_0c5u4"]
 [ext_resource type="PackedScene" uid="uid://naslptaukkc8" path="res://HealthChunkSmall.tscn" id="2_p8hpt"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://AI_SmallAgent.gd" id="4_pyyxp"]
 [ext_resource type="Texture2D" uid="uid://62qdde7ya6nv" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0001.png" id="5_46wmi"]
 [ext_resource type="Script" path="res://PID.gd" id="5_tm31u"]
-[ext_resource type="Script" path="res://aim_assist.gd" id="6_2g25n"]
 [ext_resource type="Texture2D" uid="uid://w1hgo7vbfpxm" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0002.png" id="6_eaygd"]
 [ext_resource type="Texture2D" uid="uid://q18afsoxidbk" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0003.png" id="7_7ugac"]
 [ext_resource type="Texture2D" uid="uid://dv2r878m3kx43" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0004.png" id="8_p2rq7"]
@@ -197,7 +196,7 @@ maxFocusTime = 4.0
 focusTimeScale = 0.4
 focusBar = ExtResource("3_lgble")
 
-[node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent", "pidController", "aimAssist")]
+[node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent", "pidController") groups=["agents", "small_agents"]]
 script = ExtResource("4_pyyxp")
 idleTime = Vector2(2, 4)
 idleDistance = Vector2(450, 550)
@@ -205,7 +204,6 @@ attackDistance = 200.0
 personalSpace = 100.0
 agent = NodePath("..")
 pidController = NodePath("../PID")
-aimAssist = NodePath("../Aim Assist")
 thrustModifier = 50.0
 maxThrustTowardPlayer = 10000.0
 maxThrustAwayFromPlayer = 100000.0
@@ -219,9 +217,6 @@ derivativeWeight = Vector2(-5, -5)
 integralMinValue = Vector2(0, 0)
 integralMaxValue = Vector2(0, 0)
 refNode = NodePath("..")
-
-[node name="Aim Assist" type="Node" parent="."]
-script = ExtResource("6_2g25n")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -9)

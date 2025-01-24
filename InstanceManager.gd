@@ -20,12 +20,33 @@ extends Node
 @export var players: Array[Player] = []
 @export var playerSpawns: Array[Marker2D] = []
 
+@export var debugAimForSmall: bool = false:
+	get:
+		return debugAimForSmall
+	set(value):
+		debugAimForSmall = _debug_aim_for_group("small_agents", value)
+@export var debugAimForMedium: bool = false:
+	get:
+		return debugAimForMedium
+	set(value):
+		debugAimForMedium = _debug_aim_for_group("medium_agents", value)
+@export var debugAimForStarting: bool = false:
+	get:
+		return debugAimForStarting
+	set(value):
+		debugAimForStarting = _debug_aim_for_group("starting_agents", value)
+
 @export var levelBounds: CollisionObject2D
 
 @onready var _spawnZoneTL = _min_bounds(spawnZoneCornerA.global_position, spawnZoneCornerB.global_position)
 @onready var _spawnZoneBR = _max_bounds(spawnZoneCornerA.global_position, spawnZoneCornerB.global_position)
 var _agentWeightedTable: Array[int] = []
 var _gunWeightedTable: Array[int] = []
+
+func _debug_aim_for_group(group_name: String, value: bool) -> bool:
+	for agent in get_tree().get_nodes_in_group(group_name):
+			agent.aimAssist.debug = value
+	return value
 
 func _min_bounds(a: Vector2, b: Vector2) -> Vector2:
 	return Vector2(min(a.x, b.x), min(a.y, b.y))

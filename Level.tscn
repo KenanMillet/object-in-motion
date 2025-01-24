@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=12 format=3 uid="uid://cbn4yp7nnbr40"]
 
+[ext_resource type="Script" path="res://DebugCanvas.gd" id="1_anh4p"]
 [ext_resource type="Script" path="res://InstanceManager.gd" id="1_fo1qu"]
 [ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://Player.tscn" id="2_48rs6"]
 [ext_resource type="PackedScene" uid="uid://b07rv0ofpm43a" path="res://Background_1.tscn" id="3_2nl6q"]
@@ -13,6 +14,10 @@
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 
 [node name="Level" type="Node2D"]
+
+[node name="Debug Canvas" type="Node2D" parent="."]
+z_index = 4096
+script = ExtResource("1_anh4p")
 
 [node name="Background_1" parent="." instance=ExtResource("3_2nl6q")]
 
@@ -39,6 +44,7 @@ position = Vector2(-6000, -3500)
 position = Vector2(6000, 3500)
 
 [node name="Player Spawn 1" type="Marker2D" parent="Instance Manager"]
+position = Vector2(10, 12)
 
 [node name="Player" parent="." instance=ExtResource("2_48rs6")]
 startingGun = ExtResource("4_o8hum")

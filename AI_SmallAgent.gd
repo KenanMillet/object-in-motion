@@ -6,18 +6,22 @@ extends Node
 @export var personalSpace: float
 @export var agent: Agent
 @export var pidController: PID
-@export var aimAssist: AimAssist
 @export var thrustModifier: float
 @export var maxThrustTowardPlayer: float
 @export var maxThrustAwayFromPlayer: float
 @export var minThrust: float
 @export var speedSoftCap: float = 0
 
+@onready var _debugCanvas = DebugCanvas.locate(agent)
+@onready var aimAssist = AimAssist.new(agent)
+
+
 var idling: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	#aimAssist.debug_aim.connect(AimAssist.DebugPrint(agent.name))
+	aimAssist.debug_aim.connect(AimAssist.DebugDraw(_debugCanvas, 20, Color.from_hsv(randf(), 1, 1, 0.75), false, 2))
 
 func _go_idle() -> void:
 	idling = true
@@ -34,10 +38,9 @@ func _physics_process(delta: float) -> void:
 		agent.aimPosition = agent.target.global_position
 		if agent.gun != null:
 			var gun_dist_sq = agent.global_position.distance_squared_to(agent.gun.global_position)
-			var gun_direction = aimAssist.shotLead(agent.global_position, agent.target.global_position, agent.linear_velocity, agent.target.linear_velocity, agent.gun.bulletSpeed)
+			var gun_direction = aimAssist.leadShot(agent.target, agent.gun.bulletSpeed)
 			if gun_direction != Vector2.INF:
 				agent.aimPosition = agent.global_position + (gun_direction * gun_dist_sq)
-			#print(agent.name, " | Target pos (relative): ", agent.target.global_position-agent.global_position, "  Target vel (relative): ", agent.target.linear_velocity-agent.linear_velocity, "  Bullet speed: ", agent.gun.bulletSpeed, "  Gun Direction: ", gun_direction)
 			if agent.global_position.distance_to(agent.target.global_position) < attackDistance:
 				if agent.gun.fire():
 					_go_idle()

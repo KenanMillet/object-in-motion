@@ -21,6 +21,7 @@ gunRecoil = 700.0
 playerAgentRecoil = 400.0
 enemyAgentRecoil = 100.0
 enemyRpm = 60
+precision = 10.0
 ammoChunk = ExtResource("3_jctrb")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
