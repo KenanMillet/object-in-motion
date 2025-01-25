@@ -15,6 +15,7 @@ extends Node
 @export var agentWeights: Array[int] = []
 @export var gunTable: Array[PackedScene] = []
 @export var gunWeights: Array[int] = []
+@export var aesteroidTileSpacing: float = 300
 @export_group("")
 
 @export var players: Array[Player] = []
@@ -43,9 +44,12 @@ extends Node
 var _agentWeightedTable: Array[int] = []
 var _gunWeightedTable: Array[int] = []
 
+@onready var debugCanvas: Node2D = DebugCanvas.locate(self)
+
 func _debug_aim_for_group(group_name: String, value: bool) -> bool:
-	for agent in get_tree().get_nodes_in_group(group_name):
-			agent.aimAssist.debug = value
+	if get_tree() != null:
+		for agent in get_tree().get_nodes_in_group(group_name):
+				agent.aimAssist.debug = value
 	return value
 
 func _min_bounds(a: Vector2, b: Vector2) -> Vector2:
@@ -131,3 +135,22 @@ func _ready() -> void:
 	for i in players.size():
 		var player: Player = players[i]
 		_spawn_player(player, playerSpawns[i].global_position)
+
+	debugAimForSmall = debugAimForSmall
+	debugAimForMedium = debugAimForMedium
+	debugAimForStarting = debugAimForStarting
+
+	var boundsMin = Vector2.ZERO
+	var boundsMax = Vector2.ZERO
+	for boundary: Node2D in levelBounds.get_children():
+		boundsMin.x = minf(boundsMin.x, boundary.global_position.x)
+		boundsMin.y = minf(boundsMin.y, boundary.global_position.y)
+		boundsMax.x = maxf(boundsMax.x, boundary.global_position.x)
+		boundsMax.y = maxf(boundsMax.y, boundary.global_position.y)
+	debugCanvas.draw.connect(_draw_borders.bind(boundsMin.x, boundsMin.y, boundsMax.x, boundsMax.y))
+
+func _draw_borders(x1: float, y1: float, x2: float, y2: float) -> void:
+	debugCanvas.draw_dashed_line(Vector2(x1,y1), Vector2(x2,y1), Color.RED)
+	debugCanvas.draw_dashed_line(Vector2(x2,y1), Vector2(x2,y2), Color.RED)
+	debugCanvas.draw_dashed_line(Vector2(x2,y2), Vector2(x1,y2), Color.RED)
+	debugCanvas.draw_dashed_line(Vector2(x1,y2), Vector2(x1,y1), Color.RED)

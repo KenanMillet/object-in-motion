@@ -34,8 +34,9 @@ func _physics_process(_delta: float) -> void:
 	if agent.controllingPlayer == null && agent.target != null && agent.gun != null:
 		var gun_dist_sq = agent.global_position.distance_squared_to(agent.gun.global_position)
 		var gun_direction = aimAssist.leadShot(agent.target, agent.gun.bulletSpeed)
+		agent.look_at(agent.target.global_position)
+		agent.aimPosition = agent.target.global_position
 		if gun_direction != Vector2.INF:
 			agent.aimPosition = agent.global_position + (gun_direction * gun_dist_sq)
-		agent.look_at(agent.target.global_position)
 		if !recoveringFromTeleport:
 			agent.gun.fire()
