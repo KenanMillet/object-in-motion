@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://djlohye7cxcoe"]
+
+[ext_resource type="Script" path="res://Asteroid.gd" id="1_npedc"]
+[ext_resource type="Texture2D" uid="uid://cy56p7gjp1kwd" path="res://art/misc/asteroid_1.png" id="2_qc87f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vdghg"]
+radius = 600.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ormo"]
+radius = 1000.0
+
+[node name="Aesteroid" type="RigidBody2D"]
+mass = 1500.0
+gravity_scale = 0.0
+linear_damp_mode = 1
+angular_damp_mode = 1
+script = ExtResource("1_npedc")
+linearSpeedMin = 10.0
+linearSpeedMax = 20.0
+scaleFactorMax = 0.4
+boundingCircle = SubResource("CircleShape2D_vdghg")
+isolationCircle = SubResource("CircleShape2D_5ormo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(60, 0)
+texture = ExtResource("2_qc87f")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(60, 0)
+polygon = PackedVector2Array(477, 10, 353, -303, 300, -341, 168, -393, 11, -429, -154, -414, -191, -390, -353, -161, -499, -90, -522, -54, -537, 25, -546, 226, -532, 257, -483, 290, -282, 390, -260, 390, -151, 325, -61, 248, -18, 239, 90, 284, 173, 271, 350, 155, 460, 53)

@@ -15,7 +15,12 @@ extends Node
 @export var agentWeights: Array[int] = []
 @export var gunTable: Array[PackedScene] = []
 @export var gunWeights: Array[int] = []
-@export var aesteroidTileSpacing: float = 300
+@export var asteroidTable: Array[PackedScene] = []
+@export var asteroidWeights: Array[int] = []
+@export var asteroidWaveRows: int = 3
+@export var asteroidsPerRow: int = 5
+@export var asterWaveSpawnDist: float = 8000
+@export_range(0, 15, 0.01, "radians_as_degrees") var asterAngleVariance: float
 @export_group("")
 
 @export var players: Array[Player] = []
@@ -41,8 +46,9 @@ extends Node
 
 @onready var _spawnZoneTL = _min_bounds(spawnZoneCornerA.global_position, spawnZoneCornerB.global_position)
 @onready var _spawnZoneBR = _max_bounds(spawnZoneCornerA.global_position, spawnZoneCornerB.global_position)
-var _agentWeightedTable: Array[int] = []
-var _gunWeightedTable: Array[int] = []
+var _agentWeightedTable: Array[PackedScene] = []
+var _gunWeightedTable: Array[PackedScene] = []
+var _asteroidWeightedDeck: Array[PackedScene] = []
 
 @onready var debugCanvas: Node2D = DebugCanvas.locate(self)
 
@@ -71,12 +77,17 @@ func _randomSpawnLocation() -> Vector2:
 	return _rand_in_bounds(_spawnZoneTL, _spawnZoneBR)
 
 func _randomAgentAndGun():
-	var agent_idx = _agentWeightedTable.pick_random()
-	var gun_idx = agent_idx if forceGunMatchesAgent else _gunWeightedTable.pick_random()
-	return [
-		agentTable[agent_idx].instantiate(),
-		gunTable[gun_idx].instantiate()
-	]
+	if forceGunMatchesAgent:
+		var i = randi_range(0, _agentWeightedTable.size()-1)
+		return [
+			_agentWeightedTable[i].instantiate(),
+			_gunWeightedTable[i].instantiate()
+		]
+	else:
+		return [
+			_agentWeightedTable.pick_random().instantiate(),
+			_gunWeightedTable.pick_random().instantiate()
+		]
 
 func spawnAgent(agent: Agent, pos: Vector2 = _default_spawn_pos(), gun: Gun = null, targetPlayer: Player = players.pick_random()) -> void:
 	agent.global_position = pos
@@ -108,25 +119,91 @@ func _spawn_player(player: Player, position: Vector2) -> void:
 	spawnAgent(newAgent, position, newGun, player)
 	player.controlAgent(newAgent, newGun)
 
+func _makeAsteroidWave(direction: Vector2) -> Array[Array]:
+	var wave: Array[Array]
+	wave.resize(asteroidWaveRows)
+	var wt_idx = 0
+	for row_idx in asteroidWaveRows:
+		var row: Array[Asteroid]
+		row.resize(asteroidsPerRow)
+		for ast_idx in asteroidsPerRow:
+			if wt_idx == 0:
+				_asteroidWeightedDeck.shuffle()
+			row[ast_idx] = _asteroidWeightedDeck[wt_idx].instantiate()
+			wt_idx = (wt_idx + 1) % _asteroidWeightedDeck.size()
+			var asteroid: Asteroid = row[ast_idx]
+			asteroid.setup(direction if asterAngleVariance == 0 else direction.rotated(randf_range(-asterAngleVariance, asterAngleVariance)))
+			asteroid.add_collision_exception_with(levelBounds)
+		wave[row_idx] = row
+	return wave
+
+func spawnAsteroidWave(direction: Vector2, distance_from_center: float = asterWaveSpawnDist) -> Array[Asteroid]:
+	if asteroidWaveRows * asteroidsPerRow == 0:
+		return []
+
+	direction = direction.normalized()
+	var wave: Array[Array] = _makeAsteroidWave(direction)
+
+	var row_origin: Vector2 = direction * -distance_from_center
+	var wave_line: Vector2 = direction.rotated(PI/2)
+	for row_idx in wave.size():
+		var row: Array[Asteroid] = wave[row_idx] as Array[Asteroid]
+		if row_idx != 0:
+			var prev_row: Array[Asteroid] = wave[row_idx-1]
+			row_origin += direction * -Asteroid.minRowOffset(row, prev_row)
+		for col_idx in row.size():
+			var asteroid: Asteroid = row[col_idx]
+			if col_idx == 0:
+				asteroid.global_position = row_origin
+			else:
+				var prev_asteroid: Asteroid = row[col_idx-1]
+				asteroid.global_position = prev_asteroid.global_position + wave_line * Asteroid.minSpawnDist(asteroid, prev_asteroid)
+
+	for row: Array[Asteroid] in wave:
+		var row_width = row[0].global_position.distance_to(row[-1].global_position)
+		for asteroid: Asteroid in row:
+			asteroid.global_position -= wave_line * row_width
+
+	for row: Array[Asteroid] in wave:
+		for asteroid: Asteroid in row:
+			add_child(asteroid)
+	return wave.reduce(func(a, b): return a + b)
+
+func _makeWeightedTable(table: Array[PackedScene], weights: Array[int]) -> Array[PackedScene]:
+	var weighted: Array[PackedScene]
+	if weights.size() == 0:
+		weights.resize(table.size())
+		weights.fill(1)
+	weighted.resize(weights.reduce(func(a,b): return a+b))
+	var wi = 0
+	for i in table.size():
+		var weight = weights[i] if weights.size() > i else 0
+		for _j in weight:
+			weighted[wi] = table[i]
+			wi += 1
+	return weighted
+
 func _ready() -> void:
-	var tbls = [[agentTable, agentWeights, _agentWeightedTable]]
-	if !forceGunMatchesAgent:
-		tbls.append([gunTable, gunWeights, _gunWeightedTable])
-	for tbl_trio in tbls:
-		var in_tbl = tbl_trio[0]
-		var wt_tbl = tbl_trio[1]
-		var out_tbl = tbl_trio[2]
-		for i in in_tbl.size():
-			var weight: int = wt_tbl[i] if wt_tbl.size() > i else 0
-			for _j in weight:
-				out_tbl.append(i)
-		if out_tbl.is_empty():
-			for i in in_tbl.size():
-				out_tbl.append(i)
-			
+	_agentWeightedTable = _makeWeightedTable(agentTable, agentWeights)
+	_gunWeightedTable = _makeWeightedTable(gunTable, agentWeights if forceGunMatchesAgent else gunWeights)
+	_asteroidWeightedDeck = _makeWeightedTable(asteroidTable, asteroidWeights)
+
+	var is_asteroid_covering_agent = func(asteroid: Asteroid, agent: Agent) -> bool:
+		return asteroid.global_position.distance_to(agent.global_position) < asteroid.boundingCircle.radius * asteroid.spawnScaleFactor
+
+	var aster_wave: Array[Asteroid] = spawnAsteroidWave(Vector2.RIGHT.rotated(randf_range(0, 2*PI)), 0)
+	var aster_mid_point: Vector2 = (aster_wave[0].global_position + aster_wave[-1].global_position)/2
+	for asteroid: Asteroid in aster_wave:
+		asteroid.global_position -= aster_mid_point
+
+	var asteroids_covering_agents = {}
+
 	for i in enemiesToSpawn:
 		var agent_and_gun = _randomAgentAndGun()
 		spawnAgent(agent_and_gun[0], _randomSpawnLocation(), agent_and_gun[1])
+		for asteroid: Asteroid in aster_wave:
+			if is_asteroid_covering_agent.call(asteroid, agent_and_gun[0]):
+				asteroids_covering_agents[asteroid] = asteroid
 
 	assert(playerSpawns.size() >= players.size(), "There must be at least as many possible player spawns as there are players!")
 	for player in players:
@@ -135,6 +212,13 @@ func _ready() -> void:
 	for i in players.size():
 		var player: Player = players[i]
 		_spawn_player(player, playerSpawns[i].global_position)
+		for asteroid: Asteroid in aster_wave:
+			if is_asteroid_covering_agent.call(asteroid, player.agent):
+				asteroids_covering_agents[asteroid] = asteroid
+
+	for asteroid: Asteroid in asteroids_covering_agents.keys():
+		asteroid.queue_free()
+	asteroids_covering_agents = {}
 
 	debugAimForSmall = debugAimForSmall
 	debugAimForMedium = debugAimForMedium

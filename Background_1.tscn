@@ -10,3 +10,5 @@ scroll_scale = Vector2(0.02, 0.02)
 [node name="SPAAAAACE!" type="Sprite2D" parent="BG"]
 texture = ExtResource("1_vv57e")
 centered = false
+
+[node name="Asteroids" type="Parallax2D" parent="."]

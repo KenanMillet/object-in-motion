@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=15 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://DebugCanvas.gd" id="1_anh4p"]
 [ext_resource type="Script" path="res://InstanceManager.gd" id="1_fo1qu"]
@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://dps1u886grvy8" path="res://AgentSmall.tscn" id="5_j57wm"]
 [ext_resource type="PackedScene" uid="uid://c32dxdpwasqrj" path="res://GunSMG.tscn" id="7_55d5r"]
 [ext_resource type="PackedScene" uid="uid://dhdueamxhb7yf" path="res://GunShotgun.tscn" id="8_fxed1"]
+[ext_resource type="PackedScene" uid="uid://djlohye7cxcoe" path="res://Asteroid_1.tscn" id="10_5atcg"]
+[ext_resource type="PackedScene" uid="uid://duqrik1wx1bko" path="res://Asteroid_2.tscn" id="11_ttuxb"]
+[ext_resource type="PackedScene" uid="uid://dvvrl5sami12e" path="res://Asteroid_3.tscn" id="12_gtp6l"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 
@@ -28,11 +31,13 @@ spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
 enemiesToSpawn = 4
 agentTable = Array[PackedScene]([ExtResource("3_yqvf8"), ExtResource("4_3dgf3"), ExtResource("5_j57wm")])
-agentWeights = Array[int]([0, 1, 0])
+agentWeights = Array[int]([1, 1, 1])
 gunTable = Array[PackedScene]([ExtResource("4_o8hum"), ExtResource("7_55d5r"), ExtResource("8_fxed1")])
+asteroidTable = Array[PackedScene]([ExtResource("10_5atcg"), ExtResource("11_ttuxb"), ExtResource("12_gtp6l")])
+asteroidWeights = Array[int]([1, 1, 1])
+asterAngleVariance = 0.261799
 players = [NodePath("../Player")]
 playerSpawns = [NodePath("Player Spawn 1")]
-debugAimForMedium = true
 levelBounds = NodePath("../Bounds")
 
 [node name="Default Spawn Location" type="Marker2D" parent="Instance Manager"]
@@ -48,7 +53,6 @@ position = Vector2(6000, 3500)
 position = Vector2(10, 12)
 
 [node name="Player" parent="." instance=ExtResource("2_48rs6")]
-startingAgent = ExtResource("5_j57wm")
 
 [node name="Bounds" type="StaticBody2D" parent="."]
 

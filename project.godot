@@ -13,7 +13,6 @@ config_version=5
 config/name="Object In Motion"
 run/main_scene="res://Level.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [display]
 
