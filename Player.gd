@@ -79,7 +79,8 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		newAgent.remove_collision_exception_with(levelBounds)
 	agent = newAgent
 	focusTime = maxFocusTime
-	controlDowntime = controlCooldown
+	if newAgent != null:
+		controlDowntime = controlCooldown
 	if newGun != null:
 		controlGun(newGun)
 	return old_agent
