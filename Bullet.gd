@@ -13,9 +13,8 @@ var firedFromPlayer: Player = null
 func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
-	#collision_layer = 0b0100 # bullets
-	collision_layer = 0b0000 # bullets
-	collision_mask = 0b1111 # guns, bullets, agents, walls
+	collision_layer = CollisionUtil.Layer.bullets
+	collision_mask = CollisionUtil.Layer.objects
 	body_entered.connect(_on_body_entered)
 	if firedFromPlayer == null:
 		await get_tree().create_timer(friendlyFireTimeLimit).timeout

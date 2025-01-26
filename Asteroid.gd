@@ -44,11 +44,13 @@ var spawnScaleFactor: float
 var spawnMassScaleFactor: float
 @export_group("")
 
-func setup(direction: Vector2) -> void:
+func setup(direction: Vector2, maxSizeInPixels: float) -> void:
 	spawnDirection = direction.normalized()
 	spawnLinearVelocity = spawnDirection.normalized() * randf_range(linearSpeedMin, linearSpeedMax)
 	spawnAngularVelocity = _calcInitialAngularVelocity(angularSpeedMin, angularSpeedMax, angularSpeedPolarity)
-	spawnScaleFactor = randf_range(scaleFactorMin, scaleFactorMax)
+	var max_scale_factor = minf(scaleFactorMax, maxSizeInPixels/boundingCircle.radius)
+	var min_scale_factor = minf(scaleFactorMin, max_scale_factor)
+	spawnScaleFactor = randf_range(min_scale_factor, max_scale_factor)
 	spawnMassScaleFactor = pow(spawnScaleFactor, 3)
 	
 static func minSpawnDist(a: Asteroid, b: Asteroid) -> float:
@@ -67,6 +69,7 @@ static func minRowOffset(row_a: Array[Asteroid], row_b: Array[Asteroid]) -> floa
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	collision_layer = CollisionUtil.Layer.walls | CollisionUtil.Layer.spawn_blocking
 	global_rotation = randf_range(0, 2*PI)
 	linear_velocity = spawnLinearVelocity
 	angular_velocity = deg_to_rad(spawnAngularVelocity)

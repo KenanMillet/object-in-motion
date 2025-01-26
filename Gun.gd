@@ -114,8 +114,9 @@ func reload() -> void:
 func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
-	collision_layer = 0b1000 # guns
-	collision_mask |= 0b1111 # walls, agents, bullets, guns
+	#collision_layer = CollisionUtil.Layer.guns | CollisionUtil.Layer.spawn_blocking
+	collision_layer = CollisionUtil.Layer.guns
+	collision_mask |= CollisionUtil.Layer.objects
 	if customCenterOfMass != null:
 		center_of_mass_mode = CENTER_OF_MASS_MODE_CUSTOM
 		center_of_mass = customCenterOfMass.position

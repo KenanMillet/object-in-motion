@@ -129,8 +129,8 @@ func _on_bullet_fired(_bullet: Bullet, _pos: Vector2, muzzle_velocity: Vector2, 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	collision_layer = 0b0010 # agents
-	collision_mask |= 0b1111 # walls, agents, bullets, guns
+	collision_layer = CollisionUtil.Layer.agents | CollisionUtil.Layer.spawn_blocking
+	collision_mask |= CollisionUtil.Layer.objects
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
 

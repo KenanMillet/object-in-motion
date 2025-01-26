@@ -1,10 +1,11 @@
-[gd_scene load_steps=15 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=17 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://DebugCanvas.gd" id="1_anh4p"]
 [ext_resource type="Script" path="res://InstanceManager.gd" id="1_fo1qu"]
 [ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://Player.tscn" id="2_48rs6"]
 [ext_resource type="PackedScene" uid="uid://b07rv0ofpm43a" path="res://Background_1.tscn" id="3_2nl6q"]
 [ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://AgentStarting.tscn" id="3_yqvf8"]
+[ext_resource type="PackedScene" uid="uid://dl0487ci1hje0" path="res://SpawnTile.tscn" id="4_2dvr4"]
 [ext_resource type="PackedScene" uid="uid://bcxr0fypsonrd" path="res://AgentMedium.tscn" id="4_3dgf3"]
 [ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://GunPistol.tscn" id="4_o8hum"]
 [ext_resource type="PackedScene" uid="uid://dps1u886grvy8" path="res://AgentSmall.tscn" id="5_j57wm"]
@@ -13,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://djlohye7cxcoe" path="res://Asteroid_1.tscn" id="10_5atcg"]
 [ext_resource type="PackedScene" uid="uid://duqrik1wx1bko" path="res://Asteroid_2.tscn" id="11_ttuxb"]
 [ext_resource type="PackedScene" uid="uid://dvvrl5sami12e" path="res://Asteroid_3.tscn" id="12_gtp6l"]
+[ext_resource type="Script" path="res://SpawnTile.gd" id="14_84s6t"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 
@@ -29,6 +31,7 @@ script = ExtResource("1_fo1qu")
 defaultSpawnLoc = NodePath("Default Spawn Location")
 spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
+spawnTile = ExtResource("4_2dvr4")
 enemiesToSpawn = 4
 agentTable = Array[PackedScene]([ExtResource("3_yqvf8"), ExtResource("4_3dgf3"), ExtResource("5_j57wm")])
 agentWeights = Array[int]([1, 1, 1])
@@ -49,8 +52,14 @@ position = Vector2(-6000, -3500)
 [node name="Spawn Bounds B" type="Marker2D" parent="Instance Manager"]
 position = Vector2(6000, 3500)
 
-[node name="Player Spawn 1" type="Marker2D" parent="Instance Manager"]
-position = Vector2(10, 12)
+[node name="Player Spawn 1" type="Area2D" parent="Instance Manager"]
+position = Vector2(-10, -10)
+collision_layer = 262144
+collision_mask = 196608
+monitorable = false
+script = ExtResource("14_84s6t")
+size = Vector2(20, 20)
+spawn_on_screen = false
 
 [node name="Player" parent="." instance=ExtResource("2_48rs6")]
 
