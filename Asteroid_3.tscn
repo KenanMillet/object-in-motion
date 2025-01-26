@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dlyt7djxodhv8" path="res://art/misc/asteroid_3.png" id="2_ccgac"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kyt0b"]
-radius = 650.0
+radius = 570.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2p1v3"]
 radius = 1200.0
@@ -25,9 +25,9 @@ boundingCircle = SubResource("CircleShape2D_kyt0b")
 isolationCircle = SubResource("CircleShape2D_2p1v3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-100, 0)
+position = Vector2(-10, 0)
 texture = ExtResource("2_ccgac")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-position = Vector2(-100, 0)
+position = Vector2(-10, 0)
 polygon = PackedVector2Array(505, 55, 465, -30, 380, -165, 285, -275, 150, -300, -35, -300, -70, -275, -390, -240, -485, -25, -285, 235, -95, 175, 340, 255)
