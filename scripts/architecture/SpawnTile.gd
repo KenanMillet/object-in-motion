@@ -144,7 +144,7 @@ func _ready() -> void:
 	add_child(_collider)
 	add_child(_visible_checker)
 	collision_layer = CollisionUtil.Layer.spawn_tile
-	collision_mask = CollisionUtil.Layer.spawn_blocking | CollisionUtil.Layer.spawn_testing
+	collision_mask = CollisionUtil.Layer.spawn_blocking_obj | CollisionUtil.Layer.spawn_testing
 	monitoring = true
 	monitorable = false
 	body_entered.connect(func(body: Node2D):

@@ -87,7 +87,7 @@ func fire() -> bool:
 		var vel = linear_velocity if agent == null else agent.linear_velocity
 		var bullets: Array[Bullet] = []
 		for _b in bulletsPerShot:
-			bullets.append(bullet.instantiate())
+			bullets.append(InstanceManager.instance(bullet))
 		for i in bullets.size():
 			for j in bullets.size():
 				if i != j:
@@ -114,7 +114,7 @@ func reload() -> void:
 func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
-	#collision_layer = CollisionUtil.Layer.guns | CollisionUtil.Layer.spawn_blocking
+	#collision_layer = CollisionUtil.Layer.guns | CollisionUtil.Layer.spawn_blocking_obj
 	collision_layer = CollisionUtil.Layer.guns
 	collision_mask |= CollisionUtil.Layer.objects
 	if customCenterOfMass != null:

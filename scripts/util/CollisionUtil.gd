@@ -9,9 +9,12 @@ enum Layer
 	guns = 1 << 3,
 	
 	objects = 0xFFFF,
-	spawn_blocking = 1 << 16,
+	spawn_tile = 1 << 16,
 	spawn_testing = 1 << 17,
-	spawn_tile = 1 << 18
+	spawn_blocking_obj = 1 << 18,
+	spawn_blocking_bg1 = 1 << 19,
+	spawn_blocking_bg2 = 1 << 20,
+	spawn_blocking_bg3 = 1 << 21,
 }
 
 static func testForSpawning(object: CollisionObject2D):

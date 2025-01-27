@@ -1,21 +1,21 @@
 [gd_scene load_steps=8 format=3 uid="uid://646ue1vs5pi7"]
 
-[ext_resource type="Script" path="res://scripts/guns/Bullet.gd" id="1_dt3n2"]
-[ext_resource type="Texture2D" uid="uid://bvpgvklvllq8" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0000.png" id="2_kyjm4"]
-[ext_resource type="Texture2D" uid="uid://7bqp8ptu8sit" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0001.png" id="3_cotj6"]
-[ext_resource type="Texture2D" uid="uid://cy82odx7j8sf" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0002.png" id="4_r4lpe"]
+[ext_resource type="Script" path="res://scripts/guns/Bullet.gd" id="1_pf3nb"]
+[ext_resource type="Texture2D" uid="uid://bvpgvklvllq8" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0000.png" id="2_lb3ub"]
+[ext_resource type="Texture2D" uid="uid://7bqp8ptu8sit" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0001.png" id="3_nykhx"]
+[ext_resource type="Texture2D" uid="uid://cy82odx7j8sf" path="res://art/enemies and agents/agents/bullets/small agent/small_agent_0002.png" id="4_mpl7e"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_u2jya"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_kyjm4")
+"texture": ExtResource("2_lb3ub")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_cotj6")
+"texture": ExtResource("3_nykhx")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_r4lpe")
+"texture": ExtResource("4_mpl7e")
 }],
 "loop": true,
 "name": &"default",
@@ -32,7 +32,7 @@ radius = 1.0
 mass = 2.0
 gravity_scale = 0.0
 linear_damp_mode = 1
-script = ExtResource("1_dt3n2")
+script = ExtResource("1_pf3nb")
 playerHurtBox = NodePath("Player Hurt Box")
 enemyHurtBox = NodePath("Enemy Hurt Box")
 metadata/_edit_group_ = true

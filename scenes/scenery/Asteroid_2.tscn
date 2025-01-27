@@ -9,7 +9,7 @@ radius = 600.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_etc2j"]
 radius = 800.0
 
-[node name="Aesteroid" type="RigidBody2D"]
+[node name="Aesteroid B" type="RigidBody2D"]
 mass = 2000.0
 gravity_scale = 0.0
 linear_damp_mode = 1

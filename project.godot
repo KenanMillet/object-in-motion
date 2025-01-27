@@ -83,9 +83,12 @@ ToggleThrow={
 2d_physics/layer_3="bullets"
 2d_physics/layer_4="guns"
 2d_physics/layer_5="background"
-2d_physics/layer_17="spawn_blocking"
+2d_physics/layer_17="spawn_tile"
 2d_physics/layer_18="spawn_testing"
-2d_physics/layer_19="spawn_tile"
+2d_physics/layer_19="spawn_blocking_obj"
+2d_physics/layer_20="spawn_blocking_bg1"
+2d_physics/layer_21="spawn_blocking_bg2"
+2d_physics/layer_22="spawn_blocking_bg3"
 
 [rendering]
 

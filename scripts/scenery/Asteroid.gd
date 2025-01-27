@@ -69,7 +69,7 @@ static func minRowOffset(row_a: Array[Asteroid], row_b: Array[Asteroid]) -> floa
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	collision_layer = CollisionUtil.Layer.walls | CollisionUtil.Layer.spawn_blocking
+	collision_layer = CollisionUtil.Layer.walls | CollisionUtil.Layer.spawn_blocking_obj
 	global_rotation = randf_range(0, 2*PI)
 	linear_velocity = spawnLinearVelocity
 	angular_velocity = deg_to_rad(spawnAngularVelocity)
