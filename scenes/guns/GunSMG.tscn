@@ -23,6 +23,7 @@ playerAgentRecoil = 600.0
 enemyAgentRecoil = 120.0
 playerRpm = 360
 enemyRpm = 240
+precision = 1000.0
 playerReloadTime = 3.0
 enemyReloadTime = 5.0
 magSize = 30

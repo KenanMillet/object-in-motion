@@ -219,12 +219,13 @@ radius = 4.91852
 height = 28.0
 
 [node name="Medium Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
-mass = 100.0
+mass = 50.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 script = ExtResource("1_vukeg")
 hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
+maxThrowImpulse = 500
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
 health = 14
