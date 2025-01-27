@@ -1,18 +1,20 @@
 class_name AimAssist
 
-var _agent: RigidBody2D
+var _agent: Agent
 var _dbg: Array[Callable]
 static var _nodbg: Array[Callable] = [] as Array[Callable]
 
 signal debug_aim(agentPos: Vector2, targetPos: Vector2, agentVel: Vector2, targetVel: Vector2, bulletSpeed: float, aimPos: Vector2)
 var debug: bool = false
 
-func _init(agent: RigidBody2D) -> void:
+func _init(agent: Agent) -> void:
 	_agent = agent
 	_dbg = [Callable.create(debug_aim, "emit")]
 
 func leadShot(target: RigidBody2D, bulletSpeed: float) -> Vector2:
-	return LeadShot(_agent.global_position, target.global_position, _agent.linear_velocity, target.linear_velocity, bulletSpeed, _dbg if debug else _nodbg)
+	var gun_pos = _agent.gun.endOfGun.global_position if _agent.gun != null else _agent.global_position
+	var gun_vel = _agent.gun.linear_velocity if _agent.gun != null else _agent.linear_velocity
+	return LeadShot(gun_pos, target.global_position, gun_vel, target.linear_velocity, bulletSpeed, _dbg if debug else _nodbg)
 
 
 

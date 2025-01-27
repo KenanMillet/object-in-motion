@@ -42,6 +42,7 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_u2jya")
+autoplay = "default"
 
 [node name="Player Hurt Box" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_tt0nf")

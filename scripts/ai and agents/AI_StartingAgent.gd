@@ -43,11 +43,13 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
 	if agent.controllingPlayer == null && agent.target != null && agent.gun != null:
-		var gun_dist_sq = agent.global_position.distance_squared_to(agent.gun.global_position)
+		var target_vector = agent.target.global_position - agent.global_position
 		var gun_direction = aimAssist.leadShot(agent.target, agent.gun.bulletSpeed)
-		agent.look_at(agent.target.global_position)
-		agent.aimPosition = agent.target.global_position
+		var target_distance = target_vector.length()
+		var aim_vector = agent.global_position + (gun_direction * target_distance)
 		if gun_direction != Vector2.INF:
-			agent.aimPosition = agent.global_position + (gun_direction * gun_dist_sq)
+			agent.aimPosition = aim_vector
+		else:
+			agent.aimPosition = agent.target.global_position
 		if !recoveringFromTeleport:
-			agent.gun.fire()
+			await agent.fire_gun()

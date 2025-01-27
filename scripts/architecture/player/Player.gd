@@ -9,6 +9,10 @@ signal control_target_changed(target: RigidBody2D, player: Player)
 @export var startingAgent: PackedScene
 @export var startingGun: PackedScene
 @export var camera: Camera2D
+@export var refSpeed: float = 1000
+@export var stationaryZoom: float = 1.5
+@export var refSpeedZoom: float = 1
+@export var zoomSpeed: float = 0.01
 @export var cameraMount: Node2D
 @export var cursorPos: Node2D
 @export var controlCooldown: float = 3
@@ -17,6 +21,8 @@ signal control_target_changed(target: RigidBody2D, player: Player)
 @export var godMode: bool = false
 
 var levelBounds: CollisionObject2D
+
+var target_zoom: Vector2
 
 var agent: Agent = null:
 	get:
@@ -96,11 +102,12 @@ func controlGun(newGun: Gun) -> void:
 		gun.body_entered.disconnect(_on_gun_contact)
 		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
-		gun.controllingPlayer = self
+		gun.controllingPlayer = null
 		gun.visible = true
 		gun.add_collision_exception_with(levelBounds)
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()
+			agent.controllingPlayer = self
 	newGun.body_entered.connect(_on_gun_contact)
 	newGun.body_exited.connect(_on_gun_break_contact)
 	newGun.controllingPlayer = self
@@ -126,12 +133,16 @@ func _process(delta: float) -> void:
 	else:
 		Engine.time_scale = 1.0
 
+	var cameraTarget: RigidBody2D
+
 	if gun != null:
+		cameraTarget = gun
 		cameraMount.global_position = gun.customCenterOfMass.global_position if gun.customCenterOfMass != null else gun.global_position
 		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
 			gun.fire()
 
 	if agent != null:
+		cameraTarget = agent
 		cameraMount.global_position = agent.global_position
 		if Input.is_action_just_pressed("ToggleThrow"):
 			agent.throwMode = !agent.throwMode
@@ -140,6 +151,11 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_released("Fire") && agent.throwMode:
 			agent.throwGun()
 			controlAgent(null, gun)
+	
+	target_zoom = Vector2.ONE * lerpf(stationaryZoom, refSpeedZoom, cameraTarget.linear_velocity.length()/ refSpeed)
+	
+	var zoom_dir = Vector2(signf(target_zoom.x - camera.zoom.x), signf(target_zoom.y - camera.zoom.y))
+	camera.zoom += zoom_dir * zoomSpeed * delta
 
 func _on_agent_death() -> void:
 	agent.died.disconnect(_on_agent_death)
@@ -155,7 +171,7 @@ func _on_gun_contact(body: Node) -> void:
 			var g: Gun = body as Gun
 			if g.agent != null:
 				controlAgent(g.agent, g)
-			elif !g.is_empty():
+			elif !g.is_empty() && agent != null:
 				controlGun(g)
 
 func _on_gun_break_contact(body: Node) -> void:

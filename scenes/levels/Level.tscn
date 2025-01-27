@@ -34,6 +34,7 @@ defaultSpawnLoc = NodePath("Default Spawn Location")
 spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
 spawnTile = ExtResource("5_0t4kd")
+enemiesToSpawn = 8
 agentTable = Array[PackedScene]([ExtResource("6_reeyw"), ExtResource("7_bcabb"), ExtResource("8_lwgbw")])
 agentWeights = Array[int]([1, 1, 1])
 gunTable = Array[PackedScene]([ExtResource("9_7cw3t"), ExtResource("10_0bb6m"), ExtResource("11_h0m8g")])

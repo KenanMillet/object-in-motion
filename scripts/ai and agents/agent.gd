@@ -27,6 +27,7 @@ signal target_changed(new_target: Node2D)
 
 @onready var body: AnimatedSprite2D = $Body
 
+var prefiring: bool = false
 var reloading: bool = false
 
 var gun: Gun = null
@@ -63,7 +64,7 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 	gun.attach(self)
 	gun.global_position = hand.global_position
 	gun.global_rotation = hand.global_rotation
-	gun.reparent(hand)
+	gun.reparent.call_deferred(hand)
 	gun.needs_reload.connect(_reload_gun)
 	gun.bullet_fired.connect(_on_bullet_fired)
 	reloading = false
@@ -119,6 +120,18 @@ func die() -> void:
 	target = null
 	body.play("death")
 
+func fire_gun() -> bool:
+	if gun != null && gun.can_fire():
+		if body.sprite_frames.has_animation("pre_shoot"):
+			prefiring = true
+			body.play("pre_shoot")
+			await body.animation_finished
+			prefiring = false
+	if gun != null && gun.fire():
+		body.play("shoot")
+		return true
+	return false
+
 func _reload_gun(reload_time: float) -> void:
 	if !reloading:
 		reloading = true
@@ -131,7 +144,6 @@ func _on_bullet_fired(_bullet: Bullet, _pos: Vector2, muzzle_velocity: Vector2, 
 	lock_rotation = true
 	propel(Vector2.RIGHT.rotated(muzzle_velocity.angle() + PI) * gun.agentRecoil, shoulder.global_position - global_position)
 	lock_rotation = false
-	body.play("shoot")
 
 func _on_animation_finished() -> void:
 	if health > 0:

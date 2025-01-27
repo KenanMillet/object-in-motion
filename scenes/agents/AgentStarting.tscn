@@ -222,8 +222,10 @@ agent = NodePath("..")
 position = Vector2(0, 3)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
-animation = &"teleport_out"
+animation = &"shoot"
 autoplay = "default"
+frame = 1
+frame_progress = 1.0
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)

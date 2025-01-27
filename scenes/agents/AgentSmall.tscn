@@ -126,7 +126,12 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("27_7n3ht")
+}],
+"loop": false,
+"name": &"pre_shoot",
+"speed": 12.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("28_8r0cf")
 }, {
@@ -222,7 +227,10 @@ refNode = NodePath("..")
 position = Vector2(0, -9)
 scale = Vector2(-0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
+animation = &"pre_shoot"
 autoplay = "default"
+frame = 2
+frame_progress = 1.0
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -3)

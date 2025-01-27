@@ -57,6 +57,9 @@ var thrownBy: Agent = null
 
 var _cooldown = 0
 
+func can_fire():
+	return _cooldown == 0 && !is_empty()
+
 var _impulses = []
 
 func is_empty():
@@ -79,7 +82,8 @@ func bulletDeviation() -> float:
 func fire() -> bool:
 	if _cooldown != 0:
 		return false
-	if !is_empty():
+	var has_ammo = !is_empty()
+	if has_ammo:
 		ammo-=1
 		if !is_empty():
 			_cooldown = 60.0/rpm
@@ -103,9 +107,11 @@ func fire() -> bool:
 				propel(Vector2(recoil, 0).rotated(global_rotation + PI + deviation), endOfGun.global_position - global_position)
 			else:
 				b.add_collision_exception_with(agent)
+		if is_empty():
+			needs_reload.emit(reloadTime)
 	else:
 		needs_reload.emit(reloadTime)
-	return true
+	return has_ammo
 
 func reload() -> void:
 	ammo = magSize

@@ -25,13 +25,17 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if agent.controllingPlayer == null && agent.target != null && targetMovementAngle != NAN:
 		if agent.gun != null:
-			var gun_dist_sq = agent.global_position.distance_squared_to(agent.gun.global_position)
+			var target_vector = agent.target.global_position - agent.global_position
 			var gun_direction = aimAssist.leadShot(agent.target, agent.gun.bulletSpeed)
-			agent.aimPosition = agent.target.global_position
+			var target_distance = target_vector.length()
+			var aim_vector = agent.global_position + (gun_direction * target_distance)
 			if gun_direction != Vector2.INF:
-				agent.aimPosition = agent.global_position + (gun_direction * gun_dist_sq)
-			if agent.global_position.distance_to(agent.target.global_position) < attackDistance:
-				agent.gun.fire()
+				agent.aimPosition = aim_vector
+			elif target_distance > attackDistance:
+				agent.aimPosition = agent.target.global_position
+			if target_distance < attackDistance:
+				agent.fire_gun()
+			
 		targetMovementAngle += delta
 		targetAcquireTime += delta
 		pidController.target_position = agent.target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
