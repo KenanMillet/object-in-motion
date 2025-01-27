@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://c32dxdpwasqrj"]
 
-[ext_resource type="Script" path="res://Gun.gd" id="1_wfk30"]
-[ext_resource type="PackedScene" uid="uid://dhhm8dcficht0" path="res://BulletSMG.tscn" id="2_o5ife"]
-[ext_resource type="PackedScene" uid="uid://b4mwjccqi0ff4" path="res://AmmoChunkSMG.tscn" id="3_jmqit"]
+[ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_wfk30"]
+[ext_resource type="PackedScene" uid="uid://dhhm8dcficht0" path="res://scenes/guns/BulletSMG.tscn" id="2_o5ife"]
+[ext_resource type="PackedScene" uid="uid://b4mwjccqi0ff4" path="res://scenes/ui/AmmoChunkSMG.tscn" id="3_jmqit"]
 [ext_resource type="Texture2D" uid="uid://ck6ol2wipre6d" path="res://art/enemies and agents/agents/medium_agent/medium_gun_static.png" id="4_atxb3"]
 
 [node name="Submachine Gun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]

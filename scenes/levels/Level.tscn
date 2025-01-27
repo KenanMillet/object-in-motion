@@ -1,0 +1,87 @@
+[gd_scene load_steps=18 format=3 uid="uid://cbn4yp7nnbr40"]
+
+[ext_resource type="Script" path="res://scripts/architecture/Game.gd" id="1_rdkvc"]
+[ext_resource type="Script" path="res://scripts/architecture/DebugCanvas.gd" id="2_mh5oy"]
+[ext_resource type="PackedScene" uid="uid://b07rv0ofpm43a" path="res://scenes/scenery/Background_1.tscn" id="3_pe2gd"]
+[ext_resource type="Script" path="res://scripts/architecture/InstanceManager.gd" id="4_5cuiw"]
+[ext_resource type="PackedScene" uid="uid://dl0487ci1hje0" path="res://scenes/architecture/SpawnTile.tscn" id="5_0t4kd"]
+[ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://scenes/agents/AgentStarting.tscn" id="6_reeyw"]
+[ext_resource type="PackedScene" uid="uid://bcxr0fypsonrd" path="res://scenes/agents/AgentMedium.tscn" id="7_bcabb"]
+[ext_resource type="PackedScene" uid="uid://dps1u886grvy8" path="res://scenes/agents/AgentSmall.tscn" id="8_lwgbw"]
+[ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://scenes/guns/GunPistol.tscn" id="9_7cw3t"]
+[ext_resource type="PackedScene" uid="uid://c32dxdpwasqrj" path="res://scenes/guns/GunSMG.tscn" id="10_0bb6m"]
+[ext_resource type="PackedScene" uid="uid://dhdueamxhb7yf" path="res://scenes/guns/GunShotgun.tscn" id="11_h0m8g"]
+[ext_resource type="PackedScene" uid="uid://djlohye7cxcoe" path="res://scenes/scenery/Asteroid_1.tscn" id="12_qkd4g"]
+[ext_resource type="PackedScene" uid="uid://duqrik1wx1bko" path="res://scenes/scenery/Asteroid_2.tscn" id="13_ggckg"]
+[ext_resource type="PackedScene" uid="uid://dvvrl5sami12e" path="res://scenes/scenery/Asteroid_3.tscn" id="14_g3531"]
+[ext_resource type="Script" path="res://scripts/architecture/SpawnTile.gd" id="15_uej2l"]
+[ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://scenes/architecture/Player.tscn" id="16_64rk8"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_rdkvc")
+
+[node name="Debug Canvas" type="Node2D" parent="."]
+z_index = 4096
+script = ExtResource("2_mh5oy")
+
+[node name="Background_1" parent="." instance=ExtResource("3_pe2gd")]
+
+[node name="Instance Manager" type="Node" parent="." node_paths=PackedStringArray("defaultSpawnLoc", "spawnZoneCornerA", "spawnZoneCornerB", "players", "playerSpawns", "levelBounds")]
+script = ExtResource("4_5cuiw")
+defaultSpawnLoc = NodePath("Default Spawn Location")
+spawnZoneCornerA = NodePath("Spawn Bounds A")
+spawnZoneCornerB = NodePath("Spawn Bounds B")
+spawnTile = ExtResource("5_0t4kd")
+enemiesToSpawn = 4
+agentTable = Array[PackedScene]([ExtResource("6_reeyw"), ExtResource("7_bcabb"), ExtResource("8_lwgbw")])
+agentWeights = Array[int]([1, 1, 1])
+gunTable = Array[PackedScene]([ExtResource("9_7cw3t"), ExtResource("10_0bb6m"), ExtResource("11_h0m8g")])
+asteroidTable = Array[PackedScene]([ExtResource("12_qkd4g"), ExtResource("13_ggckg"), ExtResource("14_g3531")])
+asteroidWeights = Array[int]([1, 1, 1])
+asterAngleVariance = 0.261799
+players = [NodePath("../Player")]
+playerSpawns = [NodePath("Player Spawn 1")]
+levelBounds = NodePath("../Bounds")
+
+[node name="Default Spawn Location" type="Marker2D" parent="Instance Manager"]
+position = Vector2(-8000, -8000)
+
+[node name="Spawn Bounds A" type="Marker2D" parent="Instance Manager"]
+position = Vector2(-6000, -3500)
+
+[node name="Spawn Bounds B" type="Marker2D" parent="Instance Manager"]
+position = Vector2(6000, 3500)
+
+[node name="Player Spawn 1" type="Area2D" parent="Instance Manager"]
+position = Vector2(-10, -10)
+collision_layer = 262144
+collision_mask = 196608
+monitorable = false
+script = ExtResource("15_uej2l")
+size = Vector2(20, 20)
+spawn_on_screen = false
+
+[node name="Player" parent="." instance=ExtResource("16_64rk8")]
+
+[node name="Bounds" type="StaticBody2D" parent="."]
+
+[node name="Bottom Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, 4320)
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="Left Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(-7680, 0)
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="Right Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(7680, 0)
+rotation = -1.5708
+shape = SubResource("WorldBoundaryShape2D_u2hhs")
+
+[node name="Top Wall" type="CollisionShape2D" parent="Bounds"]
+position = Vector2(0, -4320)
+rotation = 3.14159
+shape = SubResource("WorldBoundaryShape2D_u2hhs")

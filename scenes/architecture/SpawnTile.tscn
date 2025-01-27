@@ -1,10 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://dl0487ci1hje0"]
 
-[ext_resource type="Script" path="res://SpawnTile.gd" id="1_uetei"]
+[ext_resource type="Script" path="res://scripts/architecture/SpawnTile.gd" id="1_uetei"]
 
 [node name="SpawnTile" type="Area2D"]
-collision_layer = 0
-collision_mask = 65536
+collision_layer = 262144
+collision_mask = 196608
 monitorable = false
 script = ExtResource("1_uetei")
 size = Vector2(500, 500)

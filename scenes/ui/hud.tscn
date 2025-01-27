@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://ddjmlwnyldf4a"]
 
-[ext_resource type="Script" path="res://hud.gd" id="1_lj0gx"]
+[ext_resource type="Script" path="res://scripts/architecture/player/hud.gd" id="1_lj0gx"]
 [ext_resource type="Texture2D" uid="uid://c0670tcnuyqkl" path="res://art/combat ui/focus bars/gun_only_focus.png" id="2_b8fy4"]
 [ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="2_fpunk"]
-[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://HealthChunkStarting.tscn" id="3_wcqru"]
+[ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://scenes/ui/HealthChunkStarting.tscn" id="3_wcqru"]
 [ext_resource type="Texture2D" uid="uid://bws45omyav748" path="res://art/combat ui/ammo tracker/starter_bullet.png" id="5_r1om8"]
 
 [sub_resource type="Curve" id="Curve_8gbr8"]

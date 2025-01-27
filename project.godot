@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Object In Motion"
-run/main_scene="res://Level.tscn"
+run/main_scene="res://scenes/levels/Level.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
 [display]
@@ -82,6 +82,7 @@ ToggleThrow={
 2d_physics/layer_2="agents"
 2d_physics/layer_3="bullets"
 2d_physics/layer_4="guns"
+2d_physics/layer_5="background"
 2d_physics/layer_17="spawn_blocking"
 2d_physics/layer_18="spawn_testing"
 2d_physics/layer_19="spawn_tile"

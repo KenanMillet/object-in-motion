@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://djlohye7cxcoe"]
 
-[ext_resource type="Script" path="res://Asteroid.gd" id="1_npedc"]
+[ext_resource type="Script" path="res://scripts/scenery/Asteroid.gd" id="1_npedc"]
 [ext_resource type="Texture2D" uid="uid://cy56p7gjp1kwd" path="res://art/misc/asteroid_1.png" id="2_qc87f"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vdghg"]

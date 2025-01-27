@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dhdueamxhb7yf"]
 
-[ext_resource type="Script" path="res://Gun.gd" id="1_b440x"]
-[ext_resource type="PackedScene" uid="uid://646ue1vs5pi7" path="res://BulletShotgun.tscn" id="2_no545"]
-[ext_resource type="PackedScene" uid="uid://b7ue54lqsq2r4" path="res://AmmoChunkShotgun.tscn" id="3_31bbs"]
+[ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_b440x"]
+[ext_resource type="PackedScene" uid="uid://646ue1vs5pi7" path="res://scenes/guns/BulletShotgun.tscn" id="2_no545"]
+[ext_resource type="PackedScene" uid="uid://b7ue54lqsq2r4" path="res://scenes/ui/AmmoChunkShotgun.tscn" id="3_31bbs"]
 [ext_resource type="Texture2D" uid="uid://boat3eh5rbbbk" path="res://art/enemies and agents/agents/small_agent/small_gun_static.png" id="4_vq4aa"]
 
 [node name="Shotgun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]
