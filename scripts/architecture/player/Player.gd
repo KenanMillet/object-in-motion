@@ -68,6 +68,8 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		agent.enemyHitbox.set_deferred("disabled", false)
 		agent.playerHitbox.set_deferred("disabled", true)
 		agent.controllingPlayer = null
+		if agent.gun != null:
+			agent.gun.visible = false
 		agent.add_collision_exception_with(levelBounds)
 		if agent.died.is_connected(_on_agent_death):
 			agent.died.disconnect(_on_agent_death)
@@ -76,6 +78,8 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		newAgent.playerHitbox.set_deferred("disabled", false)
 		newAgent.died.connect(_on_agent_death)
 		newAgent.controllingPlayer = self
+		if newAgent.gun != null:
+			newAgent.gun.visible = true
 		newAgent.remove_collision_exception_with(levelBounds)
 	agent = newAgent
 	focusTime = maxFocusTime
@@ -93,6 +97,7 @@ func controlGun(newGun: Gun) -> void:
 		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
 		gun.controllingPlayer = self
+		gun.visible = true
 		gun.add_collision_exception_with(levelBounds)
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()

@@ -68,7 +68,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("11_vlq0q")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 24.0
 }, {
@@ -76,7 +76,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("12_jhyug")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_static",
 "speed": 1.0
 }, {
@@ -134,7 +134,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("28_mj5q4")
 }],
-"loop": true,
+"loop": false,
 "name": &"dominate",
 "speed": 24.0
 }, {
@@ -145,8 +145,25 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("15_302sv")
 }],
-"loop": true,
+"loop": false,
 "name": &"shoot",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_t54or")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_fbsrb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_1q25n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_3ce0q")
+}],
+"loop": false,
+"name": &"teleport_in",
 "speed": 12.0
 }, {
 "frames": [{
@@ -167,18 +184,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("21_t54or")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_fbsrb")
-}, {
-"duration": 1.0,
-"texture": ExtResource("23_1q25n")
-}, {
-"duration": 1.0,
-"texture": ExtResource("24_3ce0q")
 }],
-"loop": true,
-"name": &"teleport",
+"loop": false,
+"name": &"teleport_out",
 "speed": 12.0
 }]
 
@@ -207,13 +215,15 @@ focusBar = ExtResource("3_qv8pj")
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent") groups=["agents", "starting_agents"]]
 script = ExtResource("4_c5ys4")
 teleportRecoveryTime = Vector2(2, 3)
-preferredDistance = Vector2(500, 600)
+preferredDistance = Vector2(300, 500)
 agent = NodePath("..")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
+animation = &"teleport_out"
+autoplay = "default"
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)

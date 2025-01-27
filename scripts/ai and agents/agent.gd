@@ -25,6 +25,8 @@ signal target_changed(new_target: Node2D)
 @export var focusTimeScale: float = 0.2
 @export var focusBar: Texture = null
 
+@onready var body: AnimatedSprite2D = $Body
+
 var reloading: bool = false
 
 var gun: Gun = null
@@ -55,6 +57,7 @@ func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 
 func holdGun(newgun: Gun, parent: Node) -> void:
 	gun = newgun
+	gun.visible = (controllingPlayer != null)
 	prevGunParent = parent
 	add_collision_exception_with(gun)
 	gun.attach(self)
@@ -67,6 +70,7 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 
 func releaseGun() -> void:
 	var old_gun = gun
+	gun.visible = true
 	controllingPlayer = null
 	gun.detach()
 	gun.reparent.call_deferred(prevGunParent)
@@ -113,6 +117,7 @@ func die() -> void:
 	enemyHitbox.set_deferred("disabled", true)
 	playerHitbox.set_deferred("disabled", true)
 	target = null
+	body.play("death")
 
 func _reload_gun(reload_time: float) -> void:
 	if !reloading:
@@ -126,6 +131,11 @@ func _on_bullet_fired(_bullet: Bullet, _pos: Vector2, muzzle_velocity: Vector2, 
 	lock_rotation = true
 	propel(Vector2.RIGHT.rotated(muzzle_velocity.angle() + PI) * gun.agentRecoil, shoulder.global_position - global_position)
 	lock_rotation = false
+	body.play("shoot")
+
+func _on_animation_finished() -> void:
+	if health > 0:
+		body.play("default")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -133,6 +143,7 @@ func _ready() -> void:
 	collision_mask |= CollisionUtil.Layer.objects
 	enemyHitbox.set_deferred("disabled", false)
 	playerHitbox.set_deferred("disabled", true)
+	body.animation_finished.connect(_on_animation_finished)
 
 func _on_player_control_target_changed(control_target: RigidBody2D, _player: Player) -> void:
 	target = control_target if health > 0 else null
@@ -145,10 +156,12 @@ func _physics_process(_delta: float) -> void:
 	if gun != null:
 		if controllingPlayer != null:
 			aimPosition = controllingPlayer.cursorPos.global_position
-		if aimPosition != Vector2.INF:
 			shoulder.look_at(aimPosition)
-			gun.global_position = hand.global_position
 			gun.look_at(aimPosition)
+		elif aimPosition != Vector2.INF:
+			look_at(aimPosition)
+			gun.look_at(aimPosition)
+		gun.global_position = hand.global_position
 	for impulse in _impulses:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])

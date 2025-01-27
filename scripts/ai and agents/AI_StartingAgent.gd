@@ -1,5 +1,6 @@
 extends Node
 
+@export var teleportDuration: float = 0.5
 @export var teleportCooldown: float = 6
 @export var teleportRecoveryTime: Vector2
 @export var preferredDistance: Vector2
@@ -16,7 +17,17 @@ func teleport() -> void:
 		var tele_loc = agent.target.global_position + Vector2(randf_range(preferredDistance.x, preferredDistance.y), 0).rotated(randf_range(0, 2*PI))
 		agent.linear_velocity = Vector2.ZERO
 		agent.angular_velocity = 0
+		agent.body.play("teleport_out")
+		await agent.body.animation_finished
+		var prev_collision_layer = agent.collision_layer
+		agent.collision_layer = CollisionUtil.Layer.spawn_blocking_obj
+		agent.visible = 0
 		agent.global_position = tele_loc
+		await get_tree().create_timer(teleportDuration).timeout
+		agent.visible = 1
+		agent.body.play("teleport_in")
+		await agent.body.animation_finished
+		agent.collision_layer = prev_collision_layer
 		var recovery_time = randf_range(teleportRecoveryTime.x, teleportRecoveryTime.y)
 		await get_tree().create_timer(recovery_time).timeout
 		recoveringFromTeleport = false

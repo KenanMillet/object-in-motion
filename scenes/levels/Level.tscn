@@ -34,7 +34,6 @@ defaultSpawnLoc = NodePath("Default Spawn Location")
 spawnZoneCornerA = NodePath("Spawn Bounds A")
 spawnZoneCornerB = NodePath("Spawn Bounds B")
 spawnTile = ExtResource("5_0t4kd")
-enemiesToSpawn = 4
 agentTable = Array[PackedScene]([ExtResource("6_reeyw"), ExtResource("7_bcabb"), ExtResource("8_lwgbw")])
 agentWeights = Array[int]([1, 1, 1])
 gunTable = Array[PackedScene]([ExtResource("9_7cw3t"), ExtResource("10_0bb6m"), ExtResource("11_h0m8g")])
@@ -56,8 +55,8 @@ position = Vector2(6000, 3500)
 
 [node name="Player Spawn 1" type="Area2D" parent="Instance Manager"]
 position = Vector2(-10, -10)
-collision_layer = 262144
-collision_mask = 196608
+collision_layer = 65536
+collision_mask = 393216
 monitorable = false
 script = ExtResource("15_uej2l")
 size = Vector2(20, 20)

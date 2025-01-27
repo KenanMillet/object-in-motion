@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/architecture/SpawnTile.gd" id="1_uetei"]
 
 [node name="SpawnTile" type="Area2D"]
-collision_layer = 262144
-collision_mask = 196608
+collision_layer = 65536
+collision_mask = 393216
 monitorable = false
 script = ExtResource("1_uetei")
 size = Vector2(500, 500)

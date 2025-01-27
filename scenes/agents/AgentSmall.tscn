@@ -83,15 +83,15 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("19_afffe")
 }],
-"loop": true,
-"name": &"death_animation",
+"loop": false,
+"name": &"death",
 "speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("20_xe0dv")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_static",
 "speed": 1.0
 }, {
@@ -113,7 +113,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("24_ules0")
 }],
-"loop": true,
+"loop": false,
 "name": &"down",
 "speed": 8.0
 }, {
@@ -139,7 +139,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("31_ntt7a")
 }],
-"loop": true,
+"loop": false,
 "name": &"shoot",
 "speed": 12.0
 }, {
@@ -156,7 +156,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("35_670tf")
 }],
-"loop": true,
+"loop": false,
 "name": &"turnaround_halt",
 "speed": 12.0
 }, {
@@ -167,7 +167,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("37_1qq5a")
 }],
-"loop": true,
+"loop": false,
 "name": &"up",
 "speed": 8.0
 }]
@@ -222,6 +222,7 @@ refNode = NodePath("..")
 position = Vector2(0, -9)
 scale = Vector2(-0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
+autoplay = "default"
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-2, -3)

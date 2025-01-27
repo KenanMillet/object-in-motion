@@ -81,15 +81,15 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("14_4uton")
 }],
-"loop": true,
-"name": &"death_animation",
+"loop": false,
+"name": &"death",
 "speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("15_46fgm")
 }],
-"loop": true,
+"loop": false,
 "name": &"death_static",
 "speed": 1.0
 }, {
@@ -111,7 +111,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("7_hj0jc")
 }],
-"loop": true,
+"loop": false,
 "name": &"down",
 "speed": 8.0
 }, {
@@ -134,7 +134,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("25_jufve")
 }],
-"loop": true,
+"loop": false,
 "name": &"propel_down",
 "speed": 24.0
 }, {
@@ -157,7 +157,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("31_00nhk")
 }],
-"loop": true,
+"loop": false,
 "name": &"propel_up",
 "speed": 24.0
 }, {
@@ -180,7 +180,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("37_sb40j")
 }],
-"loop": true,
+"loop": false,
 "name": &"shoot",
 "speed": 24.0
 }, {
@@ -194,7 +194,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("40_8bx4t")
 }],
-"loop": true,
+"loop": false,
 "name": &"turnaround_halt",
 "speed": 12.0
 }, {
@@ -205,7 +205,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("9_hrnd6")
 }],
-"loop": true,
+"loop": false,
 "name": &"up",
 "speed": 8.0
 }]
@@ -254,7 +254,7 @@ refNode = NodePath("..")
 position = Vector2(0, 4)
 scale = Vector2(-0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_5wyik")
-frame_progress = 0.43796
+autoplay = "default"
 
 [node name="Enemy Hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-6, 1)
