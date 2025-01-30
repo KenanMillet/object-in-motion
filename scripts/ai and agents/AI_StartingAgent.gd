@@ -14,7 +14,6 @@ extends Node
 func teleport() -> void:
 	if agent.controllingPlayer == null && agent.target != null:
 		recoveringFromTeleport = true
-		var tele_loc = agent.target.global_position + Vector2(randf_range(preferredDistance.x, preferredDistance.y), 0).rotated(randf_range(0, 2*PI))
 		agent.linear_velocity = Vector2.ZERO
 		agent.angular_velocity = 0
 		agent.gun.visible = false
@@ -23,8 +22,9 @@ func teleport() -> void:
 		var prev_collision_layer = agent.collision_layer
 		agent.collision_layer = CollisionUtil.Layer.spawn_blocking_obj
 		agent.visible = false
-		agent.global_position = tele_loc
 		await get_tree().create_timer(teleportDuration).timeout
+		var tele_loc = agent.target.global_position + Vector2(randf_range(preferredDistance.x, preferredDistance.y), 0).rotated(randf_range(0, 2*PI))
+		agent.global_position = tele_loc
 		agent.visible = true
 		agent.body.play("teleport_in")
 		await agent.body.animation_finished
