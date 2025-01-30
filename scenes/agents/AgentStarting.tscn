@@ -199,7 +199,7 @@ radius = 3.27902
 height = 10.4029
 
 [node name="Starting Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
-mass = 70.0
+mass = 40.0
 gravity_scale = 0.0
 linear_damp_mode = 1
 linear_damp = 0.1

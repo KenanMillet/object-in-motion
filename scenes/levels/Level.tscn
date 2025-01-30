@@ -64,6 +64,7 @@ size = Vector2(20, 20)
 spawn_on_screen = false
 
 [node name="Player" parent="." instance=ExtResource("16_64rk8")]
+startingAgent = ExtResource("7_bcabb")
 
 [node name="Bounds" type="StaticBody2D" parent="."]
 
