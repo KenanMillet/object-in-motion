@@ -6,7 +6,6 @@ extends RigidBody2D
 @export var playerHurtBox: CollisionShape2D = null
 @export var enemyHurtBox: CollisionShape2D = null
 @export var ignoreEnemyBullets: bool = false
-@export var friendlyFireTimeLimit: float = 5
 
 var firedFromPlayer: Player = null
 
@@ -16,9 +15,6 @@ func _ready() -> void:
 	collision_layer = CollisionUtil.Layer.bullets
 	collision_mask = CollisionUtil.Layer.objects
 	body_entered.connect(_on_body_entered)
-	if firedFromPlayer == null:
-		await get_tree().create_timer(friendlyFireTimeLimit).timeout
-		enemyDamage = 0
 
 func _process(_delta: float) -> void:
 	if global_position.distance_to(Vector2.ZERO) > 10000:
@@ -27,7 +23,8 @@ func _process(_delta: float) -> void:
 func _on_body_entered(body:Node) -> void:
 	if body is Agent:
 		var agent: Agent = body as Agent
-		agent.damage(playerDamage if agent.controllingPlayer != null else enemyDamage)
+		if agent.visionChecker.is_on_screen():
+			agent.damage(playerDamage if agent.controllingPlayer != null else enemyDamage)
 	if body is Gun && (body as Gun).agent == null:
 		hide()
 		await get_tree().create_timer(0.1).timeout

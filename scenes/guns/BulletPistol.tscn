@@ -37,6 +37,7 @@ playerDamage = 3
 enemyDamage = 5
 playerHurtBox = NodePath("Player Hurt Box")
 enemyHurtBox = NodePath("Enemy Hurt Box")
+ignoreEnemyBullets = true
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

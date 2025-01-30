@@ -12,6 +12,7 @@ signal target_changed(new_target: Node2D)
 @export_range(1, 360, 1, "or_greater", "suffix:°/s") var gunSpinOnDeath = 360
 @export var enemyHitbox: CollisionShape2D = null
 @export var playerHitbox: CollisionShape2D = null
+@export var visionChecker: VisibleOnScreenNotifier2D
 @export var health: int = 12:
 	get:
 		return health

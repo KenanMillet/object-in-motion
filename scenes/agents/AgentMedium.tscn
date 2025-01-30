@@ -218,7 +218,7 @@ height = 26.0
 radius = 4.91852
 height = 28.0
 
-[node name="Medium Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox")]
+[node name="Medium Agent" type="RigidBody2D" node_paths=PackedStringArray("hand", "shoulder", "enemyHitbox", "playerHitbox", "visionChecker")]
 mass = 50.0
 gravity_scale = 0.0
 linear_damp_mode = 1
@@ -227,6 +227,7 @@ hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
+visionChecker = NodePath("VisibleOnScreenNotifier2D")
 health = 14
 healthChunk = ExtResource("2_nvap0")
 maxFocusTime = 1.5
@@ -276,5 +277,9 @@ position = Vector2(-6, -6)
 
 [node name="Hand" type="Marker2D" parent="Shoulder"]
 position = Vector2(18, 0)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-6.5, 0.999997)
+scale = Vector2(4.15, 4.6)
 
 [connection signal="target_changed" from="." to="AI" method="_on_medium_agent_target_changed"]
