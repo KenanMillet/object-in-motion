@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dhdueamxhb7yf"]
+[gd_scene load_steps=9 format=3 uid="uid://dhdueamxhb7yf"]
 
 [ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_b440x"]
 [ext_resource type="PackedScene" uid="uid://646ue1vs5pi7" path="res://scenes/guns/BulletShotgun.tscn" id="2_no545"]
 [ext_resource type="PackedScene" uid="uid://b7ue54lqsq2r4" path="res://scenes/ui/AmmoChunkShotgun.tscn" id="3_31bbs"]
 [ext_resource type="Texture2D" uid="uid://boat3eh5rbbbk" path="res://art/enemies and agents/agents/small_agent/small_gun_static.png" id="4_vq4aa"]
+[ext_resource type="Texture2D" uid="uid://busos6dqlhmxj" path="res://art/misc/indicator/fire_ready_indicator.png" id="5_eykxh"]
 
 [sub_resource type="Curve" id="Curve_gbasa"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.75), 0.0, 0.0, 0, 0]
@@ -17,19 +18,6 @@ gradient = SubResource("Gradient_1ifj1")
 fill = 1
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(0.324786, 0.487179)
-
-[sub_resource type="Curve" id="Curve_s1sv1"]
-_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="Gradient" id="Gradient_c1g8d"]
-colors = PackedColorArray(0.262745, 1, 0.827451, 1, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_e2f14"]
-gradient = SubResource("Gradient_c1g8d")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0, 0)
 
 [node name="Shotgun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass", "laserGuide", "readyToFireLight")]
 collision_layer = 8
@@ -81,14 +69,9 @@ texture_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 
-[node name="Ready to Fire" type="Line2D" parent="End Of Gun"]
-points = PackedVector2Array(0, -10, 0, 0, 0, 10)
-width = 1.0
-width_curve = SubResource("Curve_s1sv1")
-texture = SubResource("GradientTexture2D_e2f14")
-texture_mode = 2
-begin_cap_mode = 2
-end_cap_mode = 2
+[node name="Ready to Fire" type="Sprite2D" parent="End Of Gun"]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("5_eykxh")
 
 [node name="Center Of Mass" type="Marker2D" parent="."]
 position = Vector2(-6, -1)
