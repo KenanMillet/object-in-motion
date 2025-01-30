@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c32dxdpwasqrj"]
+[gd_scene load_steps=10 format=3 uid="uid://c32dxdpwasqrj"]
 
 [ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_wfk30"]
 [ext_resource type="PackedScene" uid="uid://dhhm8dcficht0" path="res://scenes/guns/BulletSMG.tscn" id="2_o5ife"]
@@ -18,7 +18,17 @@ fill = 1
 fill_from = Vector2(0, 0.5)
 fill_to = Vector2(0.324786, 0.487179)
 
-[node name="Submachine Gun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass", "laserGuide")]
+[sub_resource type="Curve" id="Curve_x0rkl"]
+_data = [Vector2(0, 0.2), 0.0, 0.0, 0, 0, Vector2(0.5, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l525h"]
+gradient = SubResource("Gradient_itin4")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+
+[node name="Submachine Gun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass", "laserGuide", "readyToFireLight")]
 collision_layer = 8
 collision_mask = 15
 mass = 2.0
@@ -44,6 +54,7 @@ ammoChunk = ExtResource("3_jmqit")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
 laserGuide = NodePath("EndOfGun/Laser")
+readyToFireLight = NodePath("EndOfGun/Ready to Fire")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(-0.2, 0.2)
@@ -61,6 +72,15 @@ points = PackedVector2Array(0, 0, 100, 0)
 width = 1.0
 width_curve = SubResource("Curve_14loj")
 texture = SubResource("GradientTexture2D_n8xir")
+texture_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Ready to Fire" type="Line2D" parent="EndOfGun"]
+points = PackedVector2Array(0, -10, 0, 0, 0, 10)
+width = 1.0
+width_curve = SubResource("Curve_x0rkl")
+texture = SubResource("GradientTexture2D_l525h")
 texture_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2

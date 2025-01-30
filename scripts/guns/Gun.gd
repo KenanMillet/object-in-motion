@@ -23,6 +23,7 @@ signal ammo_changed(new_ammo: int, ammo_chunk: PackedScene)
 @export var endOfGun: Marker2D = null
 @export var customCenterOfMass: Marker2D = null
 @export var laserGuide: Line2D
+@export var readyToFireLight: Node2D
 
 @onready var ammo = magSize:
 	get:
@@ -145,6 +146,7 @@ func _process(delta: float) -> void:
 	_cooldown = max(0.0, _cooldown - delta)
 	laserGuide.points[1].x = minf(100, 50*precision/playerFocusPrecisionModifier) * pow(playerFocusPrecisionModifier, 3)
 	laserGuide.visible = !is_empty()
+	readyToFireLight.visible = (!is_empty() && _cooldown == 0)
 
 func _physics_process(_delta: float) -> void:
 	for impulse in _impulses:
