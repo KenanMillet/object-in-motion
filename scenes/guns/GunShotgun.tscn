@@ -1,11 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://dhdueamxhb7yf"]
+[gd_scene load_steps=8 format=3 uid="uid://dhdueamxhb7yf"]
 
 [ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_b440x"]
 [ext_resource type="PackedScene" uid="uid://646ue1vs5pi7" path="res://scenes/guns/BulletShotgun.tscn" id="2_no545"]
 [ext_resource type="PackedScene" uid="uid://b7ue54lqsq2r4" path="res://scenes/ui/AmmoChunkShotgun.tscn" id="3_31bbs"]
 [ext_resource type="Texture2D" uid="uid://boat3eh5rbbbk" path="res://art/enemies and agents/agents/small_agent/small_gun_static.png" id="4_vq4aa"]
 
-[node name="Shotgun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]
+[sub_resource type="Curve" id="Curve_gbasa"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.723622), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_1ifj1"]
+colors = PackedColorArray(0.262745, 1, 0.827451, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cqs7h"]
+gradient = SubResource("Gradient_1ifj1")
+fill = 1
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(0.324786, 0.487179)
+
+[node name="Shotgun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass", "laserGuide")]
 collision_layer = 8
 collision_mask = 15
 mass = 2.0
@@ -21,16 +34,17 @@ enemyBulletSpeed = 700
 gunRecoil = 1500.0
 playerAgentRecoil = 1000.0
 enemyAgentRecoil = 10000.0
-playerRpm = 60
+playerRpm = 90
 enemyRpm = 30
 bulletsPerShot = 4
-precision = 0.75
+enemyPrecision = 0.75
 playerReloadTime = 2.25
 enemyReloadTime = 3.5
 magSize = 4
 ammoChunk = ExtResource("3_31bbs")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
+laserGuide = NodePath("EndOfGun/Laser")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-21, 4.5)
@@ -43,6 +57,15 @@ polygon = PackedVector2Array(-18, 12, -14, 11, -13, 4, -2, 1, 14, 1, 14, -4, -14
 
 [node name="EndOfGun" type="Marker2D" parent="."]
 position = Vector2(15, -2)
+
+[node name="Laser" type="Line2D" parent="EndOfGun"]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 1.0
+width_curve = SubResource("Curve_gbasa")
+texture = SubResource("GradientTexture2D_cqs7h")
+texture_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
 [node name="CenterOfMass" type="Marker2D" parent="."]
 position = Vector2(-6, -1)

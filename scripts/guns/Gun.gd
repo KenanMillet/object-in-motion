@@ -14,13 +14,15 @@ signal ammo_changed(new_ammo: int, ammo_chunk: PackedScene)
 @export var playerRpm: int = 120
 @export var enemyRpm: int = 90
 @export var bulletsPerShot: int = 1
-@export var precision: float = 1
+@export var playerPrecision: float = 1
+@export var enemyPrecision: float = 1
 @export var playerReloadTime: float = 1.5
 @export var enemyReloadTime: float = 3.0
 @export var magSize = 10
 @export var ammoChunk: PackedScene
 @export var endOfGun: Marker2D = null
 @export var customCenterOfMass: Marker2D = null
+@export var laserGuide: Line2D
 
 @onready var ammo = magSize:
 	get:
@@ -51,18 +53,28 @@ var reloadTime: float:
 	get:
 		return playerReloadTime if controllingPlayer != null else enemyReloadTime
 
+var playerFocusPrecisionModifier: float:
+	get:
+		return controllingPlayer.focusPrecisionMult if controllingPlayer != null && controllingPlayer.focusing else 1.0
+
+var precision: float:
+	get:
+		return (playerPrecision * playerFocusPrecisionModifier) if controllingPlayer != null else enemyPrecision
+
+const spread_outlier_deg: float = 15.0
+
 var agent: Agent = null
 
 var thrownBy: Agent = null
 
 var _cooldown = 0
 
-func can_fire():
+func can_fire() -> bool:
 	return _cooldown == 0 && !is_empty()
 
 var _impulses = []
 
-func is_empty():
+func is_empty() -> bool:
 	return ammo == 0 && magSize != 0
 
 func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
@@ -76,7 +88,6 @@ func detach() -> void:
 	agent = null
 	
 func bulletDeviation() -> float:
-	var spread_outlier_deg: float = 15.0
 	return deg_to_rad((randfn(0, 1.0/precision)/PI) * spread_outlier_deg)
 
 func fire() -> bool:
@@ -132,6 +143,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	_cooldown = max(0.0, _cooldown - delta)
+	laserGuide.points[1].x = minf(100, 50*precision/playerFocusPrecisionModifier) * pow(playerFocusPrecisionModifier, 3)
+	laserGuide.visible = !is_empty()
 
 func _physics_process(_delta: float) -> void:
 	for impulse in _impulses:

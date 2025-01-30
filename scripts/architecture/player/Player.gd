@@ -18,6 +18,7 @@ signal control_target_changed(target: RigidBody2D, player: Player)
 @export var controlCooldown: float = 3
 @export var gunMaxFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
+@export var focusPrecisionMult: float = 1.5
 @export var godMode: bool = false
 
 var levelBounds: CollisionObject2D
@@ -60,6 +61,8 @@ var focusTime: float = 0:
 		focusTime = value
 		focus_changed.emit(focusTime/maxFocusTime if !is_inf(maxFocusTime) else 1.0)
 
+var focusing: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	camera.reparent.call_deferred(cameraMount)
@@ -75,7 +78,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		agent.playerHitbox.set_deferred("disabled", true)
 		agent.controllingPlayer = null
 		if agent.gun != null:
-			agent.gun.visible = false
+			agent.gun.self_modulate.a = 0
 		agent.add_collision_exception_with(levelBounds)
 		if agent.died.is_connected(_on_agent_death):
 			agent.died.disconnect(_on_agent_death)
@@ -85,7 +88,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		newAgent.died.connect(_on_agent_death)
 		newAgent.controllingPlayer = self
 		if newAgent.gun != null:
-			newAgent.gun.visible = true
+			newAgent.gun.self_modulate.a = 1
 		newAgent.remove_collision_exception_with(levelBounds)
 	agent = newAgent
 	focusTime = maxFocusTime
@@ -103,7 +106,7 @@ func controlGun(newGun: Gun) -> void:
 		gun.body_exited.disconnect(_on_gun_break_contact)
 		gun.thrownBy = null
 		gun.controllingPlayer = null
-		gun.visible = true
+		gun.self_modulate.a = 1
 		gun.add_collision_exception_with(levelBounds)
 		if agent != null && agent.gun == gun:
 			agent.releaseGun()
@@ -124,6 +127,7 @@ func _process(delta: float) -> void:
 
 	controlDowntime = max(controlDowntime - delta, 0)
 	if Input.is_action_pressed("Focus") || focusIsForced:
+		focusing = true
 		if Input.is_action_pressed("Focus") && focusIsForced:
 			Engine.time_scale = 0.4
 		else:
@@ -131,6 +135,7 @@ func _process(delta: float) -> void:
 		if !Input.is_action_just_pressed("Focus"):
 			focusTime = max(focusTime - delta, 0)
 	else:
+		focusing = false
 		Engine.time_scale = 1.0
 
 	var cameraTarget: RigidBody2D
@@ -138,17 +143,13 @@ func _process(delta: float) -> void:
 	if gun != null:
 		cameraTarget = gun
 		cameraMount.global_position = gun.customCenterOfMass.global_position if gun.customCenterOfMass != null else gun.global_position
-		if Input.is_action_pressed("Fire") && (agent == null || !agent.throwMode):
+		if Input.is_action_pressed("Fire"):
 			gun.fire()
 
 	if agent != null:
 		cameraTarget = agent
 		cameraMount.global_position = agent.global_position
-		if Input.is_action_just_pressed("ToggleThrow"):
-			agent.throwMode = !agent.throwMode
-		if Input.is_action_just_pressed("Fire") && agent.throwMode:
-			agent.startChargingThrow()
-		if Input.is_action_just_released("Fire") && agent.throwMode:
+		if Input.is_action_just_pressed("Throw"):
 			agent.throwGun()
 			controlAgent(null, gun)
 	

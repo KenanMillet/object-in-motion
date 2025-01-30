@@ -7,11 +7,9 @@ signal target_changed(new_target: Node2D)
 
 @export var hand: Marker2D
 @export var shoulder: Marker2D
-@export var throwChargeTime = 1.0
-@export var minThrowImpulse = 50
-@export var maxThrowImpulse = 250
-@export var minThrowTorque = 10
-@export var maxThrowTorque = 75
+@export var throwImpulse = 250
+@export var throwTorque = 75
+@export_range(1, 360, 1, "or_greater", "suffix:°/s") var gunSpinOnDeath = 360
 @export var enemyHitbox: CollisionShape2D = null
 @export var playerHitbox: CollisionShape2D = null
 @export var health: int = 12:
@@ -41,16 +39,6 @@ var target: RigidBody2D = null:
 var aimPosition: Vector2 = Vector2.INF
 var controllingPlayer: Player = null
 
-var throwMode: bool = false:
-	get:
-		return throwMode
-	set(value):
-		throwMode = value
-		queue_redraw()
-		if !value:
-			stopChargingThrow()
-var _throwChargingStart = null
-
 var _impulses = []
 
 func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
@@ -58,7 +46,7 @@ func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 
 func holdGun(newgun: Gun, parent: Node) -> void:
 	gun = newgun
-	gun.visible = (controllingPlayer != null)
+	gun.self_modulate.a = 1 if controllingPlayer != null else 0
 	prevGunParent = parent
 	add_collision_exception_with(gun)
 	gun.attach(self)
@@ -71,7 +59,7 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 
 func releaseGun() -> void:
 	var old_gun = gun
-	gun.visible = true
+	gun.self_modulate.a = 1
 	controllingPlayer = null
 	gun.detach()
 	gun.reparent.call_deferred(prevGunParent)
@@ -83,25 +71,12 @@ func releaseGun() -> void:
 	await get_tree().create_timer(1).timeout 
 	remove_collision_exception_with(old_gun)
 
-func startChargingThrow() -> void:
-	_throwChargingStart = Time.get_ticks_msec()
-
-func stopChargingThrow() -> void:
-	_throwChargingStart = null
-
-func throwPower() -> float:
-	return clamp((Time.get_ticks_msec() - _throwChargingStart)/(throwChargeTime*1000.0), 0.0, 1.0) if _throwChargingStart != null else 0.0
-
 func throwGun() -> void:
-	if (_throwChargingStart == null || !throwMode):
+	if gun == null:
 		return
-	var power = throwPower()
-	var impulse = lerpf(minThrowImpulse, maxThrowImpulse, power)
-	var torque = lerpf(minThrowTorque, maxThrowTorque, power)
 	gun.thrownBy = self
-	gun.propel(Vector2(impulse, 0).rotated(gun.global_rotation), shoulder.global_position - gun.global_position, torque)
+	gun.propel(Vector2(throwImpulse, 0).rotated(gun.global_rotation), shoulder.global_position - gun.global_position, throwTorque)
 	releaseGun()
-	throwMode = false
 
 func damage(value: int) -> void:
 	if controllingPlayer != null && controllingPlayer.godMode:
@@ -113,6 +88,7 @@ func damage(value: int) -> void:
 
 func die() -> void:
 	if gun != null:
+		gun.angular_velocity += deg_to_rad(gunSpinOnDeath)
 		releaseGun()
 	died.emit()
 	enemyHitbox.set_deferred("disabled", true)
@@ -161,8 +137,7 @@ func _on_player_control_target_changed(control_target: RigidBody2D, _player: Pla
 	target = control_target if health > 0 else null
 
 func _process(_delta: float) -> void:
-	if throwMode:
-		queue_redraw()
+	pass
 
 func _physics_process(_delta: float) -> void:
 	if gun != null:
@@ -178,10 +153,3 @@ func _physics_process(_delta: float) -> void:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])
 	_impulses.clear()
-
-func _draw() -> void:
-	var tp = throwPower()
-	var throwIndicatorLength = lerpf(minThrowImpulse, maxThrowImpulse, tp)
-	if tp > 0 && gun != null:
-		var endOfGun = gun.endOfGun.get_relative_transform_to_parent(self)
-		draw_dashed_line(endOfGun.origin, endOfGun.origin + endOfGun.x * throwIndicatorLength, Color.ALICE_BLUE,  throwIndicatorLength / 100.0, maxThrowImpulse / 10.0)

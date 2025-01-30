@@ -1,11 +1,24 @@
-[gd_scene load_steps=5 format=3 uid="uid://c32dxdpwasqrj"]
+[gd_scene load_steps=8 format=3 uid="uid://c32dxdpwasqrj"]
 
 [ext_resource type="Script" path="res://scripts/guns/Gun.gd" id="1_wfk30"]
 [ext_resource type="PackedScene" uid="uid://dhhm8dcficht0" path="res://scenes/guns/BulletSMG.tscn" id="2_o5ife"]
 [ext_resource type="PackedScene" uid="uid://b4mwjccqi0ff4" path="res://scenes/ui/AmmoChunkSMG.tscn" id="3_jmqit"]
 [ext_resource type="Texture2D" uid="uid://ck6ol2wipre6d" path="res://art/enemies and agents/agents/medium_agent/medium_gun_static.png" id="4_atxb3"]
 
-[node name="Submachine Gun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass")]
+[sub_resource type="Curve" id="Curve_14loj"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.723622), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_itin4"]
+colors = PackedColorArray(1, 0.47451, 0, 1, 1, 0.458824, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n8xir"]
+gradient = SubResource("Gradient_itin4")
+fill = 1
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(0.324786, 0.487179)
+
+[node name="Submachine Gun" type="RigidBody2D" node_paths=PackedStringArray("endOfGun", "customCenterOfMass", "laserGuide")]
 collision_layer = 8
 collision_mask = 15
 mass = 2.0
@@ -23,12 +36,14 @@ playerAgentRecoil = 600.0
 enemyAgentRecoil = 120.0
 playerRpm = 360
 enemyRpm = 240
+playerPrecision = 2.0
 playerReloadTime = 3.0
 enemyReloadTime = 5.0
 magSize = 30
 ammoChunk = ExtResource("3_jmqit")
 endOfGun = NodePath("EndOfGun")
 customCenterOfMass = NodePath("CenterOfMass")
+laserGuide = NodePath("EndOfGun/Laser")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(-0.2, 0.2)
@@ -40,6 +55,15 @@ polygon = PackedVector2Array(-14, 13, -13, 4, -20, 5, -20, -4, 18, -4, 18, 2, 12
 
 [node name="EndOfGun" type="Marker2D" parent="."]
 position = Vector2(19, -1)
+
+[node name="Laser" type="Line2D" parent="EndOfGun"]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 1.0
+width_curve = SubResource("Curve_14loj")
+texture = SubResource("GradientTexture2D_n8xir")
+texture_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
 [node name="CenterOfMass" type="Marker2D" parent="."]
 position = Vector2(-2, -1)

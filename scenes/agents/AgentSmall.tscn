@@ -192,7 +192,6 @@ linear_damp_mode = 1
 script = ExtResource("1_k1s4o")
 hand = NodePath("Shoulder/Hand")
 shoulder = NodePath("Shoulder")
-throwChargeTime = 2.0
 enemyHitbox = NodePath("Enemy Hitbox")
 playerHitbox = NodePath("Player Hitbox")
 health = 8
