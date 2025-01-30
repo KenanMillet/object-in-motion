@@ -28,7 +28,8 @@ func teleport() -> void:
 		agent.visible = true
 		agent.body.play("teleport_in")
 		await agent.body.animation_finished
-		agent.gun.visible = true
+		if agent.gun != null:
+			agent.gun.visible = true
 		agent.collision_layer = prev_collision_layer
 		var recovery_time = randf_range(teleportRecoveryTime.x, teleportRecoveryTime.y)
 		await get_tree().create_timer(recovery_time).timeout
