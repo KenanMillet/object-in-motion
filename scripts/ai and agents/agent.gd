@@ -46,9 +46,11 @@ func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 	_impulses.append([impulse, from, torque])
 
 func holdGun(newgun: Gun, parent: Node) -> void:
+	releaseGun()
 	gun = newgun
-	gun.self_modulate.a = 1 if controllingPlayer != null else 0
 	prevGunParent = parent
+	reloading = false
+	gun.self_modulate.a = 1 if controllingPlayer != null else 0
 	add_collision_exception_with(gun)
 	gun.attach(self)
 	gun.global_position = hand.global_position
@@ -56,9 +58,10 @@ func holdGun(newgun: Gun, parent: Node) -> void:
 	gun.reparent.call_deferred(hand)
 	gun.needs_reload.connect(_reload_gun)
 	gun.bullet_fired.connect(_on_bullet_fired)
-	reloading = false
 
 func releaseGun() -> void:
+	if gun == null:
+		return
 	var old_gun = gun
 	gun.self_modulate.a = 1
 	controllingPlayer = null

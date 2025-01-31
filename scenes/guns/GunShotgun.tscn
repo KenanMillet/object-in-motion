@@ -38,6 +38,7 @@ enemyAgentRecoil = 10000.0
 playerRpm = 90
 enemyRpm = 30
 bulletsPerShot = 4
+focusDecayPerShot = 0.1
 enemyPrecision = 0.75
 playerReloadTime = 2.25
 enemyReloadTime = 3.5

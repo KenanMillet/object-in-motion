@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ai and agents/agent.gd" id="1_x38s1"]
 [ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://scenes/ui/HealthChunkStarting.tscn" id="2_b2ane"]
-[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="3_qv8pj"]
+[ext_resource type="Texture2D" uid="uid://bw44nleoi1gri" path="res://art/combat ui/focus bars/starting_agent_focus_cropped.png" id="3_l3n4x"]
 [ext_resource type="Script" path="res://scripts/ai and agents/AI_StartingAgent.gd" id="4_c5ys4"]
 [ext_resource type="Texture2D" uid="uid://bhvkaqu17otr3" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0000.png" id="4_n3qm8"]
 [ext_resource type="Texture2D" uid="uid://dhrifgxuxkfd2" path="res://art/enemies and agents/agents/starting_agent/death/starting_agent_death_0001.png" id="5_4qjxb"]
@@ -211,7 +211,7 @@ playerHitbox = NodePath("Player Hitbox")
 visionChecker = NodePath("VisibleOnScreenNotifier2D")
 healthChunk = ExtResource("2_b2ane")
 maxFocusTime = 3.0
-focusBar = ExtResource("3_qv8pj")
+focusBar = ExtResource("3_l3n4x")
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent") groups=["agents", "starting_agents"]]
 script = ExtResource("4_c5ys4")

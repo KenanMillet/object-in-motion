@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ai and agents/agent.gd" id="1_vukeg"]
 [ext_resource type="PackedScene" uid="uid://dnfmj0uln01hr" path="res://scenes/ui/HealthChunkMedium.tscn" id="2_nvap0"]
-[ext_resource type="Texture2D" uid="uid://c1euopc40x4f5" path="res://art/combat ui/focus bars/medium_agent_focus.png" id="3_lp2gn"]
+[ext_resource type="Texture2D" uid="uid://c0vwxc1ga4k3d" path="res://art/combat ui/focus bars/medium_agent_focus_cropped.png" id="3_u6cpq"]
 [ext_resource type="Texture2D" uid="uid://cr3qxanl4yam6" path="res://art/enemies and agents/agents/medium_agent/death/medium_death_0000.png" id="4_1mute"]
 [ext_resource type="Texture2D" uid="uid://beq7ocdsna8e5" path="res://art/enemies and agents/agents/medium_agent/neutral/medium_neutral_0000.png" id="4_2thlj"]
 [ext_resource type="Script" path="res://scripts/ai and agents/AI_MediumAgent.gd" id="4_hx8gh"]
@@ -231,7 +231,7 @@ visionChecker = NodePath("VisibleOnScreenNotifier2D")
 health = 14
 healthChunk = ExtResource("2_nvap0")
 maxFocusTime = 1.5
-focusBar = ExtResource("3_lp2gn")
+focusBar = ExtResource("3_u6cpq")
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent", "pidController") groups=["agents", "medium_agents"]]
 script = ExtResource("4_hx8gh")

@@ -29,3 +29,4 @@ position_smoothing_enabled = true
 [connection signal="agent_changed" from="." to="HUD" method="_on_player_agent_changed"]
 [connection signal="focus_changed" from="." to="HUD" method="_on_player_focus_changed"]
 [connection signal="gun_changed" from="." to="HUD" method="_on_player_gun_changed"]
+[connection signal="gun_max_focus_changed" from="." to="HUD" method="_on_player_gun_max_focus_changed"]

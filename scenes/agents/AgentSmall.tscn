@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ai and agents/agent.gd" id="1_k1s4o"]
 [ext_resource type="PackedScene" uid="uid://naslptaukkc8" path="res://scenes/ui/HealthChunkSmall.tscn" id="2_aj03o"]
-[ext_resource type="Texture2D" uid="uid://pq3w5xq7s4ec" path="res://art/combat ui/focus bars/small_agent_focus.png" id="3_cjlep"]
+[ext_resource type="Texture2D" uid="uid://b2e0hridvbs4l" path="res://art/combat ui/focus bars/small_agent_focus_cropped.png" id="3_32b51"]
 [ext_resource type="Script" path="res://scripts/ai and agents/AI_SmallAgent.gd" id="4_yu742"]
 [ext_resource type="Script" path="res://scripts/ai and agents/PID.gd" id="5_odb35"]
 [ext_resource type="Texture2D" uid="uid://x6ivq3gfce3s" path="res://art/enemies and agents/agents/small_agent/death/small_agent_death_0000.png" id="6_jaai7"]
@@ -199,7 +199,7 @@ health = 8
 healthChunk = ExtResource("2_aj03o")
 maxFocusTime = 4.0
 focusTimeScale = 0.4
-focusBar = ExtResource("3_cjlep")
+focusBar = ExtResource("3_32b51")
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("agent", "pidController") groups=["agents", "small_agents"]]
 script = ExtResource("4_yu742")

@@ -14,6 +14,7 @@ signal ammo_changed(new_ammo: int, ammo_chunk: PackedScene)
 @export var playerRpm: int = 120
 @export var enemyRpm: int = 90
 @export var bulletsPerShot: int = 1
+@export var focusDecayPerShot: float = 0.01
 @export var playerPrecision: float = 1
 @export var enemyPrecision: float = 1
 @export var playerReloadTime: float = 1.5
@@ -94,8 +95,8 @@ func bulletDeviation() -> float:
 func fire() -> bool:
 	if _cooldown != 0:
 		return false
-	var has_ammo = !is_empty()
-	if has_ammo:
+	var had_ammo = !is_empty()
+	if had_ammo:
 		ammo-=1
 		if !is_empty():
 			_cooldown = 60.0/rpm
@@ -123,7 +124,7 @@ func fire() -> bool:
 			needs_reload.emit(reloadTime)
 	else:
 		needs_reload.emit(reloadTime)
-	return has_ammo
+	return had_ammo
 
 func reload() -> void:
 	ammo = magSize

@@ -3,12 +3,14 @@ extends CanvasLayer
 
 @export_group("HUD Elements")
 @export var focus: TextureProgressBar
+@export var gunMaxFocus: TextureProgressBar
 @export var health: HBoxContainer
 @export var plan: HBoxContainer
 @export var ammunition: GridContainer
 
 @export_group("Element Modifiers")
-@export var gunFocusBar: Texture = null
+@export var gunFocusBar: Texture
+@export var gunMaxFocusBar: Texture
 @export var agentFocusCurve: Curve
 @export var gunFocusCurve: Curve
 
@@ -16,6 +18,7 @@ var focusCurve: Curve
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	gunMaxFocus.texture_progress = gunMaxFocusBar
 	var focus_resolution: int = int(absf(focus.max_value-focus.min_value)/focus.step)
 	agentFocusCurve.bake_resolution = focus_resolution
 	gunFocusCurve.bake_resolution = focus_resolution
@@ -48,7 +51,9 @@ func set_new_ammo_chunks(new_gun: Gun) -> void:
 func _on_player_agent_changed(new_agent: Agent, old_agent: Agent) -> void:
 	set_new_health_chunks(new_agent)
 	focus.texture_progress = new_agent.focusBar if new_agent != null else gunFocusBar
-	focusCurve = agentFocusCurve if new_agent != null else gunFocusCurve
+	gunMaxFocus.visible = (new_agent == null)
+	#focusCurve = agentFocusCurve if new_agent != null else gunFocusCurve
+	focusCurve = agentFocusCurve if new_agent != null else null
 
 	var handle_signals = func(agent: Agent, signal_fn: StringName):
 		var handle: Callable
@@ -102,3 +107,6 @@ func _on_gun_ammo_changed(new_ammo: int, ammo_chunk: PackedScene) -> void:
 
 func _on_player_focus_changed(percent_remaining: float) -> void:
 	focus.value = focusCurve.sample_baked(percent_remaining) if focusCurve != null else percent_remaining
+
+func _on_player_gun_max_focus_changed(percent_remaining: float) -> void:
+	gunMaxFocus.value = focusCurve.sample_baked(percent_remaining) if focusCurve != null else percent_remaining

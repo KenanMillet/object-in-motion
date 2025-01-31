@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://ddjmlwnyldf4a"]
 
 [ext_resource type="Script" path="res://scripts/architecture/player/hud.gd" id="1_lj0gx"]
-[ext_resource type="Texture2D" uid="uid://c0670tcnuyqkl" path="res://art/combat ui/focus bars/gun_only_focus.png" id="2_b8fy4"]
-[ext_resource type="Texture2D" uid="uid://87hursygqwhr" path="res://art/combat ui/focus bars/starting_agent_focus.png" id="2_fpunk"]
+[ext_resource type="Texture2D" uid="uid://ccl5lrjnriegs" path="res://art/combat ui/focus bars/gun_only_focus_cropped.png" id="2_tel8u"]
+[ext_resource type="Texture2D" uid="uid://bw44nleoi1gri" path="res://art/combat ui/focus bars/starting_agent_focus_cropped.png" id="3_lsl5c"]
 [ext_resource type="PackedScene" uid="uid://dohty5kqwuune" path="res://scenes/ui/HealthChunkStarting.tscn" id="3_wcqru"]
 [ext_resource type="Texture2D" uid="uid://bws45omyav748" path="res://art/combat ui/ammo tracker/starter_bullet.png" id="5_r1om8"]
 
@@ -14,24 +14,60 @@ point_count = 2
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.63861, 0.0, 0, 0]
 point_count = 2
 
-[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("focus", "health", "plan", "ammunition")]
+[node name="HUD" type="CanvasLayer" node_paths=PackedStringArray("focus", "gunMaxFocus", "health", "plan", "ammunition")]
 script = ExtResource("1_lj0gx")
-focus = NodePath("Focus")
+focus = NodePath("Focus/Focus")
+gunMaxFocus = NodePath("Focus/Max Gun Focus")
 health = NodePath("Health And Plan/Health")
 plan = NodePath("Health And Plan/Plan")
 ammunition = NodePath("Ammunition")
-gunFocusBar = ExtResource("2_b8fy4")
+gunFocusBar = ExtResource("2_tel8u")
+gunMaxFocusBar = ExtResource("2_tel8u")
 agentFocusCurve = SubResource("Curve_8gbr8")
 gunFocusCurve = SubResource("Curve_hynd8")
 
-[node name="Focus" type="TextureProgressBar" parent="."]
-offset_right = 1920.0
-offset_bottom = 1080.0
+[node name="Focus" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.9, 1)
+
+[node name="Max Gun Focus" type="TextureProgressBar" parent="Focus"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -876.0
+offset_top = -61.0
+offset_right = 876.0
+grow_vertical = 0
 max_value = 1.0
 step = 0.001
 value = 1.0
 fill_mode = 6
-texture_progress = ExtResource("2_fpunk")
+texture_progress = ExtResource("2_tel8u")
+tint_under = Color(0, 0, 0, 0.862745)
+tint_progress = Color(0.572988, 0.572988, 0.572988, 1)
+
+[node name="Focus" type="TextureProgressBar" parent="Focus"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -876.0
+offset_top = -61.0
+offset_right = 876.0
+grow_vertical = 0
+max_value = 1.0
+step = 0.001
+value = 1.0
+fill_mode = 6
+texture_progress = ExtResource("3_lsl5c")
 tint_under = Color(0, 0, 0, 0.862745)
 
 [node name="Health And Plan" type="VBoxContainer" parent="."]

@@ -36,6 +36,7 @@ playerAgentRecoil = 1500.0
 enemyAgentRecoil = 100.0
 playerRpm = 150
 enemyRpm = 60
+focusDecayPerShot = 0.025
 playerPrecision = 9001.0
 enemyPrecision = 10.0
 ammoChunk = ExtResource("3_jctrb")
