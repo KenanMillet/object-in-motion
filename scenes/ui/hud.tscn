@@ -37,7 +37,6 @@ offset_top = -50.0
 offset_bottom = -50.0
 grow_horizontal = 2
 grow_vertical = 0
-scale = Vector2(0.9, 1)
 
 [node name="Max Gun Focus" type="TextureProgressBar" parent="Focus"]
 layout_mode = 1
