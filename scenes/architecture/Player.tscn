@@ -13,8 +13,7 @@ startingGun = ExtResource("3_4j4t6")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")
-gunTetherPID = NodePath("PID")
-godMode = true
+gunTetherPID = NodePath("Gun Tether PID")
 
 [node name="CameraMount" type="Node2D" parent="."]
 
@@ -29,12 +28,12 @@ position_smoothing_enabled = true
 
 [node name="HUD" parent="." instance=ExtResource("4_ns5kd")]
 
-[node name="PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
+[node name="Gun Tether PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
 script = ExtResource("5_3hxf2")
 _ref_node = NodePath("..")
 _ref_property = "gun_abs_angle_to_mouse"
 _ref_property_type = 3
-_proportional_wt = 4.0
+_proportional_wt = 5.0
 _integral_wt = 0.0
 _derivative_wt = -2.0
 _integral_min_value = 0.0

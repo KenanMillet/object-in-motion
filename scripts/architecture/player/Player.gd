@@ -196,7 +196,7 @@ func _process(delta: float) -> void:
 			newGunMaxFocusTime = max(gunMaxFocusTime - delta, 0)
 			var torque = gunTetherPID.value
 			if torque != null:
-				gun.impart(Vector2.ZERO, Vector2.ZERO, torque * -180/PI * signf(gun_angle_to_mouse))
+				gun.impart(Vector2.ZERO, Vector2.ZERO, torque * gun.inertia * -signf(gun_angle_to_mouse))
 	else:
 		gunTetherPID.target_value = null
 
