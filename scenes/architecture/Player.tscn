@@ -1,17 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://eli52larnpyd"]
+[gd_scene load_steps=6 format=3 uid="uid://eli52larnpyd"]
 
 [ext_resource type="Script" path="res://scripts/architecture/player/Player.gd" id="1_8uice"]
 [ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://scenes/agents/AgentStarting.tscn" id="2_qkmox"]
 [ext_resource type="PackedScene" uid="uid://dxlvnghp7s5iy" path="res://scenes/guns/GunPistol.tscn" id="3_4j4t6"]
 [ext_resource type="PackedScene" uid="uid://ddjmlwnyldf4a" path="res://scenes/ui/hud.tscn" id="4_ns5kd"]
+[ext_resource type="Script" path="res://scripts/ai and agents/PID.gd" id="5_3hxf2"]
 
-[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos")]
+[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "gunTetherPID")]
 script = ExtResource("1_8uice")
 startingAgent = ExtResource("2_qkmox")
 startingGun = ExtResource("3_4j4t6")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")
+gunTetherPID = NodePath("PID")
+godMode = true
 
 [node name="CameraMount" type="Node2D" parent="."]
 
@@ -25,6 +28,17 @@ position_smoothing_enabled = true
 [node name="TargetPos" type="Node2D" parent="."]
 
 [node name="HUD" parent="." instance=ExtResource("4_ns5kd")]
+
+[node name="PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
+script = ExtResource("5_3hxf2")
+_ref_node = NodePath("..")
+_ref_property = "gun_abs_angle_to_mouse"
+_ref_property_type = 3
+_proportional_wt = 4.0
+_integral_wt = 0.0
+_derivative_wt = -2.0
+_integral_min_value = 0.0
+_integral_max_value = 0.0
 
 [connection signal="agent_changed" from="." to="HUD" method="_on_player_agent_changed"]
 [connection signal="focus_changed" from="." to="HUD" method="_on_player_focus_changed"]

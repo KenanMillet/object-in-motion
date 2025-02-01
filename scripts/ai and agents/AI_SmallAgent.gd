@@ -26,10 +26,10 @@ func _ready() -> void:
 
 func _go_idle() -> void:
 	idling = true
-	pidController.target_position = Vector2.INF
+	pidController.target_value = null
 	await get_tree().create_timer(idleTransitionTime).timeout
 	if agent.target != null:
-		pidController.target_position = Vector2(randf_range(idleDistance.x, idleDistance.y), 0).rotated(agent.target.global_position.angle_to(agent.global_position) + randf_range(-PI/8, PI/8))
+		pidController.target_value = Vector2(randf_range(idleDistance.x, idleDistance.y), 0).rotated(agent.target.global_position.angle_to(agent.global_position) + randf_range(-PI/8, PI/8))
 	var idle_time = randf_range(idleTime.x, idleTime.y)
 	if agent.gun != null:
 		idle_time = max(idle_time, 60.0/agent.gun.enemyRpm)
@@ -52,12 +52,12 @@ func _physics_process(_delta: float) -> void:
 				agent.aimPosition = agent.target.global_position
 			if target_distance < attackDistance && !agent.prefiring:
 				if agent.gun.can_fire():
-					pidController.target_position = Vector2.INF
+					pidController.target_value = null
 					agent.fire_gun()
 					_go_idle()
 		if !idling && !agent.reloading && agent.target != null:
-			pidController.target_position = agent.target.global_position + (agent.global_position - agent.target.global_position).normalized() * personalSpace
-		var thrust = thrustModifier * pidController.value
+			pidController.target_value = agent.target.global_position + (agent.global_position - agent.target.global_position).normalized() * personalSpace
+		var thrust = thrustModifier * pidController.value_or(Vector2.ZERO)
 		var maxThrust = maxThrustAwayFromPlayer
 		if agent.linear_velocity.dot(agent.target.global_position - agent.global_position) >= 0 && thrust.dot(agent.target.global_position - agent.global_position) >= 0:
 			maxThrust = maxThrustTowardPlayer
@@ -69,5 +69,5 @@ func _physics_process(_delta: float) -> void:
 			for i in 2:
 				if signf(thrust[i]) == signf(agent.linear_velocity[i]):
 					thrust[i] = 0
-		#print(agent.name, " | Target pos (absolute): ", pidController.target_position, "  (relative): ", pidController.target_position - agent.global_position, "  PID: ", pidController.value, "  Thrust: ", thrust, " (magnitude:", thrust.length(), ")  Speed: ", agent.linear_velocity.length())
+		#print(agent.name, " | Target pos (absolute): ", pidController.target_value, "  (relative): ", pidController.target_value - agent.global_position, "  PID: ", pidController.value_or(Vector2.ZERO), "  Thrust: ", thrust, " (magnitude:", thrust.length(), ")  Speed: ", agent.linear_velocity.length())
 		agent.apply_force(thrust)

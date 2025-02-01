@@ -244,12 +244,15 @@ maxThrust = 10000.0
 minThrust = 1000.0
 speedSoftCap = 200.0
 
-[node name="PID" type="Node" parent="." node_paths=PackedStringArray("refNode")]
+[node name="PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
 script = ExtResource("5_olmh7")
-proportionalWeight = Vector2(1.5, 1.5)
-integralMinValue = Vector2(-200, -200)
-integralMaxValue = Vector2(200, 200)
-refNode = NodePath("..")
+_ref_node = NodePath("..")
+_ref_property_type = 5
+_proportional_wt = Vector2(1.5, 1.5)
+_integral_wt = Vector2(0.15, 0.15)
+_derivative_wt = Vector2(-2, -2)
+_integral_min_value = Vector2(-200, -200)
+_integral_max_value = Vector2(200, 200)
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 4)

@@ -38,8 +38,8 @@ func _physics_process(delta: float) -> void:
 			
 		targetMovementAngle += delta
 		targetAcquireTime += delta
-		pidController.target_position = agent.target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
-		var thrust = thrustModifier * pidController.value
+		pidController.target_value = agent.target.global_position + Vector2(lerp(preferredDistance.x, preferredDistance.y, (sin(targetAcquireTime * 2 * PI)+1)/2), 0).rotated(targetMovementAngle)
+		var thrust = thrustModifier * pidController.value_or(Vector2.ZERO)
 		if thrust.length() < minThrust:
 			thrust = Vector2.ZERO
 		elif thrust.length() > maxThrust:
@@ -48,7 +48,7 @@ func _physics_process(delta: float) -> void:
 			for i in 2:
 				if signf(thrust[i]) == signf(agent.linear_velocity[i]):
 					thrust[i] = 0
-		#print(agent.name, " | Target pos (relative): ", pidController.target_position - agent.global_position, "  PID: ", pidController.value, "  Thrust: ", thrust, " (magnitude:", thrust.length(), ")  Speed: ", agent.linear_velocity.length())
+		#print(agent.name, " | Target pos (relative): ", pidController.target_value - agent.global_position, "  PID: ", pidController.value_or(Vector2.ZERO), "  Thrust: ", thrust, " (magnitude:", thrust.length(), ")  Speed: ", agent.linear_velocity.length())
 		agent.apply_force(thrust)
 
 func _on_medium_agent_target_changed(new_target: Node2D) -> void:

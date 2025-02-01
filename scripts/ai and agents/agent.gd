@@ -78,6 +78,7 @@ func releaseGun() -> void:
 func throwGun() -> void:
 	if gun == null:
 		return
+	
 	gun.thrownBy = self
 	gun.propel(Vector2(throwImpulse, 0).rotated(gun.global_rotation), shoulder.global_position - gun.global_position, throwTorque)
 	releaseGun()

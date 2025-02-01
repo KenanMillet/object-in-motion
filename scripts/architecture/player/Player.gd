@@ -21,6 +21,7 @@ signal game_over()
 @export var gunStartingFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
 @export var gunTetherTimeScale: float = 0.6
+@export var gunTetherPID: PID
 @export var focusPrecisionMult: float = 1.5
 @export var godMode: bool = false
 
@@ -48,6 +49,15 @@ var gun: Gun = null:
 			gun_changed.emit(value, prev_gun)
 			if agent == null:
 				control_target_changed.emit((value as RigidBody2D), self)
+
+var gun_angle_to_mouse: float:
+	get:
+		return 0.0 if Engine.is_editor_hint() || gun == null || camera == null else gun.get_angle_to(cursorPos.global_position)
+
+@export_storage var gun_abs_angle_to_mouse: float:
+	get:
+		return absf(gun_angle_to_mouse)
+	
 
 var controlDowntime = 0
 var maxFocusTime: float:
@@ -154,9 +164,6 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("Fire"):
 			bullet_fired = gun.fire()
 
-	if bullet_fired:
-		print("Pew!!!")
-
 	if agent != null:
 		cameraTarget = agent
 		if Input.is_action_just_pressed("Throw"):
@@ -183,8 +190,16 @@ func _process(delta: float) -> void:
 	var newGunMaxFocusTime = gunMaxFocusTime
 	var newFocusTime = focusTime
 
-	if agent == null && focusing && !Input.is_action_just_pressed("Focus"):
-		newGunMaxFocusTime = max(gunMaxFocusTime - delta, 0)
+	if agent == null && focusing && gun != null:
+		gunTetherPID.target_value = 0
+		if !Input.is_action_just_pressed("Focus"):
+			newGunMaxFocusTime = max(gunMaxFocusTime - delta, 0)
+			var torque = gunTetherPID.value
+			if torque != null:
+				gun.impart(Vector2.ZERO, Vector2.ZERO, torque * -180/PI * signf(gun_angle_to_mouse))
+	else:
+		gunTetherPID.target_value = null
+
 	if (agent == null && agent_on_prev_frame == null) || (focusing && !Input.is_action_just_pressed("Focus")):
 		newFocusTime = max(focusTime - (delta*focusDrainRate), 0)
 

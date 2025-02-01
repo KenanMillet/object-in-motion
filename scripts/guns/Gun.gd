@@ -75,12 +75,16 @@ func can_fire() -> bool:
 	return _cooldown == 0 && !is_empty()
 
 var _impulses = []
+var _forces = []
 
 func is_empty() -> bool:
 	return ammo == 0 && magSize != 0
 
 func propel(impulse: Vector2, from: Vector2, torque: float = 0) -> void:
 	_impulses.append([impulse, from, torque])
+
+func impart(force: Vector2, from: Vector2, torque: float = 0) -> void:
+	_forces.append([force, from, torque])
 
 func attach(newAgent: Agent) -> void:
 	agent = newAgent
@@ -154,3 +158,8 @@ func _physics_process(_delta: float) -> void:
 		apply_impulse(impulse[0], impulse[1])
 		apply_torque_impulse(impulse[2])
 	_impulses.clear()
+	
+	for force in _forces:
+		apply_force(force[0], force[1])
+		apply_torque(force[2])
+	_forces.clear()
