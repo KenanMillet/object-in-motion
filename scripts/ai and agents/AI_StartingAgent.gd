@@ -23,7 +23,9 @@ func teleport() -> void:
 		agent.collision_layer = CollisionUtil.Layer.spawn_blocking_obj
 		agent.visible = false
 		await get_tree().create_timer(teleportDuration).timeout
-		var tele_loc = agent.target.global_position + Vector2(randf_range(preferredDistance.x, preferredDistance.y), 0).rotated(randf_range(0, 2*PI))
+		var tele_loc = agent.global_position
+		if agent.target != null:
+			tele_loc = agent.target.global_position + Vector2(randf_range(preferredDistance.x, preferredDistance.y), 0).rotated(randf_range(0, 2*PI))
 		agent.global_position = tele_loc
 		agent.visible = true
 		agent.body.play("teleport_in")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://eli52larnpyd"]
+[gd_scene load_steps=7 format=3 uid="uid://eli52larnpyd"]
 
 [ext_resource type="Script" path="res://scripts/architecture/player/Player.gd" id="1_8uice"]
 [ext_resource type="PackedScene" uid="uid://rl71eoe3h2qx" path="res://scenes/agents/AgentStarting.tscn" id="2_qkmox"]
@@ -6,14 +6,19 @@
 [ext_resource type="PackedScene" uid="uid://ddjmlwnyldf4a" path="res://scenes/ui/hud.tscn" id="4_ns5kd"]
 [ext_resource type="Script" path="res://scripts/ai and agents/PID.gd" id="5_3hxf2"]
 
-[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "gunTetherPID")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_lqe5v"]
+radius = 200.0
+
+[node name="Player" type="Node" node_paths=PackedStringArray("camera", "cameraMount", "cursorPos", "gunTetherAnglePID", "gunTetherMovePID", "gunTetherArea")]
 script = ExtResource("1_8uice")
 startingAgent = ExtResource("2_qkmox")
 startingGun = ExtResource("3_4j4t6")
 camera = NodePath("CameraMount/Camera2D")
 cameraMount = NodePath("CameraMount")
 cursorPos = NodePath("CursorPos")
-gunTetherPID = NodePath("Gun Tether PID")
+gunTetherAnglePID = NodePath("Gun Tether Angle PID")
+gunTetherMovePID = NodePath("Gun Tether Move PID")
+gunTetherArea = NodePath("Gun Tether Area")
 
 [node name="CameraMount" type="Node2D" parent="."]
 
@@ -28,7 +33,7 @@ position_smoothing_enabled = true
 
 [node name="HUD" parent="." instance=ExtResource("4_ns5kd")]
 
-[node name="Gun Tether PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
+[node name="Gun Tether Angle PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
 script = ExtResource("5_3hxf2")
 _ref_node = NodePath("..")
 _ref_property = "gun_abs_angle_to_mouse"
@@ -38,6 +43,24 @@ _integral_wt = 0.0
 _derivative_wt = -2.0
 _integral_min_value = 0.0
 _integral_max_value = 0.0
+
+[node name="Gun Tether Move PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
+script = ExtResource("5_3hxf2")
+_ref_node = NodePath("..")
+_ref_property = "gun_position"
+_ref_property_type = 5
+_proportional_wt = Vector2(5, 5)
+_integral_wt = Vector2(0.25, 0.25)
+_derivative_wt = Vector2(-1, -1)
+_integral_min_value = Vector2(0, 0)
+_integral_max_value = Vector2(0, 0)
+
+[node name="Gun Tether Area" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Gun Tether Area"]
+shape = SubResource("CircleShape2D_lqe5v")
 
 [connection signal="agent_changed" from="." to="HUD" method="_on_player_agent_changed"]
 [connection signal="focus_changed" from="." to="HUD" method="_on_player_focus_changed"]

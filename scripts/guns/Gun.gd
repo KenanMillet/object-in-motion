@@ -49,7 +49,7 @@ var agentRecoil: float:
 
 var rpm: int:
 	get:
-		return playerRpm if controllingPlayer != null else enemyRpm
+		return int(playerRpm * controllingPlayer.gun_rpm_mult) if controllingPlayer != null else enemyRpm
 
 var reloadTime: float:
 	get:

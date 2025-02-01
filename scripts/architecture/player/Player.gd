@@ -18,10 +18,13 @@ signal game_over()
 @export var cameraMount: Node2D
 @export var cursorPos: Node2D
 @export var controlCooldown: float = 3
+@export var spaceGunRpmMult: float = 1.5
 @export var gunStartingFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
 @export var gunTetherTimeScale: float = 0.6
-@export var gunTetherPID: PID
+@export var gunTetherAnglePID: PID
+@export var gunTetherMovePID: PID
+@export var gunTetherArea: Area2D
 @export var focusPrecisionMult: float = 1.5
 @export var godMode: bool = false
 
@@ -50,6 +53,10 @@ var gun: Gun = null:
 			if agent == null:
 				control_target_changed.emit((value as RigidBody2D), self)
 
+var gun_rpm_mult: float:
+	get:
+		return spaceGunRpmMult if agent == null else 1.0
+
 var gun_angle_to_mouse: float:
 	get:
 		return 0.0 if Engine.is_editor_hint() || gun == null || camera == null else gun.get_angle_to(cursorPos.global_position)
@@ -57,7 +64,10 @@ var gun_angle_to_mouse: float:
 @export_storage var gun_abs_angle_to_mouse: float:
 	get:
 		return absf(gun_angle_to_mouse)
-	
+
+@export_storage var gun_position: Vector2:
+	get:
+		return gun.global_position if gun != null else Vector2.ZERO
 
 var controlDowntime = 0
 var maxFocusTime: float:
@@ -86,6 +96,8 @@ var focusTime: float = 0:
 		gunMaxFocusTime = value
 		gun_max_focus_changed.emit(gunMaxFocusTime/gunStartingFocusTime if !is_inf(gunStartingFocusTime) else 1.0)
 
+@onready var _debugCanvas = DebugCanvas.locate(self)
+
 var focusing: bool = false
 
 var cameraTarget: RigidBody2D
@@ -93,6 +105,9 @@ var cameraTarget: RigidBody2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	camera.reparent.call_deferred(cameraMount)
+	_debugCanvas.draw.connect(func():
+		if agent == null && focusing && gun != null && controlDowntime == 0:
+			_debugCanvas.draw_circle(gunTetherArea.global_position, 200, Color(Color.WHITE, 0.25)))
 
 func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 	if agent == newAgent:
@@ -119,7 +134,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 		newAgent.remove_collision_exception_with(levelBounds)
 	agent = newAgent
 	focusTime = agent.maxFocusTime if agent != null else gunMaxFocusTime
-	if newAgent != null:
+	if newAgent != null && old_agent != null:
 		controlDowntime = controlCooldown
 	if newGun != null:
 		controlGun(newGun)
@@ -128,6 +143,7 @@ func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 func controlGun(newGun: Gun) -> void:
 	if newGun == gun:
 		return
+	var old_gun = gun
 	if gun != null:
 		gun.body_entered.disconnect(_on_gun_contact)
 		gun.body_exited.disconnect(_on_gun_break_contact)
@@ -151,7 +167,18 @@ func controlGun(newGun: Gun) -> void:
 		else:
 			agent.holdGun(null, null)
 	gun = newGun
-	controlDowntime = controlCooldown
+	if newGun != null && old_gun != null:
+		controlDowntime = controlCooldown
+
+func _is_closer_living_agent_or_gun(closest: Node2D, agent_or_gun: Node2D):
+	if agent_or_gun == gun || agent_or_gun == gun.thrownBy || (agent_or_gun is Agent && agent_or_gun.health <= 0):
+		return closest
+	elif closest == gun || closest == gun.thrownBy || (closest is Agent && closest.health <= 0):
+		return agent_or_gun
+	else:
+		var closest_dist = closest.global_position.distance_squared_to(gun.global_position)
+		var agent_or_gun_dist = agent_or_gun.global_position.distance_squared_to(gun.global_position)
+		return closest if closest_dist < agent_or_gun_dist else agent_or_gun
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -190,15 +217,30 @@ func _process(delta: float) -> void:
 	var newGunMaxFocusTime = gunMaxFocusTime
 	var newFocusTime = focusTime
 
+	_debugCanvas.queue_redraw()
+
 	if agent == null && focusing && gun != null:
-		gunTetherPID.target_value = 0
+		gunTetherArea.process_mode = Node.PROCESS_MODE_INHERIT
+		gunTetherArea.global_position = gun.global_position
+		gunTetherAnglePID.target_value = 0
+		
+		if controlDowntime == 0:
+			var closest_living_agent_or_gun = gunTetherArea.get_overlapping_bodies().reduce(_is_closer_living_agent_or_gun)
+			if closest_living_agent_or_gun == gun || (closest_living_agent_or_gun is Agent && closest_living_agent_or_gun.health <= 0):
+				closest_living_agent_or_gun = null
+			gunTetherMovePID.target_value = closest_living_agent_or_gun.global_position if closest_living_agent_or_gun != null else null
+		else:
+			gunTetherMovePID.target_value = null
+
+		var torque = gunTetherAnglePID.value_or(0.0)
+		var force = gunTetherMovePID.value_or(Vector2.ZERO)
+		gun.impart(force * gun.mass, Vector2.ZERO, torque * gun.inertia * -signf(gun_angle_to_mouse))
 		if !Input.is_action_just_pressed("Focus"):
 			newGunMaxFocusTime = max(gunMaxFocusTime - delta, 0)
-			var torque = gunTetherPID.value
-			if torque != null:
-				gun.impart(Vector2.ZERO, Vector2.ZERO, torque * gun.inertia * -signf(gun_angle_to_mouse))
 	else:
-		gunTetherPID.target_value = null
+		gunTetherAnglePID.target_value = null
+		gunTetherMovePID.target_value = null
+		gunTetherArea.process_mode = Node.PROCESS_MODE_DISABLED
 
 	if (agent == null && agent_on_prev_frame == null) || (focusing && !Input.is_action_just_pressed("Focus")):
 		newFocusTime = max(focusTime - (delta*focusDrainRate), 0)
