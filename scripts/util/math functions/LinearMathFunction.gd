@@ -8,8 +8,5 @@ extends MathFunction
 ## f(x) = a*x + [b]b[/b]
 @export var b: float = 0
 
-func _init() -> void:
-	super(null)
-
 func _compute(x: float) -> float:
 	return a*x + b

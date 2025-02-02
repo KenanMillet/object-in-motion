@@ -12,8 +12,5 @@ extends MathFunction
 ## f(x) = a*x^3 + b*x^2 + c*x + [b]d[/b]
 @export var d: float = 0
 
-func _init() -> void:
-	super(null)
-
 func _compute(x: float) -> float:
 	return a*x*x*x + b*x*x + c*x + d

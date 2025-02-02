@@ -8,8 +8,5 @@ extends MathFunction
 ## f(x) = a*log(x) + [b]b[/b]
 @export var b: float = 0
 
-func _init() -> void:
-	super(null)
-
 func _compute(x: float) -> float:
 	return a*log(x) + b

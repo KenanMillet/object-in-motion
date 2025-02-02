@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=28 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://scripts/architecture/Game.gd" id="1_rdkvc"]
 [ext_resource type="Script" path="res://scripts/architecture/DebugCanvas.gd" id="2_mh5oy"]
@@ -20,31 +20,32 @@
 [ext_resource type="Script" path="res://scripts/util/math functions/ConstantFunction.gd" id="16_4b8tn"]
 [ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://scenes/architecture/Player.tscn" id="16_64rk8"]
 [ext_resource type="Script" path="res://scripts/util/math functions/PiecewiseMathFunction.gd" id="16_giu38"]
+[ext_resource type="Script" path="res://scripts/util/math functions/InverseMathFunction.gd" id="18_o4jxo"]
 
 [sub_resource type="Resource" id="Resource_ei7c8"]
 script = ExtResource("16_4b8tn")
 constant = 1.443
-shift_input = 0.0
-invert = false
 
 [sub_resource type="Resource" id="Resource_1n720"]
 script = ExtResource("15_odn8b")
 x = 2.0
 function = SubResource("Resource_ei7c8")
 
-[sub_resource type="Resource" id="Resource_d4g2o"]
+[sub_resource type="Resource" id="Resource_no8wn"]
 script = ExtResource("15_uljxi")
 a = 1.0
 b = 0.0
-shift_input = 0.0
-invert = true
+
+[sub_resource type="Resource" id="Resource_tvl1y"]
+script = ExtResource("18_o4jxo")
+a = 1.0
+b = 0.0
+modify_input = SubResource("Resource_no8wn")
 
 [sub_resource type="Resource" id="Resource_peix0"]
 script = ExtResource("16_giu38")
 pieces = Array[ExtResource("15_odn8b")]([SubResource("Resource_1n720")])
-upper_bounds = SubResource("Resource_d4g2o")
-shift_input = 0.0
-invert = false
+upper_bounds = SubResource("Resource_tvl1y")
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 

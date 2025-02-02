@@ -11,17 +11,14 @@ extends MathFunction
 ## If set to [code]null[/code] and [member pieces] is empty, the result of [method MathFunction.compute] will instead be [code]NAN[/code]. 
 @export var upper_bounds: MathFunction = null
 
-func _init() -> void:
-	super(null)
-
 func _compute(x: float) -> float:
 	for piece in pieces:
 		if x <= piece.x:
-			return piece.function.compute(x)
+			return piece.compute(x)
 	if upper_bounds != null:
 		return upper_bounds.compute(x)
 	elif !pieces.is_empty():
 		var piece: MathFunctionPiece = pieces[-1]
-		return piece.function.compute(piece.x)
+		return piece.compute(piece.x)
 	else:
 		return NAN

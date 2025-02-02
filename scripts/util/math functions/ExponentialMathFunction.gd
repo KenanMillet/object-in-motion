@@ -10,8 +10,5 @@ extends MathFunction
 ## f(x) = f(x) = a*b^x + [b]c[/b]
 @export var c: float = 0
 
-func _init() -> void:
-	super(null)
-
 func _compute(x: float) -> float:
 	return a*pow(b,x) + c
