@@ -170,7 +170,7 @@ func controlGun(newGun: Gun) -> void:
 	if newGun != null && old_gun != null:
 		controlDowntime = controlCooldown
 
-func _is_closer(ref_pos: Vector2, closest: Node2D, next: Node2D) -> Node2D:
+func _is_closer(closest: Node2D, next: Node2D, ref_pos: Vector2) -> Node2D:
 	var closest_dist = closest.global_position.distance_squared_to(ref_pos)
 	var next_dist = next.global_position.distance_squared_to(ref_pos)
 	return closest if closest_dist < next_dist else next
@@ -271,7 +271,7 @@ func _process(delta: float) -> void:
 	gunMaxFocusTime = min(gunStartingFocusTime, newGunMaxFocusTime)
 	focusTime = min(maxFocusTime, newFocusTime)
 	
-	if agent == null && focusTime == 0:
+	if gun != null && agent == null && focusTime == 0:
 		controlGun(null)
 		print("Game Over!")
 		game_over.emit()
