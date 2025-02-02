@@ -19,6 +19,7 @@ signal game_over()
 @export var cursorPos: Node2D
 @export var controlCooldown: float = 3
 @export var spaceGunRpmMult: float = 1.5
+@export var throwGracePeriod: float = 1
 @export var gunStartingFocusTime: float = 6
 @export var gunFocusTimeScale: float = 0.1
 @export var gunTetherTimeScale: float = 0.6
@@ -65,11 +66,12 @@ var gun_angle_to_mouse: float:
 	get:
 		return absf(gun_angle_to_mouse)
 
-@export_storage var gun_position: Vector2:
+@export_storage var gun_center_of_mass: Vector2:
 	get:
-		return gun.global_position if gun != null else Vector2.ZERO
+		return gun.to_global(gun.center_of_mass) if gun != null else Vector2.ZERO
 
 var controlDowntime = 0
+var throwGraceTime = 0
 var maxFocusTime: float:
 	get:
 		return agent.maxFocusTime if agent != null else gunMaxFocusTime
@@ -105,9 +107,7 @@ var cameraTarget: RigidBody2D
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	camera.reparent.call_deferred(cameraMount)
-	_debugCanvas.draw.connect(func():
-		if agent == null && focusing && gun != null && controlDowntime == 0:
-			_debugCanvas.draw_circle(gunTetherArea.global_position, 200, Color(Color.WHITE, 0.25)))
+	_debugCanvas.draw.connect(_draw_on_canvas.bind(_debugCanvas))
 
 func controlAgent(newAgent: Agent, newGun: Gun) -> Agent:
 	if agent == newAgent:
@@ -170,15 +170,21 @@ func controlGun(newGun: Gun) -> void:
 	if newGun != null && old_gun != null:
 		controlDowntime = controlCooldown
 
-func _is_closer_living_agent_or_gun(closest: Node2D, agent_or_gun: Node2D):
-	if agent_or_gun == gun || agent_or_gun == gun.thrownBy || (agent_or_gun is Agent && agent_or_gun.health <= 0):
-		return closest
-	elif closest == gun || closest == gun.thrownBy || (closest is Agent && closest.health <= 0):
-		return agent_or_gun
-	else:
-		var closest_dist = closest.global_position.distance_squared_to(gun.global_position)
-		var agent_or_gun_dist = agent_or_gun.global_position.distance_squared_to(gun.global_position)
-		return closest if closest_dist < agent_or_gun_dist else agent_or_gun
+func _is_closer(ref_pos: Vector2, closest: Node2D, next: Node2D) -> Node2D:
+	var closest_dist = closest.global_position.distance_squared_to(ref_pos)
+	var next_dist = next.global_position.distance_squared_to(ref_pos)
+	return closest if closest_dist < next_dist else next
+
+func _closest_if(options: Array[Node2D], ref_pos: Vector2, predicate: Callable) -> Node2D:
+	return options.filter(predicate).reduce(_is_closer.bind(ref_pos))
+
+func _closest_living_agent(options: Array[Node2D], ref_pos: Vector2) -> Agent:
+	return _closest_if(options, ref_pos, func(opt): return opt is Agent && opt.health > 0 && opt != gun.thrownBy) as Agent
+
+func _closest_loaded_gun(options: Array[Node2D], ref_pos: Vector2) -> Gun:
+	return _closest_if(options, ref_pos, func(opt): return opt is Gun && !opt.is_empty()) as Gun
+
+var _closest_tether: Node2D = null
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -196,6 +202,12 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("Throw"):
 			agent.throwGun()
 			controlAgent(null, gun)
+			throwGraceTime = throwGracePeriod + delta
+
+	var tethering = (agent == null && focusing && gun != null)
+	
+	if tethering || bullet_fired || agent != null:
+		throwGraceTime = 0
 
 	cameraMount.global_position = cameraTarget.to_global(cameraTarget.center_of_mass)
 	
@@ -205,30 +217,38 @@ func _process(delta: float) -> void:
 	camera.zoom += zoom_dir * zoomSpeed * delta
 
 	controlDowntime = max(controlDowntime - delta, 0)
+	throwGraceTime = max(throwGraceTime - delta, 0)
 	focusing = Input.is_action_pressed("Focus")
 	Engine.time_scale = 1.0
 	if focusTime > 0:
-		if agent == null:
-			Engine.time_scale = gunTetherTimeScale if focusing else gunFocusTimeScale
+		if tethering:
+			Engine.time_scale = gunTetherTimeScale
+		elif agent == null:
+			Engine.time_scale = gunFocusTimeScale
 		elif focusing:
 			Engine.time_scale = agent.focusTimeScale
 
-	var focusDrainRate = gunFocusTimeScale / gunTetherTimeScale if focusing && agent == null else 1.0
+	var focusDrainRate = gunFocusTimeScale / gunTetherTimeScale if tethering else (0.0 if throwGraceTime else 1.0)
 	var newGunMaxFocusTime = gunMaxFocusTime
 	var newFocusTime = focusTime
 
 	_debugCanvas.queue_redraw()
 
-	if agent == null && focusing && gun != null:
+	if tethering:
 		gunTetherArea.process_mode = Node.PROCESS_MODE_INHERIT
 		gunTetherArea.global_position = gun.global_position
 		gunTetherAnglePID.target_value = 0
 		
 		if controlDowntime == 0:
-			var closest_living_agent_or_gun = gunTetherArea.get_overlapping_bodies().reduce(_is_closer_living_agent_or_gun)
-			if closest_living_agent_or_gun == gun || (closest_living_agent_or_gun is Agent && closest_living_agent_or_gun.health <= 0):
-				closest_living_agent_or_gun = null
-			gunTetherMovePID.target_value = closest_living_agent_or_gun.global_position if closest_living_agent_or_gun != null else null
+			var tetherables: Array[Node2D] = gunTetherArea.get_overlapping_bodies()
+			var ref_pos: Vector2 = gun_center_of_mass
+			_closest_tether = _closest_living_agent(tetherables, ref_pos)
+			if _closest_tether == null:
+				_closest_tether = _closest_loaded_gun(tetherables, ref_pos)
+			if _closest_tether != null:
+				gunTetherMovePID.target_value = _closest_tether.global_position
+			else:
+				gunTetherMovePID.target_value = null
 		else:
 			gunTetherMovePID.target_value = null
 
@@ -279,3 +299,8 @@ func _on_gun_break_contact(body: Node) -> void:
 		await get_tree().create_timer(0.5).timeout
 		if gun.thrownBy == body:
 			gun.thrownBy = null
+
+func _draw_on_canvas(canvas: DebugCanvas):
+	if agent == null && focusing && gun != null && controlDowntime == 0:
+		var color := Color(Color.WHITE, 0.25) if _closest_tether != null else Color(Color.RED, 0.1)
+		canvas.draw_circle(gunTetherArea.global_position, gunTetherArea.get_child(0).shape.radius, color)

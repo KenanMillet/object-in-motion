@@ -16,7 +16,8 @@ func teleport() -> void:
 		recoveringFromTeleport = true
 		agent.linear_velocity = Vector2.ZERO
 		agent.angular_velocity = 0
-		agent.gun.visible = false
+		if agent.gun != null:
+			agent.gun.visible = false
 		agent.body.play("teleport_out")
 		await agent.body.animation_finished
 		var prev_collision_layer = agent.collision_layer

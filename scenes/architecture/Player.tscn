@@ -47,7 +47,7 @@ _integral_max_value = 0.0
 [node name="Gun Tether Move PID" type="Node" parent="." node_paths=PackedStringArray("_ref_node")]
 script = ExtResource("5_3hxf2")
 _ref_node = NodePath("..")
-_ref_property = "gun_position"
+_ref_property = "gun_center_of_mass"
 _ref_property_type = 5
 _proportional_wt = Vector2(5, 5)
 _integral_wt = Vector2(0.25, 0.25)
@@ -57,7 +57,7 @@ _integral_max_value = Vector2(0, 0)
 
 [node name="Gun Tether Area" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 10
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Gun Tether Area"]
 shape = SubResource("CircleShape2D_lqe5v")

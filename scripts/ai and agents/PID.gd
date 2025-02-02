@@ -2,11 +2,14 @@
 class_name PID
 extends Node
 
-
+## Use this to set the Ref Node and Ref Property via scripts.
+## Ref Node and Ref Property should only be assigned directly via the Inspector.
 func set_control_input(ref_node: Node, ref_property: NodePath):
 	_ref_node = ref_node
 	_ref_property = ref_property
 
+## The target_value that the PID should provide feedback for.
+## Set this to the same type as your Ref Property, or set to null to reset the PID with no target_value.
 var target_value = null:
 	get:
 		return target_value
@@ -17,6 +20,8 @@ var target_value = null:
 			_derivative = _get_scalar_value(0)
 		target_value = value
 
+## The value that the PID provides as an output given your target_value, Ref Property, and other control values.
+## This will be null if the target_value is null
 var value:
 	get:
 		if target_value != null:
@@ -30,6 +35,7 @@ var value:
 		else:
 			return null
 
+## Like the value property, but will return the provided default value if the target_value is null.
 func value_or(default):
 	var val = value
 	return val if val != null else default
@@ -203,7 +209,6 @@ func _ready() -> void:
 	_cumulative_integral = _get_scalar_value(0)
 	_derivative = _get_scalar_value(0)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		return
