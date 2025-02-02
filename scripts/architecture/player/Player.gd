@@ -287,6 +287,8 @@ func _on_gun_contact(body: Node) -> void:
 		if body is Agent && body != gun.thrownBy:
 			var a: Agent = body as Agent
 			controlAgent(a, a.gun)
+			if a.gun == null:
+				a.holdGun(gun, gun.get_parent())
 		elif body is Gun:
 			var g: Gun = body as Gun
 			if g.agent != null:
