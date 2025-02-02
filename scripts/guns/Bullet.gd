@@ -1,10 +1,13 @@
 class_name Bullet
 extends RigidBody2D
 
+@export_group("When Hitting Player", "player")
 @export var playerDamage: int = 2
-@export var enemyDamage: int = 4
 @export var playerHurtBox: CollisionShape2D = null
+@export_group("When Hitting Enemy", "enemy")
+@export var enemyDamage: int = 4
 @export var enemyHurtBox: CollisionShape2D = null
+@export_group("When Hitting Bullet")
 @export var ignoreEnemyBullets: bool = false
 
 var firedFromPlayer: Player = null

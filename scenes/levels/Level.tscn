@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=20 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://scripts/architecture/Game.gd" id="1_rdkvc"]
 [ext_resource type="Script" path="res://scripts/architecture/DebugCanvas.gd" id="2_mh5oy"]
@@ -15,7 +15,19 @@
 [ext_resource type="PackedScene" uid="uid://duqrik1wx1bko" path="res://scenes/scenery/Asteroid_2.tscn" id="13_ggckg"]
 [ext_resource type="PackedScene" uid="uid://dvvrl5sami12e" path="res://scenes/scenery/Asteroid_3.tscn" id="14_g3531"]
 [ext_resource type="Script" path="res://scripts/architecture/SpawnTile.gd" id="15_uej2l"]
+[ext_resource type="Script" path="res://scripts/util/math functions/LogarithmicMathFunction.gd" id="15_uljxi"]
 [ext_resource type="PackedScene" uid="uid://eli52larnpyd" path="res://scenes/architecture/Player.tscn" id="16_64rk8"]
+
+[sub_resource type="Resource" id="Resource_e43yj"]
+script = ExtResource("15_uljxi")
+a = 1.0
+c = 0.0
+shift_input = 0.0
+invert = true
+apply_lower_bounds = false
+lower_bounds = Vector2(0, 0)
+apply_upper_bounds = false
+upper_bounds = Vector2(0, 0)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 
@@ -41,6 +53,7 @@ gunTable = Array[PackedScene]([ExtResource("9_7cw3t"), ExtResource("10_0bb6m"), 
 asteroidTable = Array[PackedScene]([ExtResource("12_qkd4g"), ExtResource("13_ggckg"), ExtResource("14_g3531")])
 asteroidWeights = Array[int]([1, 1, 1])
 asterAngleVariance = 0.261799
+enemySpawnTimerFn = SubResource("Resource_e43yj")
 players = [NodePath("../Player")]
 playerSpawns = [NodePath("Player Spawn 1")]
 levelBounds = NodePath("../Bounds")

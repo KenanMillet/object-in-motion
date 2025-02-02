@@ -25,6 +25,7 @@ extends Node
 @export var asteroidsPerRow: int = 5
 @export var asterWaveSpawnDist: float = 8000
 @export_range(0, 15, 0.01, "radians_as_degrees") var asterAngleVariance: float
+@export var enemySpawnTimerFn: MathFunction
 @export_group("")
 
 @export var players: Array[Player]

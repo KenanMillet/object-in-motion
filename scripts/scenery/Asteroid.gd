@@ -3,12 +3,14 @@ class_name Asteroid
 extends RigidBody2D
 
 @export_group("Spawn Parameters")
+@export_subgroup("Linear Speed", "linearSpeed")
 ## Minimum Linear Speed to give the asteroid when it spawns.
 ## Domain: [1,inf)
 @export_range(1, 1000, 1, "or_greater", "suffix:px/s") var linearSpeedMin: float = 100
 ## Maximum Linear Speed to give the asteroid when it spawns.
 ## Domain: [1,inf)
 @export_range(1, 1000, 1, "or_greater", "suffix:px/s") var linearSpeedMax: float = 300
+@export_subgroup("Angular Speed", "angularSpeed")
 ## Minimum Angular Speed (in degrees) to give the asteroid when it spawns.
 ## Domain: [0,inf)
 @export_range(0, 360, 1, "or_greater", "suffix:°/s") var angularSpeedMin: float = 2
@@ -18,17 +20,18 @@ extends RigidBody2D
 ## Chances of the Initial Angular Speed to be in a clockwise direction.
 ## Domain: [0,100]
 @export_range(0, 100, 0.01, "suffix:%") var angularSpeedPolarity: float = 50.0
+@export_subgroup("Scale Factor", "scaleFactor")
 ## Minimum factor that the asteroid's scale will be multiplied by when it spawns.
 ## Domain: [0.01,inf)
 @export_range(0.01, 5, 0.01, "or_greater") var scaleFactorMin: float = 0.2
 ## Minimum factor that the asteroid's scale will be multiplied by when it spawns.
 ## Domain: [0.01,inf)
 @export_range(0.01, 5, 0.01, "or_greater") var scaleFactorMax: float = 1.5
+@export_group("Boundaries")
 ## Radius that encompasses the entire aesteroid; used to not spawn asteroids too close together.
 @export var boundingCircle: CircleShape2D
 ## Radius that another asteroid's bounding circle should not spawn within.
 @export var isolationCircle: CircleShape2D
-@export_group("")
 
 static func _calcAngularSpeedPolarity(aspolarity) -> int:
 	return -1 if randf() > remap(aspolarity, -1, 1, 0, 1) else 1
