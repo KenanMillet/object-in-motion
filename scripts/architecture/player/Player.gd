@@ -273,6 +273,7 @@ func _process(delta: float) -> void:
 	
 	if agent == null && focusTime == 0:
 		controlGun(null)
+		print("Game Over!")
 		game_over.emit()
 	
 	agent_on_prev_frame = agent
@@ -293,7 +294,7 @@ func _on_gun_contact(body: Node) -> void:
 			var g: Gun = body as Gun
 			if g.agent != null:
 				controlAgent(g.agent, g)
-			elif !g.is_empty() && agent != null:
+			elif !g.is_empty():
 				controlGun(g)
 
 func _on_gun_break_contact(body: Node) -> void:
