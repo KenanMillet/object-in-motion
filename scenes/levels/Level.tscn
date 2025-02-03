@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cbn4yp7nnbr40"]
+[gd_scene load_steps=30 format=3 uid="uid://cbn4yp7nnbr40"]
 
 [ext_resource type="Script" path="res://scripts/architecture/Game.gd" id="1_rdkvc"]
 [ext_resource type="Script" path="res://scripts/architecture/DebugCanvas.gd" id="2_mh5oy"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://djlohye7cxcoe" path="res://scenes/scenery/Asteroid_1.tscn" id="12_qkd4g"]
 [ext_resource type="PackedScene" uid="uid://duqrik1wx1bko" path="res://scenes/scenery/Asteroid_2.tscn" id="13_ggckg"]
 [ext_resource type="PackedScene" uid="uid://dvvrl5sami12e" path="res://scenes/scenery/Asteroid_3.tscn" id="14_g3531"]
+[ext_resource type="Script" path="res://scripts/util/math functions/LinearMathFunction.gd" id="15_d1hkl"]
 [ext_resource type="Script" path="res://scripts/util/math functions/MathFunctionPiece.gd" id="15_odn8b"]
 [ext_resource type="Script" path="res://scripts/architecture/SpawnTile.gd" id="15_uej2l"]
 [ext_resource type="Script" path="res://scripts/util/math functions/LogarithmicMathFunction.gd" id="15_uljxi"]
@@ -22,13 +23,18 @@
 [ext_resource type="Script" path="res://scripts/util/math functions/PiecewiseMathFunction.gd" id="16_giu38"]
 [ext_resource type="Script" path="res://scripts/util/math functions/InverseMathFunction.gd" id="18_o4jxo"]
 
+[sub_resource type="Resource" id="Resource_8s4b4"]
+script = ExtResource("15_d1hkl")
+a = 0.4
+b = 0.0
+
 [sub_resource type="Resource" id="Resource_ei7c8"]
 script = ExtResource("16_4b8tn")
-constant = 1.443
+constant = 54.614
 
 [sub_resource type="Resource" id="Resource_1n720"]
 script = ExtResource("15_odn8b")
-x = 2.0
+x = 5.0
 function = SubResource("Resource_ei7c8")
 
 [sub_resource type="Resource" id="Resource_no8wn"]
@@ -38,7 +44,7 @@ b = 0.0
 
 [sub_resource type="Resource" id="Resource_tvl1y"]
 script = ExtResource("18_o4jxo")
-a = 1.0
+a = 60.0
 b = 0.0
 modify_input = SubResource("Resource_no8wn")
 
@@ -46,6 +52,7 @@ modify_input = SubResource("Resource_no8wn")
 script = ExtResource("16_giu38")
 pieces = Array[ExtResource("15_odn8b")]([SubResource("Resource_1n720")])
 upper_bounds = SubResource("Resource_tvl1y")
+modify_input = SubResource("Resource_8s4b4")
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_u2hhs"]
 

@@ -56,6 +56,8 @@ var _agentWeightedTable: Array[PackedScene]
 var _gunWeightedTable: Array[PackedScene]
 var _asteroidWeightedDeck: Array[PackedScene]
 
+var enemySpawnTimer: Timer = Timer.new()
+
 static var _sceneIds = {}
 
 static func instance(scene: PackedScene, customNameArgs: Array = []) -> Node:
@@ -154,6 +156,7 @@ func spawnAgent(agent_scene: PackedScene, spawn_tile: SpawnTile, gun_scene: Pack
 	var agent: Agent = instance(agent_scene)
 	spawn_tile.spawn(agent)
 	targetPlayer.control_target_changed.connect(agent._on_player_control_target_changed)
+	agent._on_player_control_target_changed((targetPlayer.agent as RigidBody2D) if targetPlayer.agent != null else (targetPlayer.gun as RigidBody2D), targetPlayer)
 	agent.add_collision_exception_with(levelBounds)
 	_manage(agent)
 	var gun: Gun = null
@@ -273,10 +276,30 @@ func _findTilesToSpawnObject(bounding_box: Rect2 = Rect2(0, 0, 0, 0)) -> Array[S
 		return _spawnTiles.reduce(func(a, b): return a + b).filter(func(spawn_tile: SpawnTile): return spawn_tile.can_spawn)
 	return []
 
+func _spawn_enemy_wave(tiles: Array[SpawnTile] = []) -> Array[Agent]:
+	enemySpawnTimer.wait_time = enemySpawnTimerFn.compute(Game.Difficulty)
+	enemySpawnTimer.timeout.connect(_spawn_enemy_wave, CONNECT_ONE_SHOT)
+	enemySpawnTimer.start()
+	print("Difficulty [", Game.Difficulty, "] Next wave in ", enemySpawnTimer.wait_time, "s")
+	
+	if tiles.is_empty():
+		tiles = _findTilesToSpawnObject()
+		tiles.shuffle()
+	
+	var wave: Array[Agent]
+	for i in min(tiles.size(), enemiesToSpawn):
+		var agent_and_gun = _randomAgentAndGun()
+		wave.append(spawnAgent(agent_and_gun[0], tiles[i], agent_and_gun[1]))
+	return wave
+
 func _ready() -> void:
 	if OS.is_debug_build():
 		_setupCategories()
 	_setupSpawnTiles()
+	
+	enemySpawnTimer.process_callback = Timer.TIMER_PROCESS_PHYSICS
+	enemySpawnTimer.one_shot = true
+	add_child(enemySpawnTimer)
 
 	_agentWeightedTable = _makeWeightedTable(agentTable, agentWeights)
 	_gunWeightedTable = _makeWeightedTable(gunTable, agentWeights if forceGunMatchesAgent else gunWeights)
@@ -297,10 +320,8 @@ func _ready() -> void:
 		tiles[i].spawn(aster_wave[i])
 
 	var asteroids_covering_agents = {}
-
-	for i in min(max(tiles.size()-aster_wave.size(), 0), enemiesToSpawn):
-		var agent_and_gun = _randomAgentAndGun()
-		var agent:Agent = spawnAgent(agent_and_gun[0], tiles[i], agent_and_gun[1])
+	
+	for agent: Agent in _spawn_enemy_wave(tiles.slice(aster_wave.size())):
 		for asteroid: Asteroid in aster_wave:
 			if is_asteroid_covering_agent.call(asteroid, agent):
 				asteroids_covering_agents[asteroid] = asteroid
